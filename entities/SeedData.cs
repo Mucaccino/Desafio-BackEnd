@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Motto.Models;
+using Motto.Utils;
 using System;
 
 public static class SeedData
@@ -9,8 +10,10 @@ public static class SeedData
     {
         // Seed Users
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Name = "Admin", Username = "admin", Password = "123admin", Type = UserType.Admin },
-            new User { Id = 2, Name = "Entregador", Username = "entregador", Password = "123entregador", Type = UserType.DeliveryDriver }
+            new User { Id = 1, Name = "Admin", Username = "admin", PasswordHash = PasswordHasher.HashPassword("123mudar").HashedPassword,
+            Salt = PasswordHasher.HashPassword("123mudar").Salt, Type = UserType.Admin },
+            new User { Id = 2, Name = "Entregador", Username = "entregador", PasswordHash = PasswordHasher.HashPassword("123mudar").HashedPassword,
+            Salt = PasswordHasher.HashPassword("123mudar").Salt, Type = UserType.DeliveryDriver }
         );
 
         // Seed RentalPlans

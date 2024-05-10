@@ -5,13 +5,8 @@ var urls = new string[] { "http://localhost:5000", "https://localhost:5001" };
 builder.WebHost.UseUrls(urls);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
-
-var app = builder.Build();
-
-Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})"); // Console message
+builder.Services.AddEndpointsApiExplorer();
 
 // Configure NSwag
 builder.Services.AddOpenApiDocument(document =>
@@ -20,6 +15,10 @@ builder.Services.AddOpenApiDocument(document =>
     document.Version = "v1";
     document.Description = "API Documentation using NSwag";
 });
+
+var app = builder.Build();
+
+Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})"); // Console message
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

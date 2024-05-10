@@ -38,8 +38,9 @@ public class ApplicationDbContext : DbContext
         // Configure User entity
         builder.ToTable("User");
         builder.HasKey(u => u.Id);
-        builder.Property(u => u.Username).IsRequired();
-        builder.Property(u => u.Password).IsRequired();
+        builder.Property(u => u.Username).IsRequired().HasMaxLength(100);
+        builder.Property(u => u.PasswordHash).IsRequired();
+        builder.Property(u => u.Salt).IsRequired();
         builder.Property(u => u.Type).IsRequired();
     }
 
