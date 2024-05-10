@@ -1,6 +1,6 @@
 ﻿namespace Motto.Models;
 
-public class MotorcycleYear2024Message
+public class MotorcycleMessage
 {
     public int Id { get; set; }
     public string Content { get; set; }

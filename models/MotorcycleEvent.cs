@@ -1,6 +1,6 @@
 ﻿namespace Motto.Models;
 
-public class MotorcycleRegisteredEvent
+public class MotorcycleEvent
 {
     public int Id { get; set; }
     public Motorcycle Motorcycle { get; set; }

@@ -1,12 +1,10 @@
 ﻿namespace Motto.Models;
 
-public class DeliveryDriver
+public class DeliveryDriver : User
 {
-    public int Identifier { get; set; }
-    public string Name { get; set; }
     public string CNPJ { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string DriverLicenseNumber { get; set; }
     public string DriverLicenseType { get; set; }
-    public byte[] DriverLicenseImage { get; set; } // Stored as byte[]
+    public string DriverLicenseImage { get; set; } // Path of license image
 }
