@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Motto.Entities;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -216,8 +217,8 @@ namespace entities.Migrations
                         {
                             Id = 1,
                             Name = "Admin",
-                            PasswordHash = "o570u1hVc3lzoV5QftuOVYK42L1RWVA2Mqek+Mb4fBg=",
-                            Salt = "kE7HnV3A+Iv/JJEl5qHN2A==",
+                            PasswordHash = "gkxC089fRCk83eD4vW+C3VSPWwqaxbsZFeXKNDIrPWE=",
+                            Salt = "i7l6dTL57EGuwGzfW8STuQ==",
                             Type = 0,
                             Username = "admin"
                         },
@@ -225,8 +226,8 @@ namespace entities.Migrations
                         {
                             Id = 2,
                             Name = "Entregador",
-                            PasswordHash = "VkO+F/wJE5FxVWofQiNbHfnSRMTxbcLA1JMWO2XRTYQ=",
-                            Salt = "AWf6PkcP3DDSBzG8phNGaw==",
+                            PasswordHash = "DiE/eT7HQkldH6mQWp283N5pExXk9IvKgH4nmrajPEo=",
+                            Salt = "MFNLqTMlqdQme+hivoG2dg==",
                             Type = 1,
                             Username = "entregador"
                         });

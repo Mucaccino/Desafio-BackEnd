@@ -9,11 +9,13 @@ public static class SeedData
     public static void Seed(ModelBuilder modelBuilder)
     {
         // Seed Users
+        var password = PasswordHasher.HashPassword("123mudar");
+        var password2 = PasswordHasher.HashPassword("123mudar");
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Name = "Admin", Username = "admin", PasswordHash = PasswordHasher.HashPassword("123mudar").HashedPassword,
-            Salt = PasswordHasher.HashPassword("123mudar").Salt, Type = UserType.Admin },
-            new User { Id = 2, Name = "Entregador", Username = "entregador", PasswordHash = PasswordHasher.HashPassword("123mudar").HashedPassword,
-            Salt = PasswordHasher.HashPassword("123mudar").Salt, Type = UserType.DeliveryDriver }
+            new User { Id = 1, Name = "Admin", Username = "admin", PasswordHash = password.HashedPassword,
+            Salt = password.Salt, Type = UserType.Admin },
+            new User { Id = 2, Name = "Entregador", Username = "entregador", PasswordHash = password2.HashedPassword,
+            Salt = password2.Salt, Type = UserType.DeliveryDriver }
         );
 
         // Seed RentalPlans

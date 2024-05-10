@@ -63,9 +63,10 @@ namespace entities.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    Salt = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -160,11 +161,11 @@ namespace entities.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "Name", "Password", "Type", "Username" },
+                columns: new[] { "Id", "Name", "PasswordHash", "Salt", "Type", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Admin", "123admin", 0, "admin" },
-                    { 2, "Entregador", "123entregador", 1, "entregador" }
+                    { 1, "Admin", "gkxC089fRCk83eD4vW+C3VSPWwqaxbsZFeXKNDIrPWE=", "i7l6dTL57EGuwGzfW8STuQ==", 0, "admin" },
+                    { 2, "Entregador", "DiE/eT7HQkldH6mQWp283N5pExXk9IvKgH4nmrajPEo=", "MFNLqTMlqdQme+hivoG2dg==", 1, "entregador" }
                 });
 
             migrationBuilder.CreateIndex(

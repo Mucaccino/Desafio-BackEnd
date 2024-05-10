@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders; 
+using Microsoft.Extensions.Configuration;
 using Motto.Models;
 
+namespace Motto.Entities;
+
 public class ApplicationDbContext : DbContext
-{
+{    
     public DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
     public DbSet<Motorcycle> Motorcycles { get; set; }
     public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
@@ -14,8 +17,14 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
         // Configure the connection string for PostgreSQL
-        optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=mottodb;User Id=mottouser;Password=mottopassword;");
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        optionsBuilder.UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

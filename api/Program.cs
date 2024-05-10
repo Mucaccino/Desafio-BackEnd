@@ -1,3 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Motto.Entities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Define default URLs 
@@ -16,48 +21,47 @@ builder.Services.AddOpenApiDocument(document =>
     document.Description = "API Documentation using NSwag";
 });
 
+// Configure JWT
+var jwtKey = new string(builder.Configuration["Jwt:Key"]);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddAuthorization();
+// Configure dbcontext and login
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddSingleton(jwtKey);
+
 var app = builder.Build();
 
-Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})"); // Console message
+Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {    
-    // Add OpenAPI 3.0 document serving middleware
-    // Available at: http://localhost:<port>/swagger/v1/swagger.json
     app.UseOpenApi();
-
-    // Add web UIs to interact with the document
-    // Available at: http://localhost:<port>/swagger
-    app.UseSwaggerUi(); // UseSwaggerUI Protected by if (env.IsDevelopment())
-
+    app.UseSwaggerUi();
+    app.UseReDoc(options =>
+    {
+        options.Path = "/redoc";
+    });
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

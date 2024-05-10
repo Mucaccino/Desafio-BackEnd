@@ -31,10 +31,11 @@ public class User
     public string? Name { get; set; }
     public string PasswordHash { get; set; }
     public string Salt { get; set; }
+    
     public void SetPassword(string password)
-{
-    (PasswordHash, Salt) = PasswordHasher.HashPassword(password);
-}
+    {
+        (PasswordHash, Salt) = PasswordHasher.HashPassword(password);
+    }
     public bool VerifyPassword(string password)
     {
         return PasswordHasher.VerifyPassword(password, Salt, PasswordHash);
