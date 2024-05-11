@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace entities.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240511171822_InitialCreate")]
+    [Migration("20240511223416_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,21 +35,41 @@ namespace entities.Migrations
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Plate")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(8)
+                        .IsUnicode(false)
+                        .HasColumnType("character(8)")
+                        .IsFixedLength();
 
                     b.Property<int>("Year")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Plate")
-                        .IsUnique();
+                    b.ToTable("Motorcycle", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Motorcycle_Plate_Format", "\"Plate\" ~ '[A-Z]{3}-[0-9]{4}'");
+                        });
 
-                    b.ToTable("Motorcycle", (string)null);
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Model = "Halley Davidson",
+                            Plate = "AAA-1234",
+                            Year = 1985
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Model = "Honda",
+                            Plate = "AAA-4321",
+                            Year = 1995
+                        });
                 });
 
             modelBuilder.Entity("Motto.Models.MotorcycleEvent", b =>
@@ -220,19 +240,10 @@ namespace entities.Migrations
                         {
                             Id = 1,
                             Name = "Usuário Administrador",
-                            PasswordHash = "DUuy0pqsHVXtHgiS3qyUqEq0k1+b+xU3jh17jvh6RqY=",
-                            Salt = "d7nw+RvwPgGqlrwsMT39Nw==",
+                            PasswordHash = "gLto+vG1is3S5NngG7y+mqxETMPGuqguDJnSXPr28sI=",
+                            Salt = "jF5FBIXGo8Kn+oPcpnhKdA==",
                             Type = 0,
                             Username = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Usuário Entregador",
-                            PasswordHash = "GiGpKU6bGKsx+ODP1oD7pbamKLKmNKfEjzvM9L7Y2P0=",
-                            Salt = "yhif/MuE5V0vA2eNT8U1PQ==",
-                            Type = 1,
-                            Username = "entregador"
                         });
                 });
 
@@ -245,10 +256,9 @@ namespace entities.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("date");
 
                     b.Property<string>("DriverLicenseImage")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("DriverLicenseNumber")
@@ -265,7 +275,29 @@ namespace entities.Migrations
                     b.HasIndex("DriverLicenseNumber")
                         .IsUnique();
 
-                    b.ToTable("DeliveryDriver", (string)null);
+                    b.ToTable("DeliveryDriver", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_DeliveryDriver_CNPJ_Format", "\"CNPJ\" ~ '[0-9]{14}'");
+
+                            t.HasCheckConstraint("CK_DeliveryDriver_DriverLicenseNumber_Format", "\"DriverLicenseNumber\" ~ '[0-9]{11}'");
+
+                            t.HasCheckConstraint("CK_DeliveryDriver_DriverLicenseType_Format", "\"DriverLicenseType\" IN ('A', 'B', 'AB')");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "Usuário Entregador",
+                            PasswordHash = "k/2Rq8NjNSklCgwE5BmrHNs8RXzULv62z4rgNUGIwSU=",
+                            Salt = "mYw5k6kl6TrZQIdE5oLFfQ==",
+                            Type = 1,
+                            Username = "entregador",
+                            CNPJ = "12345678901234",
+                            DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DriverLicenseNumber = "12345678901",
+                            DriverLicenseType = "AB"
+                        });
                 });
 
             modelBuilder.Entity("Motto.Models.MotorcycleEvent", b =>

@@ -1,15 +1,8 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Motto.Models;
 using Motto.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using System.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Motto.Api
 {
@@ -18,16 +11,15 @@ namespace Motto.Api
     public class UserController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly string _jwtKey;
 
-        public UserController(ApplicationDbContext dbContext, string jwtKey)
+        public UserController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _jwtKey = jwtKey;
         }
 
-        [HttpPost("register/deliveryDriver")]
-        public async Task<ActionResult<User>> RegisterDeliveryDriver(RegisterModel registerModel)
+        [HttpPost("register/admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<User>> RegisterAdmin(RegisterAdminModel registerModel)
         {
             if (!ModelState.IsValid)
             {
@@ -38,25 +30,73 @@ namespace Motto.Api
             {
                 Username = registerModel.Username,
                 Name = registerModel.Name,
-                Type = UserType.DeliveryDriver // Define o tipo de usuário como DeliveryDriver
+                Type = UserType.Admin
             };
 
             user.SetPassword(registerModel.Password);
 
-            // Hash da senha e outras lógicas de segurança podem ser aplicadas aqui, se necessário
-
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
-            return Ok("Usuário criado com sucesso");
+            return Ok("Administrador criado com sucesso");
+        }
+
+        [HttpPost("register/deliveryDriver")]
+        public async Task<ActionResult<User>> RegisterDeliveryDriver(RegisterDeliveryDriverModel registerModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new DeliveryDriver
+            {
+                Username = registerModel.Username,
+                Name = registerModel.Name,
+                CNPJ = registerModel.CNPJ,
+                DateOfBirth = registerModel.DateOfBirth,
+                DriverLicenseNumber = registerModel.DriverLicenseNumber,
+                DriverLicenseType = registerModel.DriverLicenseType,
+                DriverLicenseImage = registerModel.DriverLicenseImage,
+                Type = UserType.DeliveryDriver // Define o tipo de usuário como DeliveryDriver
+            };
+
+            user.SetPassword(registerModel.Password);
+            
+            try
+            {
+                _dbContext.Users.Add(user);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok("Entregador criado com sucesso");
+            }
+            catch (DbUpdateException ex)
+            {
+                // Se ocorrer um erro durante o salvamento no banco de dados
+                // Aqui você pode acessar as informações específicas do erro, se necessário
+                // Por exemplo, ex.InnerException.Message para obter a mensagem de erro detalhada
+                return StatusCode(500, "Erro ao salvar os dados no banco de dados: " + ex.Message);
+            }
         }
     }
 
-    public class RegisterModel
+    public class RegisterAdminModel
     {
         public required string Name { get; set; }
         public required string Username { get; set; }
         public required string Password { get; set; }
+    }
+
+    public class RegisterDeliveryDriverModel
+    {
+        public required string Name { get; set; }
+        public required string Username { get; set; }
+        public required string Password { get; set; }
+        public required string CNPJ { get; set; }
+        public required DateTime DateOfBirth { get; set; }
+        public required string DriverLicenseNumber { get; set; }
+        public required string DriverLicenseType { get; set; }
+        public string DriverLicenseImage { get; set; }
     }
 }
 

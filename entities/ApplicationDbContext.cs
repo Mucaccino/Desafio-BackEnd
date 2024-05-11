@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders; 
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
 using Motto.Models;
 
 namespace Motto.Entities;
 
 public class ApplicationDbContext : DbContext
-{   
+{
     public ApplicationDbContext() { }
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -14,7 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Motorcycle> Motorcycles { get; set; }
     public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
     public DbSet<Rental> Rentals { get; set; }
-    public DbSet<RentalPlan> RentalPlans { get; set; } 
+    public DbSet<RentalPlan> RentalPlans { get; set; }
     public DbSet<MotorcycleEvent> MotorcycleEvents { get; set; }
     public DbSet<MotorcycleMessage> MotorcycleMessages { get; set; }
 
@@ -40,7 +40,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<RentalPlan>(ConfigureRentalPlan);
         modelBuilder.Entity<MotorcycleEvent>(ConfigureMotorcycleEvent);
         modelBuilder.Entity<MotorcycleMessage>(ConfigureMotorcycleMessage);
-        
+
         // Seed data
         SeedData.Seed(modelBuilder);
     }
@@ -59,18 +59,37 @@ public class ApplicationDbContext : DbContext
     private void ConfigureMotorcycle(EntityTypeBuilder<Motorcycle> builder)
     {
         // Configure Motorcycle entity
-        builder.ToTable("Motorcycle");
+        builder.ToTable("Motorcycle", b =>
+            {
+                b.HasCheckConstraint("CK_Motorcycle_Plate_Format", "\"Plate\" ~ '[A-Z]{3}-[0-9]{4}'");
+            });
         builder.HasKey(m => m.Id);
-        builder.Property(m => m.Model).IsRequired();
-        builder.Property(m => m.Plate).IsRequired();
-        builder.HasIndex(m => m.Plate).IsUnique();
+        builder.Property(m => m.Model)
+            .IsRequired()
+            .HasMaxLength(100);
+        builder.Property(m => m.Year)
+            .IsRequired()
+            .HasColumnType("int");
+        builder.Property(m => m.Plate)
+            .IsRequired()
+            .HasMaxLength(8)
+            .IsFixedLength()
+            .IsUnicode(false);
     }
 
     private void ConfigureDeliveryDriver(EntityTypeBuilder<DeliveryDriver> builder)
     {
         // Configure DeliveryDriver entity
-        builder.ToTable("DeliveryDriver");
+        builder.ToTable("DeliveryDriver", b =>
+        {
+            b.HasCheckConstraint("CK_DeliveryDriver_DriverLicenseType_Format", "\"DriverLicenseType\" IN ('A', 'B', 'AB')");
+            b.HasCheckConstraint("CK_DeliveryDriver_CNPJ_Format", "\"CNPJ\" ~ '[0-9]{14}'");
+            b.HasCheckConstraint("CK_DeliveryDriver_DriverLicenseNumber_Format", "\"DriverLicenseNumber\" ~ '[0-9]{11}'");
+        });
         builder.HasBaseType<User>();
+        builder.Property(d => d.DateOfBirth).IsRequired().HasColumnType("date");
+        builder.Property(d => d.CNPJ).IsRequired();
+        builder.Property(d => d.DriverLicenseNumber).IsRequired();
         builder.HasIndex(d => d.CNPJ).IsUnique();
         builder.HasIndex(d => d.DriverLicenseNumber).IsUnique();
     }

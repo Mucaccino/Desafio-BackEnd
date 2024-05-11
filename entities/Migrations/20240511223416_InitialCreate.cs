@@ -20,13 +20,14 @@ namespace entities.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Year = table.Column<int>(type: "integer", nullable: false),
-                    Model = table.Column<string>(type: "text", nullable: false),
-                    Plate = table.Column<string>(type: "text", nullable: false)
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    Model = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Plate = table.Column<string>(type: "character(8)", unicode: false, fixedLength: true, maxLength: 8, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Motorcycle", x => x.Id);
+                    table.CheckConstraint("CK_Motorcycle_Plate_Format", "\"Plate\" ~ '[A-Z]{3}-[0-9]{4}'");
                 });
 
             migrationBuilder.CreateTable(
@@ -100,14 +101,17 @@ namespace entities.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
                     CNPJ = table.Column<string>(type: "text", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     DriverLicenseNumber = table.Column<string>(type: "text", nullable: false),
                     DriverLicenseType = table.Column<string>(type: "text", nullable: false),
-                    DriverLicenseImage = table.Column<string>(type: "text", nullable: false)
+                    DriverLicenseImage = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeliveryDriver", x => x.Id);
+                    table.CheckConstraint("CK_DeliveryDriver_CNPJ_Format", "\"CNPJ\" ~ '[0-9]{14}'");
+                    table.CheckConstraint("CK_DeliveryDriver_DriverLicenseNumber_Format", "\"DriverLicenseNumber\" ~ '[0-9]{11}'");
+                    table.CheckConstraint("CK_DeliveryDriver_DriverLicenseType_Format", "\"DriverLicenseType\" IN ('A', 'B', 'AB')");
                     table.ForeignKey(
                         name: "FK_DeliveryDriver_User_Id",
                         column: x => x.Id,
@@ -148,6 +152,15 @@ namespace entities.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Motorcycle",
+                columns: new[] { "Id", "Model", "Plate", "Year" },
+                values: new object[,]
+                {
+                    { 1, "Halley Davidson", "AAA-1234", 1985 },
+                    { 2, "Honda", "AAA-4321", 1995 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "RentalPlan",
                 columns: new[] { "Id", "DailyCost", "Days" },
                 values: new object[,]
@@ -164,9 +177,14 @@ namespace entities.Migrations
                 columns: new[] { "Id", "Name", "PasswordHash", "Salt", "Type", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Usuário Administrador", "DUuy0pqsHVXtHgiS3qyUqEq0k1+b+xU3jh17jvh6RqY=", "d7nw+RvwPgGqlrwsMT39Nw==", 0, "admin" },
-                    { 2, "Usuário Entregador", "GiGpKU6bGKsx+ODP1oD7pbamKLKmNKfEjzvM9L7Y2P0=", "yhif/MuE5V0vA2eNT8U1PQ==", 1, "entregador" }
+                    { 1, "Usuário Administrador", "gLto+vG1is3S5NngG7y+mqxETMPGuqguDJnSXPr28sI=", "jF5FBIXGo8Kn+oPcpnhKdA==", 0, "admin" },
+                    { 2, "Usuário Entregador", "k/2Rq8NjNSklCgwE5BmrHNs8RXzULv62z4rgNUGIwSU=", "mYw5k6kl6TrZQIdE5oLFfQ==", 1, "entregador" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "DeliveryDriver",
+                columns: new[] { "Id", "CNPJ", "DateOfBirth", "DriverLicenseImage", "DriverLicenseNumber", "DriverLicenseType" },
+                values: new object[] { 2, "12345678901234", new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "12345678901", "AB" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryDriver_CNPJ",
@@ -178,12 +196,6 @@ namespace entities.Migrations
                 name: "IX_DeliveryDriver_DriverLicenseNumber",
                 table: "DeliveryDriver",
                 column: "DriverLicenseNumber",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Motorcycle_Plate",
-                table: "Motorcycle",
-                column: "Plate",
                 unique: true);
 
             migrationBuilder.CreateIndex(
