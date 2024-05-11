@@ -8,22 +8,6 @@ public enum UserType
     DeliveryDriver
 }
 
-/*
-// to create a new user
-var user = new User
-{
-    Username = "userx",
-};
-user.SetPassword("password123");
-
-// to verify password
-var user = dbContext.Users.FirstOrDefault(u => u.Username == "alice");
-if (user != null && user.VerifyPassword("password123"))
-{
-    // Senha correta
-}
-*/
-
 public class User
 {
     public int Id { get; set; }

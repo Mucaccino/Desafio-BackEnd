@@ -216,18 +216,18 @@ namespace entities.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Admin",
-                            PasswordHash = "gkxC089fRCk83eD4vW+C3VSPWwqaxbsZFeXKNDIrPWE=",
-                            Salt = "i7l6dTL57EGuwGzfW8STuQ==",
+                            Name = "Usuário Administrador",
+                            PasswordHash = "DUuy0pqsHVXtHgiS3qyUqEq0k1+b+xU3jh17jvh6RqY=",
+                            Salt = "d7nw+RvwPgGqlrwsMT39Nw==",
                             Type = 0,
                             Username = "admin"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Entregador",
-                            PasswordHash = "DiE/eT7HQkldH6mQWp283N5pExXk9IvKgH4nmrajPEo=",
-                            Salt = "MFNLqTMlqdQme+hivoG2dg==",
+                            Name = "Usuário Entregador",
+                            PasswordHash = "GiGpKU6bGKsx+ODP1oD7pbamKLKmNKfEjzvM9L7Y2P0=",
+                            Salt = "yhif/MuE5V0vA2eNT8U1PQ==",
                             Type = 1,
                             Username = "entregador"
                         });

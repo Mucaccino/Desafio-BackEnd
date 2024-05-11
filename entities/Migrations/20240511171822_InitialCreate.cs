@@ -164,8 +164,8 @@ namespace entities.Migrations
                 columns: new[] { "Id", "Name", "PasswordHash", "Salt", "Type", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Admin", "gkxC089fRCk83eD4vW+C3VSPWwqaxbsZFeXKNDIrPWE=", "i7l6dTL57EGuwGzfW8STuQ==", 0, "admin" },
-                    { 2, "Entregador", "DiE/eT7HQkldH6mQWp283N5pExXk9IvKgH4nmrajPEo=", "MFNLqTMlqdQme+hivoG2dg==", 1, "entregador" }
+                    { 1, "Usuário Administrador", "DUuy0pqsHVXtHgiS3qyUqEq0k1+b+xU3jh17jvh6RqY=", "d7nw+RvwPgGqlrwsMT39Nw==", 0, "admin" },
+                    { 2, "Usuário Entregador", "GiGpKU6bGKsx+ODP1oD7pbamKLKmNKfEjzvM9L7Y2P0=", "yhif/MuE5V0vA2eNT8U1PQ==", 1, "entregador" }
                 });
 
             migrationBuilder.CreateIndex(

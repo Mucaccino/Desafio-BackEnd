@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Net.Http.Headers;
 
 namespace Motto.Api
 {
@@ -24,7 +26,19 @@ namespace Motto.Api
             _jwtKey = jwtKey;
         }
 
-        [HttpPost("login")] // Mudança do verbo HTTP de GET para POST para melhorar a segurança
+        [HttpGet("admin"), Authorize(Policy = "Admin")]
+        public string GetAdmin()
+        {
+            return "Admin Authorized";
+        }
+
+        [HttpGet("deliveryDriver"), Authorize(Policy = "DeliveryDriver")]
+        public string GetDeliveryDriver()
+        {
+            return "DeliveryDriver Authorized";
+        }
+
+        [HttpPost("login")]
         public async Task<ActionResult<User>> AuthenticateUser(LoginModel loginModel)
         {
             // Verifique se o modelo de login é válido (ex: campos obrigatórios preenchidos)
@@ -47,26 +61,32 @@ namespace Motto.Api
                 return Unauthorized("Senha incorreta");
             }
 
-            var token = GenerateJwtToken(loginModel.Username);
+            // Configure jwt token
+            var token = GenerateJwtToken(user);
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             return Ok(new { Token = token });
         }
         
-        private string GenerateJwtToken(string username)
+        private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtKey); // Defina sua chave secreta
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, username),
-                    // Adicione quaisquer outras reivindicações necessárias
-                }),
+                Subject = new ClaimsIdentity(
+                [
+                    new Claim(JwtRegisteredClaimNames.Name, user.Username),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                    new Claim(ClaimTypes.Role, user.Type.ToString())
+                ]),
                 Expires = DateTime.UtcNow.AddHours(1), // Defina a expiração do token
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-
+       
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
@@ -76,8 +96,8 @@ namespace Motto.Api
 
     public class LoginModel
     {
-        public string? Username { get; internal set; }
-        public string? Password { get; internal set; }
+        public required string Username { get; set; }
+        public required string Password { get; set; }
     }
 }
 

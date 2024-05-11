@@ -6,7 +6,10 @@ using Motto.Models;
 namespace Motto.Entities;
 
 public class ApplicationDbContext : DbContext
-{    
+{   
+    public ApplicationDbContext() { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
     public DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
     public DbSet<Motorcycle> Motorcycles { get; set; }
     public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
