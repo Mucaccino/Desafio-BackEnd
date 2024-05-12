@@ -66,7 +66,7 @@ namespace Motto.Api
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            return Ok(new { Token = token });
+            return Ok(new { Token = $"Bearer {token}", UserId = user.Id });
         }
         
         private string GenerateJwtToken(User user)
@@ -78,6 +78,7 @@ namespace Motto.Api
             {
                 Subject = new ClaimsIdentity(
                 [
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Name, user.Username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),

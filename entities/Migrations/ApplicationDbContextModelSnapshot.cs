@@ -133,6 +133,9 @@ namespace entities.Migrations
                     b.Property<decimal>("PenaltyCost")
                         .HasColumnType("numeric");
 
+                    b.Property<int>("RentalPlanId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
 
@@ -144,6 +147,8 @@ namespace entities.Migrations
                     b.HasIndex("DeliveryDriverId");
 
                     b.HasIndex("MotorcycleId");
+
+                    b.HasIndex("RentalPlanId");
 
                     b.ToTable("Rental", (string)null);
                 });
@@ -237,8 +242,8 @@ namespace entities.Migrations
                         {
                             Id = 1,
                             Name = "Usuário Administrador",
-                            PasswordHash = "gLto+vG1is3S5NngG7y+mqxETMPGuqguDJnSXPr28sI=",
-                            Salt = "jF5FBIXGo8Kn+oPcpnhKdA==",
+                            PasswordHash = "IWsJIfH/pPqlLPHjzDLxGVWVjpvAM+ReG1hV65gXSL0=",
+                            Salt = "bKeBJ/CYO+3AM7y6G1qncw==",
                             Type = 0,
                             Username = "admin"
                         });
@@ -286,8 +291,8 @@ namespace entities.Migrations
                         {
                             Id = 2,
                             Name = "Usuário Entregador",
-                            PasswordHash = "k/2Rq8NjNSklCgwE5BmrHNs8RXzULv62z4rgNUGIwSU=",
-                            Salt = "mYw5k6kl6TrZQIdE5oLFfQ==",
+                            PasswordHash = "Cz8m4JWkmIeRUnqJX2RA5GFCRwqQ/Dkj8UPXUXYy5Zw=",
+                            Salt = "NGvULlho+9JkN5IhxAOIOw==",
                             Type = 1,
                             Username = "entregador",
                             CNPJ = "12345678901234",
@@ -322,9 +327,17 @@ namespace entities.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Motto.Models.RentalPlan", "RentalPlan")
+                        .WithMany()
+                        .HasForeignKey("RentalPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("DeliveryDriver");
 
                     b.Navigation("Motorcycle");
+
+                    b.Navigation("RentalPlan");
                 });
 
             modelBuilder.Entity("Motto.Models.DeliveryDriver", b =>

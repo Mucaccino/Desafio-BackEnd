@@ -101,6 +101,7 @@ public class ApplicationDbContext : DbContext
         builder.HasKey(r => r.Id);
         builder.HasOne(r => r.Motorcycle).WithMany().HasForeignKey(r => r.MotorcycleId);
         builder.HasOne(r => r.DeliveryDriver).WithMany().HasForeignKey(r => r.DeliveryDriverId);
+        builder.HasOne(r => r.RentalPlan).WithMany().HasForeignKey(r => r.RentalPlanId);
         builder.Property(r => r.StartDate).IsRequired().HasColumnType("date");
         builder.Property(r => r.EndDate).IsRequired().HasColumnType("date");
         builder.Property(r => r.ExpectedEndDate).IsRequired().HasColumnType("date");

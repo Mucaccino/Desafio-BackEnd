@@ -128,6 +128,7 @@ namespace entities.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     MotorcycleId = table.Column<int>(type: "integer", nullable: false),
                     DeliveryDriverId = table.Column<int>(type: "integer", nullable: false),
+                    RentalPlanId = table.Column<int>(type: "integer", nullable: false),
                     StartDate = table.Column<DateTime>(type: "date", nullable: false),
                     EndDate = table.Column<DateTime>(type: "date", nullable: false),
                     ExpectedEndDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -147,6 +148,12 @@ namespace entities.Migrations
                         name: "FK_Rental_Motorcycle_MotorcycleId",
                         column: x => x.MotorcycleId,
                         principalTable: "Motorcycle",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Rental_RentalPlan_RentalPlanId",
+                        column: x => x.RentalPlanId,
+                        principalTable: "RentalPlan",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -177,8 +184,8 @@ namespace entities.Migrations
                 columns: new[] { "Id", "Name", "PasswordHash", "Salt", "Type", "Username" },
                 values: new object[,]
                 {
-                    { 1, "Usuário Administrador", "gLto+vG1is3S5NngG7y+mqxETMPGuqguDJnSXPr28sI=", "jF5FBIXGo8Kn+oPcpnhKdA==", 0, "admin" },
-                    { 2, "Usuário Entregador", "k/2Rq8NjNSklCgwE5BmrHNs8RXzULv62z4rgNUGIwSU=", "mYw5k6kl6TrZQIdE5oLFfQ==", 1, "entregador" }
+                    { 1, "Usuário Administrador", "IWsJIfH/pPqlLPHjzDLxGVWVjpvAM+ReG1hV65gXSL0=", "bKeBJ/CYO+3AM7y6G1qncw==", 0, "admin" },
+                    { 2, "Usuário Entregador", "Cz8m4JWkmIeRUnqJX2RA5GFCRwqQ/Dkj8UPXUXYy5Zw=", "NGvULlho+9JkN5IhxAOIOw==", 1, "entregador" }
                 });
 
             migrationBuilder.InsertData(
@@ -212,6 +219,11 @@ namespace entities.Migrations
                 name: "IX_Rental_MotorcycleId",
                 table: "Rental",
                 column: "MotorcycleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rental_RentalPlanId",
+                table: "Rental",
+                column: "RentalPlanId");
         }
 
         /// <inheritdoc />
@@ -227,13 +239,13 @@ namespace entities.Migrations
                 name: "Rental");
 
             migrationBuilder.DropTable(
-                name: "RentalPlan");
-
-            migrationBuilder.DropTable(
                 name: "DeliveryDriver");
 
             migrationBuilder.DropTable(
                 name: "Motorcycle");
+
+            migrationBuilder.DropTable(
+                name: "RentalPlan");
 
             migrationBuilder.DropTable(
                 name: "User");

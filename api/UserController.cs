@@ -71,9 +71,6 @@ namespace Motto.Api
             }
             catch (DbUpdateException ex)
             {
-                // Se ocorrer um erro durante o salvamento no banco de dados
-                // Aqui você pode acessar as informações específicas do erro, se necessário
-                // Por exemplo, ex.InnerException.Message para obter a mensagem de erro detalhada
                 return StatusCode(500, "Erro ao salvar os dados no banco de dados: " + ex.Message);
             }
         }
