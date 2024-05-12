@@ -50,13 +50,14 @@ public class LicenseImageService : IMinioService
             else
             {
                 Console.WriteLine($"O bucket '{_bucketName}' já existe.");
-                return false;
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao verificar ou criar o bucket '{_bucketName}': {ex.Message}");
         }
+            
+        return false;
     }
 
     public async Task<MemoryStream> GetImageAsync(string fileName)

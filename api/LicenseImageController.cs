@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Motto.Models;
+using Motto.Utils;
 using Motto.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,20 @@ namespace Motto.Api
             _minioService = minioService;
         }
 
-        // [Authorize(Roles = "DeliveryDriver")]
         [HttpPost("{id}/upload-image")]
+        [Authorize(Roles = "DeliveryDriver")]
         public async Task<IActionResult> UploadImage(int id, IFormFile image)
         {
             if (image == null || image.Length == 0)
             {
                 return BadRequest("A imagem não foi enviada.");
+            }
+
+            // Verificar o tipo MIME do arquivo
+            var mimeType = ImageUtils.GetMimeType(image.FileName);
+            if (mimeType != "image/png" && mimeType != "image/bmp")
+            {
+                return BadRequest("O formato do arquivo deve ser PNG ou BMP.");
             }
 
             var driver = await _dbContext.DeliveryDrivers.FindAsync(id);
@@ -54,6 +62,7 @@ namespace Motto.Api
         }
 
         [HttpGet("{id}/image")]
+        [Authorize(Roles = "Admin, DeliveryDriver")]
         public async Task<IActionResult> GetImage(int id)
         {
             // Verificar se o DeliveryDriver com o ID especificado existe
