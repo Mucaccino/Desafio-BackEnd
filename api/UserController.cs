@@ -57,7 +57,6 @@ namespace Motto.Api
                 DateOfBirth = registerModel.DateOfBirth,
                 DriverLicenseNumber = registerModel.DriverLicenseNumber,
                 DriverLicenseType = registerModel.DriverLicenseType,
-                DriverLicenseImage = registerModel.DriverLicenseImage,
                 Type = UserType.DeliveryDriver // Define o tipo de usuário como DeliveryDriver
             };
 
@@ -96,7 +95,7 @@ namespace Motto.Api
         public required DateTime DateOfBirth { get; set; }
         public required string DriverLicenseNumber { get; set; }
         public required string DriverLicenseType { get; set; }
-        public string DriverLicenseImage { get; set; }
+        public string? DriverLicenseImage { get; set; }
     }
 }
 

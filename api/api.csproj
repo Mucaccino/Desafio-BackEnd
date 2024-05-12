@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
+    <PackageReference Include="Minio" Version="6.0.2" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
     <ProjectReference Include="..\models\models.csproj" />

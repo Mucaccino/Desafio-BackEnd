@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Motto.Api;
 using Motto.Entities;
 using Motto.Models;
 using NSwag.Generation.Processors.Security;
@@ -72,8 +73,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("DeliveryDriver", policy => policy.RequireRole(UserType.DeliveryDriver.ToString()));
 });
 
-// Configure dbcontext and login
 builder.Services.AddSingleton(jwtKey);
+
+// Configuração do MinIO
+builder.Services.AddSingleton<IMinioService>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    return new LicenseImageService(configuration);
+});
 
 var app = builder.Build();
 

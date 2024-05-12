@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   api:
     image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
@@ -10,13 +12,17 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+      - minio
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=mottodb;Username=mottouser;Password=mottopassword
       - RABBITMQ_CONNECTION_STRING=amqp://guest:guest@rabbitmq:5672/
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
     networks:
       - motto-net
-  
+
   postgres:
     image: postgres:latest
     container_name: motto-postgres
@@ -40,8 +46,27 @@ services:
     networks:
       - motto-net
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    build:
+      context: ./dockerfiles/dockerfile_minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: miniopass
+    working_dir: "/minio/storage"
+    volumes:
+      - ./Storage/minio/storage:/minio/storage
+    command: server /minio/storage --console-address :9001
+    networks:
+      - motto-net
+
 networks:
   motto-net:
 
 volumes:
   postgres-data:
+  minio-data:
