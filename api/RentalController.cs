@@ -110,36 +110,12 @@ public class RentalController : ControllerBase
             return BadRequest("Plano de aluguel inválido.");
         }
 
-        // Calcular a multa e o custo adicional, se aplicável
-        if (endDate < rental.ExpectedEndDate)
-        {
-            int daysLate = (int)(rental.ExpectedEndDate - endDate).TotalDays;
-
-            decimal lateFeePercentage = 0.0m;
-            if (rentalPlan.Days == 7)
-            {
-                lateFeePercentage = 0.2m;
-            }
-            else if (rentalPlan.Days == 15)
-            {
-                lateFeePercentage = 0.4m;
-            }
-
-            decimal lateFee = rentalPlan.DailyCost * daysLate * lateFeePercentage;
-            rental.PenaltyCost = lateFee;
-
-            rental.TotalCost += lateFee;
-        }
-        else if (endDate > rental.ExpectedEndDate)
-        {
-            int additionalDays = (int)(endDate - rental.ExpectedEndDate).TotalDays;
-            rental.TotalCost += 50 * additionalDays;
-        }
+        var totalCostInfo = GetTotalCost(rental, endDate);
         
         try
         {
             await _dbContext.SaveChangesAsync();
-            return Ok(new { rental.TotalCost, Message = "Entrega registrada com sucesso." });
+            return Ok(new { Cost = totalCostInfo, Message = "Entrega registrada com sucesso." });
         }
         catch (DbUpdateException ex)
         {
@@ -189,6 +165,16 @@ public class RentalController : ControllerBase
             return NotFound();
         }
 
+        var totalCostInfo = GetTotalCost(rental, endDate);
+
+        return Ok(totalCostInfo);
+    }
+
+
+    public RentalTotalCostModel GetTotalCost(Rental rental, DateTime endDate) {
+        // Se a data final for nula, marca como dia atual
+        if (endDate == default(DateTime)) endDate = DateTime.Today;
+
         // Calcular a multa e o custo adicional, se aplicável
         if (endDate < rental.ExpectedEndDate)
         {
@@ -212,20 +198,15 @@ public class RentalController : ControllerBase
         else if (endDate > rental.ExpectedEndDate)
         {
             int additionalDays = (int)(endDate - rental.ExpectedEndDate).TotalDays;
-            rental.TotalCost += 50 * additionalDays;
+            rental.PenaltyCost = 50 * additionalDays;
+            
+            rental.TotalCost += rental.PenaltyCost;
         }
 
-        return Ok(rental.TotalCost);
-    }
-
-
-    public decimal GetTotalCost(DateTime startDate, DateTime endDate, decimal dailyCost) {
-        // Calcular a duração do aluguel em dias
-        TimeSpan duration = endDate - startDate;
-        int totalDays = (int)duration.TotalDays;
-        
-        // Calcular o custo total com base no plano selecionado
-        return dailyCost * totalDays;
+        return new RentalTotalCostModel() { 
+            BaseCost = rental.TotalCost - rental.PenaltyCost, 
+            PenaltyCost = rental.PenaltyCost, 
+            TotalCost = rental.TotalCost};
     }
     
 }
@@ -234,4 +215,11 @@ public class RentalRegisterModel
 { 
     public int MotorcycleId { get; set; }
     public int RentalPlanId { get; set; }
+}
+
+public class RentalTotalCostModel
+{ 
+    public decimal BaseCost { get; set; }
+    public decimal PenaltyCost { get; set; }
+    public decimal TotalCost { get; set; }
 }
