@@ -7,33 +7,31 @@ public class RabbitMQService
 {
     private readonly string _connectionString;
     private IConnection? _connection;
+    private IModel? _channel;
 
     public RabbitMQService(string connectionString)
     {
         _connectionString = connectionString;
+
+        Connect();
     }
 
-    public void Connect()
+    private void Connect()
     {
-        EnsureConnection();
+        var factory = new ConnectionFactory
+        {
+            Uri = new Uri(_connectionString)
+        };
+
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
+    }
+
+    public IConnection? GetConnection() {
+        return _connection;
     }
     
-    public IConnection GetConnection()
-    {
-        EnsureConnection();
-        return _connection!;
-    }
-
-    private void EnsureConnection()
-    {
-        if (_connection == null)
-        {
-            var factory = new ConnectionFactory
-            {
-                Uri = new Uri(_connectionString)
-            };
-
-            _connection = factory.CreateConnection();
-        }
+    public IModel? GetChannel() {
+        return _channel;
     }
 }

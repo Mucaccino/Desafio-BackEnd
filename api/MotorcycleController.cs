@@ -36,8 +36,8 @@ public class MotorcycleController : ControllerBase
                 Plate = model.Plate
             };
 
-            _dbContext.Motorcycles.Add(motorcycle);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Motorcycles.Add(motorcycle);            
+            await _dbContext.SaveChangesAsync(); // mover pra baixo
 
             // Disparar evento do RabbitMQ para moto cadastrada com sucesso
             motorcycleEventProducer.PublishMotorcycleRegisteredEvent(motorcycle); // Chamada síncrona

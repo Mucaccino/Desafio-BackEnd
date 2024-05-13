@@ -91,6 +91,9 @@ builder.Services.AddSingleton<RabbitMQService>(sp =>
     return new RabbitMQService(connectionString);
 });
 
+
+builder.Services.AddSingleton<MotorcycleEventProducer>();
+
 // Adicionado consumidor de evento
 builder.Services.AddHostedService<MotorcycleEventConsumer>();
 
