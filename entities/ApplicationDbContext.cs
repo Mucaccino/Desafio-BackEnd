@@ -75,6 +75,7 @@ public class ApplicationDbContext : DbContext
             .HasMaxLength(8)
             .IsFixedLength()
             .IsUnicode(false);
+        builder.HasIndex(d => d.Plate).IsUnique();
     }
 
     private void ConfigureDeliveryDriver(EntityTypeBuilder<DeliveryDriver> builder)
