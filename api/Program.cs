@@ -6,6 +6,7 @@ using Motto.Api;
 using Motto.Entities;
 using Motto.Models;
 using NSwag.Generation.Processors.Security;
+using Motto.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +82,17 @@ builder.Services.AddSingleton<IMinioService>(sp =>
     var configuration = sp.GetRequiredService<IConfiguration>();
     return new LicenseImageService(configuration);
 });
+
+// Adicione o serviço RabbitMQ ao contêiner de serviços
+builder.Services.AddSingleton<RabbitMQService>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var connectionString = builder.Configuration["RabbitMQ:ConnectionString"];
+    return new RabbitMQService(connectionString);
+});
+
+// Adicionado consumidor de evento
+builder.Services.AddHostedService<MotorcycleEventConsumer>();
 
 var app = builder.Build();
 

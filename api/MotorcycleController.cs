@@ -19,7 +19,7 @@ public class MotorcycleController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPost("create")]
-    public async Task<IActionResult> Create([FromBody] MotorcycleCreateModel model)
+   public async Task<IActionResult> Create([FromBody] MotorcycleCreateModel model, [FromServices] MotorcycleEventProducer motorcycleEventProducer)
     {
         if (!ModelState.IsValid)
         {
@@ -38,6 +38,9 @@ public class MotorcycleController : ControllerBase
 
             _dbContext.Motorcycles.Add(motorcycle);
             await _dbContext.SaveChangesAsync();
+
+            // Disparar evento do RabbitMQ para moto cadastrada com sucesso
+            motorcycleEventProducer.PublishMotorcycleRegisteredEvent(motorcycle); // Chamada síncrona
 
             return Ok("Moto cadastrada com sucesso");
         }

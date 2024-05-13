@@ -95,7 +95,6 @@ public class RentalController : ControllerBase
             return BadRequest("A moto já foi entregue.");
         }
 
-        // Registrar a data de entrega como a data atual
         if (endDate < rental.StartDate)
         {
             return BadRequest("A data de entrega não pode ser anterior à data de retirada.");
@@ -163,6 +162,11 @@ public class RentalController : ControllerBase
         if (rental == null)
         {
             return NotFound();
+        }
+        
+        if (endDate < rental.StartDate)
+        {
+            return BadRequest("A data de entrega não pode ser anterior à data de retirada.");
         }
 
         var totalCostInfo = GetTotalCost(rental, endDate);

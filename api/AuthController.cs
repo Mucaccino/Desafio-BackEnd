@@ -26,13 +26,13 @@ namespace Motto.Api
             _jwtKey = jwtKey;
         }
 
-        [HttpGet("admin"), Authorize(Roles = "Admin")]
+        [HttpGet("verify/admin"), Authorize(Roles = "Admin")]
         public string GetAdmin()
         {
             return "Admin Authorized";
         }
 
-        [HttpGet("deliveryDriver"), Authorize(Roles = "DeliveryDriver")]
+        [HttpGet("verify/deliveryDriver"), Authorize(Roles = "DeliveryDriver")]
         public string GetDeliveryDriver()
         {
             return "DeliveryDriver Authorized";
