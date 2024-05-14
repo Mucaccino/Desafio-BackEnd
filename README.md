@@ -1,42 +1,65 @@
 # Desafio backend.
 Seja muito bem-vindo ao desafio backend.
 
-## Docker
+## Arquitetura
 
-Define três serviços: api, postgres e RabbitMQ:
+A solução é integralmente desenvolvida em .NET 8, utilizando EF Core, RabbitMQ, PostgreSQL, MinIO e possui ambiente para execução em Docker.
 
-- O serviço api usa a imagem do SDK do .NET Core 3.1, definindo as variáveis de ambiente para configuração do banco de dados PostgreSQL e do RabbitMQ.
-- O serviço postgres usa a imagem do PostgreSQL e define as variáveis de ambiente para criar um usuário, senha e banco de dados.
-- O serviço RabbitMQ usa a imagem do emulador do RabbitMQ para simular o serviço.
-- As portas 5000 (API), 5432 (PostgreSQL) e 5672 (RabbitMQ) são expostas para acesso externo.
-- Define uma rede chamada motto-net para comunicação entre os serviços.
-- Usa um volume chamado postgres-data para persistir os dados do PostgreSQL.
+### Estrutura da Solução
 
-## API .NET Core
+* Projeto `api`
+    * Webapp com controllers e serviços relacionados.
+    * Interface Swagger UI quando executado em Development.
+* Projeto `models`
+    * Classlib com modelos e classes de dominio.
+* Projeto `entities`
+    * Classlib que inclui `models` e trata a infra com EF Core.
+* Projeto `utils`
+    * Classlib com classes e métodos estáticos de auxilio.
+* Projeto `workers`
+    * Worker com consumer da fila de mensagens.
+    * Inspeciona as mensagens e exibe no Logger.
 
-O Dockerfile cria duas etapas:
-- (build) é usada para restaurar as dependências e compilar o código.
-- (runtime) é usada para criar a imagem final para execução da aplicação.
+### Setup do Projeto
 
-- Localizado na pasta `/api`.
-- Você poderá acessar o Swagger em http://localhost:5000/swagger.
-- token JWT para autenticação
+> ___TODO__ makefile para setup do projeto_
 
-
-## Entities
-
-- dotnet tool install --global dotnet-ef
-
-## RabbitMQ
-
-- Porta 5672 para conexões.
-- Porta 15672 para acesso ao admin.
-
-`RABBITMQ_CONNECTION_STRING=amqp://guest:guest@rabbitmq:5672/`
-
-## Execução
-
+Executar ambiente docker
+```
 > docker compose build
 > docker compose up
+```
+Realizar update do migrations
+```
+> cd ./entities 
+> dotnet tool install --global dotnet-ef
+> dotnet ef database update
+```
 
-- dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123
+## Ambiente Docker
+
+A estrutura do Docker cria o ambiente propício para o desenvolvimento ou produção da solução completa, com todos os serviços externos necessários, como o RabbitMQ, MinIO e PostgreSQL. 
+
+O aplicativo API e WORKERS também estão adicionados ao docker-compose para possibilitar o ambiente stage completo rodando localmente, sem necessidade do um ambiente de desenvolvimento.
+
+### Containers
+
+* `postgresql`
+    * executa uma imagem do PostgreSQL, usado como base de dados
+* `rabbitmq`
+    * executa a imagem do RabbitMQ, usada como messageria
+* `minio`
+    * executa a imagem do MinIO, usada como bucket de arquivos 
+* `api`
+    * executa o build do projeto `/api` em localhost:5000
+    * para acessar o SwaggerUI entrar no endereço localhost:5000/swagger
+* `workers`
+    * executa o build do projeto `/workers`, para escuta de fila de mensagens
+
+## Adicional
+
+- O projeto contém um [TODO](TODO.md), que deve ser mantido.
+- A solução ainda carece da implementação do projeto de testes.
+- Necessário repassar o projeto incluindo Loggers no decorrer da execução.
+- Usado para criar os certificados para HTTPS dentro do Docker:
+`dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123`
