@@ -1,4 +1,4 @@
-# Desafio backend.
+# Desafio Back-end
 
 Seja muito bem-vindo ao desafio backend. Seu objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
 
@@ -92,6 +92,12 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 - Recupere o valor da propriedade token, retornada pelo `api/Auth/login`, clique no botão `Authorize` da interface do Swagger UI e adicione o valor do token para autenticação (Ex.: Bearer 213das9bn7h21...).
 - Pode verificar as autorizações de cada um dos tipos de usuários em `api/Auth/verify/admin` ou `api/Auth/verify/deliveryDriver`
 - Com o Swagger UI autenticado, os end-points criado baseado nas especificações do desafio podem ser devidamente utilizadas 
+
+#### Consumer no console
+
+- O container `workers` contém o consumidor das mensagens do RabbitMQ
+- As mensagens recebidas são exibidas como mensagens do ILogger
+- Para verificar seu funcionamento, consultar o `output` do container
 
 ## Adicional
 
