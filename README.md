@@ -9,7 +9,7 @@ Define três serviços: api, postgres e RabbitMQ:
 - O serviço postgres usa a imagem do PostgreSQL e define as variáveis de ambiente para criar um usuário, senha e banco de dados.
 - O serviço RabbitMQ usa a imagem do emulador do RabbitMQ para simular o serviço.
 - As portas 5000 (API), 5432 (PostgreSQL) e 5672 (RabbitMQ) são expostas para acesso externo.
-- Define uma rede chamada mottu-net para comunicação entre os serviços.
+- Define uma rede chamada motto-net para comunicação entre os serviços.
 - Usa um volume chamado postgres-data para persistir os dados do PostgreSQL.
 
 ## API .NET Core
@@ -17,6 +17,15 @@ Define três serviços: api, postgres e RabbitMQ:
 O Dockerfile cria duas etapas:
 - (build) é usada para restaurar as dependências e compilar o código.
 - (runtime) é usada para criar a imagem final para execução da aplicação.
+
+- Localizado na pasta `/api`.
+- Você poderá acessar o Swagger em http://localhost:5000/swagger.
+- token JWT para autenticação
+
+
+## Entities
+
+- dotnet tool install --global dotnet-ef
 
 ## RabbitMQ
 
@@ -27,4 +36,7 @@ O Dockerfile cria duas etapas:
 
 ## Execução
 
-> docker-compose up
+> docker compose build
+> docker compose up
+
+- dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123
