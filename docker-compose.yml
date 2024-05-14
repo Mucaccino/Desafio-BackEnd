@@ -1,31 +1,10 @@
-version: '3.7'
+version: '3.8'
 
 services:
-  api:
-    image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
-    container_name: motto-api
-    build:
-      context: .
-      dockerfile: api/Dockerfile
-    ports:
-      - "5000:5000"
-    depends_on:
-      - postgres
-      - rabbitmq
-      - minio
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=mottodb;Username=mottouser;Password=mottopassword
-      - RABBITMQ_CONNECTION_STRING=amqp://guest:guest@rabbitmq:5672/
-      - MINIO_ENDPOINT=minio:9000
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-    networks:
-      - motto-net
 
   postgres:
     image: postgres:latest
-    container_name: motto-postgres
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -39,18 +18,21 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: motto-rabbitmq
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
     networks:
       - motto-net
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_listener 5672
+      interval: 1s
+      timeout: 1s
+      retries: 100
 
   minio:
     image: minio/minio
     container_name: minio
-    build:
-      context: ./dockerfiles/dockerfile_minio
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -61,6 +43,50 @@ services:
     volumes:
       - ./Storage/minio/storage:/minio/storage
     command: server /minio/storage --console-address :9001
+    networks:
+      - motto-net
+      
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    depends_on:
+      postgres: 
+        condition: service_started
+      minio: 
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_HTTPS_PORT=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=mottodb;Username=mottouser;Password=mottopassword
+      - RabbitMQ__ConnectionString=amqp://guest:guest@rabbitmq:5672/
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+    networks:
+      - motto-net
+    volumes:
+        - ./api/https/aspnetapp.pfx:/https/aspnetapp.pfx
+
+  workers:
+    container_name: workers
+    build:
+      context: .
+      dockerfile: workers/Dockerfile
+    ports:
+      - "5002:5002"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - motto-net
 

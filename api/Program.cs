@@ -10,13 +10,7 @@ using Motto.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Define default URLs 
-
-var urls = new string[] { "http://localhost:5000", "https://localhost:5001" };
-builder.WebHost.UseUrls(urls);
-
 // Add services to the container
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -84,18 +78,13 @@ builder.Services.AddSingleton<IMinioService>(sp =>
 });
 
 // Adicione o serviço RabbitMQ ao contêiner de serviços
-builder.Services.AddSingleton<RabbitMQService>(sp =>
-{
-    var configuration = sp.GetRequiredService<IConfiguration>();
-    var connectionString = builder.Configuration["RabbitMQ:ConnectionString"];
-    return new RabbitMQService(connectionString);
-});
+builder.Services.AddSingleton<RabbitMQService>();
 
 
 builder.Services.AddSingleton<MotorcycleEventProducer>();
 
 // Adicionado consumidor de evento
-builder.Services.AddHostedService<MotorcycleEventConsumer>();
+// builder.Services.AddHostedService<MotorcycleEventConsumer>();
 
 var app = builder.Build();
 
@@ -112,7 +101,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers();
 app.UseAuthentication();
