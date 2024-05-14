@@ -62,6 +62,21 @@ A API é preparada como um webapp do dotnet, possui implementação do JWT como 
 
 A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e entregador (`DeliveryDriver`) - e cada end-point criado possui sua devida autorização.
 
+### Controllers e End-points
+
+- `Motorcycle`
+    - Responsável pelo cadastro, listagem e consulta de motos
+- `Rental`
+    - Responsável pela criação, listagem e consulta de aluguel, entrega e consulta do valor total
+- `RentalPlan`
+    - Responsável por listar os planos disponíveis
+- `Auth`
+    - Reponsável pelo login e verificação da autenticacao
+- `LicenseImage`
+    - Responsável para receber e recuparar imagem vinculada ao entregador
+- `User`
+    - Responsável pelo cadastro de usuários
+
 ### Para executar e testar
 
 #### API com Swagger UI
