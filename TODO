@@ -1,2 +1,9 @@
-- Makefile
+# TODO
+
+[ ] Makefile
+- [ ] setup
+- [ ] setup:update db
+- [ ] setup:seed db
+- [ ] docker
+--- 
 - Tests
