@@ -2,9 +2,12 @@
 
 Seja muito bem-vindo ao desafio backend. Seu objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
 
-## Arquitetura
+## Solução
 
-A solução é integralmente desenvolvida em .NET 8, utilizando EF Core, RabbitMQ, PostgreSQL, MinIO e possui ambiente para execução em Docker.
+A solução é integralmente desenvolvida em .NET 8, utilizando EntityFramework, RabbitMQ, PostgreSQL e MinIO, possui ambiente para execução completa em Docker e o Swagger UI para interação com a API em ambiente `Development`.
+
+![Swagger UI rodando no Docker](print_swagger_ui.png?raw=true "Swagger UI rodando no Docker")
+Swagger UI rodando no Docker
 
 ### Estrutura da Solução
 
