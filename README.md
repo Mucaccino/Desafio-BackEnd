@@ -1,5 +1,6 @@
 # Desafio backend.
-Seja muito bem-vindo ao desafio backend.
+
+Seja muito bem-vindo ao desafio backend. Seu objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
 
 ## Arquitetura
 
@@ -13,7 +14,7 @@ A solução é integralmente desenvolvida em .NET 8, utilizando EF Core, RabbitM
 * Projeto `models`
     * Classlib com modelos e classes de dominio.
 * Projeto `entities`
-    * Classlib que inclui `models` e trata a infra com EF Core.
+    * Classlib de infraestrutura que configura os `models` com EF Core.
 * Projeto `utils`
     * Classlib com classes e métodos estáticos de auxilio.
 * Projeto `workers`
@@ -32,7 +33,6 @@ Executar ambiente docker
 Realizar update do migrations
 ```
 > cd ./entities 
-> dotnet tool install --global dotnet-ef
 > dotnet ef database update
 ```
 
@@ -56,9 +56,29 @@ O aplicativo API e WORKERS também estão adicionados ao docker-compose para pos
 * `workers`
     * executa o build do projeto `/workers`, para escuta de fila de mensagens
 
+## Execução e API
+
+A API é preparada como um webapp do dotnet, possui implementação do JWT como autenticação, e possue o Swaager UI configurado no ambiente de desenvolvimento.
+
+A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e entregador (`DeliveryDriver`) - e cada end-point criado possui sua devida autorização.
+
+### Para executar e testar
+
+#### API com Swagger UI
+
+- Realize o __up__ dos containers e __migrations__ do EF Core
+- Vá até o endereço do Swagger UI em [http://localhost:5000](http://localhost:5000)
+- Execute o end-point [api/Auth/login](http://localhost:5000/swagger/index.html#/Auth/Auth_AuthenticateUser)
+    - para logar como administrador use `{ username: admin, password: 123mudar }`
+    - para logar como entregador use `{ username: entregador, password: 123mudar }`
+- Recupere o valor da propriedade token, retornada pelo `api/Auth/login`, clique no botão `Authorize` da interface do Swagger UI e adicione o valor do token para autenticação (Ex.: Bearer 213das9bn7h21...).
+- Pode verificar as autorizações de cada um dos tipos de usuários em `api/Auth/verify/admin` ou `api/Auth/verify/deliveryDriver`
+- Com o Swagger UI autenticado, os end-points criado baseado nas especificações do desafio podem ser devidamente utilizadas 
+
 ## Adicional
 
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
+- Passo a passo para execução do projeto.
 - A solução ainda carece da implementação do projeto de testes.
 - Necessário repassar o projeto incluindo Loggers no decorrer da execução.
 - Usado para criar os certificados para HTTPS dentro do Docker:
