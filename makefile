@@ -13,7 +13,7 @@ SEQ_CONTAINER = seq
 all: build setup up
 
 build:
-	$(DOTNET) build
+	$(DOCKER_COMPOSE) build
 
 up:
 	$(DOCKER_COMPOSE) up
