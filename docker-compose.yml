@@ -72,6 +72,7 @@ services:
       - MINIO_ENDPOINT=minio:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
+      - Serilog__WriteTo__1__Args__serverUrl=http://seq:5341
     networks:
       - motto-net
     volumes:
@@ -87,6 +88,17 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    networks:
+      - motto-net
+      
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8081:80
     networks:
       - motto-net
 

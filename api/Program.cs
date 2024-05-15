@@ -7,6 +7,8 @@ using Motto.Entities;
 using Motto.Models;
 using NSwag.Generation.Processors.Security;
 using Motto.Utils;
+using Serilog;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
+builder.Logging.ClearProviders();
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration)
+    // .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    // .MinimumLevel.Override("Motto.Entities", Serilog.Events.LogEventLevel.Warning) 
+);
 
 // Configure NSwag
 
@@ -88,7 +99,8 @@ builder.Services.AddSingleton<MotorcycleEventProducer>();
 
 var app = builder.Build();
 
-Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
+// Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
+Log.Information($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -101,7 +113,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
 app.UseRouting();
 app.MapControllers();
 app.UseAuthentication();

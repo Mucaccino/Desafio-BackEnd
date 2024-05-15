@@ -2,13 +2,18 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
 using Motto.Models;
+using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Motto.Entities;
 
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext() { }
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+        Console.WriteLine("ApplicationDbContext");
+    }
 
     public DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
     public DbSet<Motorcycle> Motorcycles { get; set; }
@@ -27,7 +32,14 @@ public class ApplicationDbContext : DbContext
 
         // Configure the connection string for PostgreSQL
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseNpgsql(connectionString);
+        
+        Console.WriteLine($"ConnectionString {connectionString}");
+        
+        Log.Information($"Log.Information {connectionString}");
+
+        optionsBuilder
+            // .LogTo(Console.WriteLine)
+            .UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
