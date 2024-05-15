@@ -115,8 +115,8 @@ O Makefile está configurado com as principais tarefas para a execução da solu
 ## Adicional
 
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
-- Passo a passo para execução do projeto.
+- ~~Passo a passo para execução do projeto~~.
 - A solução ainda carece da implementação do projeto de testes.
-- Necessário repassar o projeto incluindo Loggers no decorrer da execução.
+- ~~Necessário repassar o projeto incluindo Loggers no decorrer da execução~~.
 - Usado para criar os certificados para HTTPS dentro do Docker:
 `dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123`

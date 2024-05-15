@@ -7,4 +7,4 @@
         - [x] docker
     - [x] run docker
 - [ ] Projeto de Tests
-- [ ] Loggers nos projetos
+- [x] Loggers nos projetos
