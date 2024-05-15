@@ -1,10 +1,10 @@
 # TODO
 
-- [ ] Criar Makefile
-    - [ ] setup
-        - [ ] update db
-        - [ ] seed db
-        - [ ] docker
-    - [ ] run docker
+- [x] Criar Makefile
+    - [x] setup
+        - [x] update db
+        - [x] seed db
+        - [x] docker
+    - [x] run docker
 - [ ] Projeto de Tests
 - [ ] Loggers nos projetos
