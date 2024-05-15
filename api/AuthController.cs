@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Motto.Api
 {
@@ -17,11 +19,13 @@ namespace Motto.Api
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly ILogger<AuthController> _logger;
         private readonly ApplicationDbContext _dbContext;
         private readonly string _jwtKey;
 
-        public AuthController(ApplicationDbContext dbContext, string jwtKey)
+        public AuthController(ApplicationDbContext dbContext, ILogger<AuthController> logger, string jwtKey)
         {
+            _logger = logger;
             _dbContext = dbContext;
             _jwtKey = jwtKey;
         }
@@ -44,6 +48,7 @@ namespace Motto.Api
             // Verifique se o modelo de login é válido (ex: campos obrigatórios preenchidos)
             if (loginModel == null || string.IsNullOrEmpty(loginModel.Username) || string.IsNullOrEmpty(loginModel.Password))
             {
+                _logger.LogError("Credenciais inválidas");
                 return BadRequest("Credenciais inválidas");
             }
 
@@ -51,6 +56,7 @@ namespace Motto.Api
             var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Username == loginModel.Username);
             if (user == null)
             {
+                _logger.LogError("Usuário não encontrado");
                 return NotFound("Usuário não encontrado");
             }
 
@@ -58,6 +64,7 @@ namespace Motto.Api
             var passwordValid = user.VerifyPassword(loginModel.Password);
             if (!passwordValid)
             {
+                _logger.LogError("Senha incorreta");
                 return Unauthorized("Senha incorreta");
             }
 
@@ -66,7 +73,9 @@ namespace Motto.Api
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            return Ok(new { Token = $"Bearer {token}", UserId = user.Id });
+            var response = new { Token = $"Bearer {token}", UserId = user.Id };
+            _logger.LogInformation(JsonConvert.SerializeObject(response));
+            return Ok(response);
         }
         
         private string GenerateJwtToken(User user)

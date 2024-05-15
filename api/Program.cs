@@ -7,6 +7,8 @@ using Motto.Entities;
 using Motto.Models;
 using NSwag.Generation.Processors.Security;
 using Motto.Utils;
+using Serilog;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
+builder.Logging.ClearProviders();
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration)
+    // .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    // .MinimumLevel.Override("Motto.Entities", Serilog.Events.LogEventLevel.Warning) 
+);
 
 // Configure NSwag
 
@@ -106,5 +117,6 @@ app.UseRouting();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSerilogRequestLogging();
 
 app.Run();
