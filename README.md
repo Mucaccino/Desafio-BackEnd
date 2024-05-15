@@ -69,6 +69,8 @@ O aplicativo API e WORKERS também estão adicionados ao docker-compose para pos
     * para acessar o SwaggerUI entrar no endereço localhost:5000/swagger
 * `workers`
     * executa o build do projeto `/workers`, para escuta de fila de mensagens
+* `seq`
+    * executa a imagem do Seq, usada para monitoramento de registro de eventos 
 
 ## Execução e API
 
