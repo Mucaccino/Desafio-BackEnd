@@ -99,6 +99,10 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 - As mensagens recebidas são exibidas como mensagens do ILogger
 - Para verificar seu funcionamento, consultar o `output` do container
 
+#### Makefile
+
+O Makefile está configurado com as principais tarefas para a execução da solução.
+
 ## Adicional
 
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
