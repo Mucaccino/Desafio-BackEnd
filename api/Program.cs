@@ -99,7 +99,8 @@ builder.Services.AddSingleton<MotorcycleEventProducer>();
 
 var app = builder.Build();
 
-Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
+// Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
+Log.Information($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -112,11 +113,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
 app.UseRouting();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSerilogRequestLogging();
 
 app.Run();

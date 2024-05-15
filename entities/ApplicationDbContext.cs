@@ -38,7 +38,7 @@ public class ApplicationDbContext : DbContext
         Log.Information($"Log.Information {connectionString}");
 
         optionsBuilder
-            .LogTo(Console.WriteLine)
+            // .LogTo(Console.WriteLine)
             .UseNpgsql(connectionString);
     }
 
