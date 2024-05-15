@@ -28,14 +28,16 @@ Swagger UI rodando no Docker
 
 #### Makefile
 
-Compila, sobe serviços e projetos e realiza seed inicial do database
+A solução do projeto inclui o __makefile__, e para executar toda a solução usando o Docker, subindo os serviçoes e os projetos com a api e o consumidor. 
+
+Compila, sobe serviços e projetos e realiza seed inicial do database.
 ```
 > make
 ```
 
-A solução do projeto inclui o __makefile__, e para executar toda a solução usando o Docker, subindo os serviçoes e os projetos com a api e o consumidor. Outros comandos podem ser encontrados no __makefile__.
+Outros comandos podem ser encontrados no __makefile__.
 
-#### Outros comandos isolados:
+#### Outros comandos isolados
 
 Executar ambiente docker
 ```
