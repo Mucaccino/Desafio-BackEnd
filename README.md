@@ -93,7 +93,7 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 
 #### API com Swagger UI
 
-- Realize o __up__ dos containers e __migrations__ do EF Core
+- Realize o __up__ dos containers e __migrations__ do EF Core (pode usar o make do makefile)
 - Vá até o endereço do Swagger UI em [http://localhost:5000](http://localhost:5000)
 - Execute o end-point [api/Auth/login](http://localhost:5000/swagger/index.html#/Auth/Auth_AuthenticateUser)
     - para logar como administrador use `{ username: admin, password: 123mudar }`
