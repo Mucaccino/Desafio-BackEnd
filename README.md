@@ -24,9 +24,18 @@ Swagger UI rodando no Docker
     * Worker com consumer da fila de mensagens.
     * Inspeciona as mensagens e exibe no Logger.
 
-### Setup do Projeto
+### Setup e up da solução
 
-> ___TODO__ makefile para setup do projeto_
+#### Makefile
+
+Compila, sobe serviços e projetos e realiza seed inicial do database
+```
+> make
+```
+
+A solução do projeto inclui o __makefile__, e para executar toda a solução usando o Docker, subindo os serviçoes e os projetos com a api e o consumidor. Outros comandos podem ser encontrados no __makefile__.
+
+#### Outros comandos isolados:
 
 Executar ambiente docker
 ```
