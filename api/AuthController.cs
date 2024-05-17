@@ -1,17 +1,14 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Motto.Models;
-using Motto.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using Newtonsoft.Json;
+using Motto.Models;
+using Motto.Entities;
 
 namespace Motto.Api
 {
@@ -73,7 +70,7 @@ namespace Motto.Api
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = new { Token = $"Bearer {token}", UserId = user.Id };
+            var response = new LoginModelResponse() { Token = $"Bearer {token}", UserId = user.Id };
             _logger.LogInformation(JsonConvert.SerializeObject(response));
             return Ok(response);
         }
@@ -102,12 +99,6 @@ namespace Motto.Api
 
             return tokenString;
         }
-    }
-
-    public class LoginModel
-    {
-        public required string Username { get; set; }
-        public required string Password { get; set; }
     }
 }
 
