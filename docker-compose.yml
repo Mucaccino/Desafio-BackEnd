@@ -72,9 +72,9 @@ services:
       - motto-net
     healthcheck:
       test: rabbitmq-diagnostics check_port_listener 5672
-      interval: 1s
-      timeout: 1s
-      retries: 100
+      interval: 10s
+      timeout: 10s
+      retries: 10
 
   minio:
     image: minio/minio
