@@ -1,17 +1,14 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Motto.Models;
-using Motto.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using Newtonsoft.Json;
+using Motto.Models;
+using Motto.Entities;
 
 namespace Motto.Api
 {
@@ -43,7 +40,7 @@ namespace Motto.Api
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> AuthenticateUser(LoginModel loginModel)
+        public async Task<ActionResult<LoginModelResponse>> AuthenticateUser(LoginModel loginModel)
         {
             // Verifique se o modelo de login é válido (ex: campos obrigatórios preenchidos)
             if (loginModel == null || string.IsNullOrEmpty(loginModel.Username) || string.IsNullOrEmpty(loginModel.Password))
@@ -73,12 +70,12 @@ namespace Motto.Api
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = new { Token = $"Bearer {token}", UserId = user.Id };
+            var response = new LoginModelResponse() { Token = $"Bearer {token}", UserId = user.Id };
             _logger.LogInformation(JsonConvert.SerializeObject(response));
             return Ok(response);
         }
         
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtKey); // Defina sua chave secreta
@@ -102,12 +99,6 @@ namespace Motto.Api
 
             return tokenString;
         }
-    }
-
-    public class LoginModel
-    {
-        public required string Username { get; set; }
-        public required string Password { get; set; }
     }
 }
 

@@ -15,27 +15,28 @@ public class ApplicationDbContext : DbContext
         Console.WriteLine("ApplicationDbContext");
     }
 
-    public DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
-    public DbSet<Motorcycle> Motorcycles { get; set; }
-    public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
-    public DbSet<Rental> Rentals { get; set; }
-    public DbSet<RentalPlan> RentalPlans { get; set; }
-    public DbSet<MotorcycleEvent> MotorcycleEvents { get; set; }
-    public DbSet<MotorcycleMessage> MotorcycleMessages { get; set; }
+    public virtual DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
+    public virtual DbSet<Motorcycle> Motorcycles { get; set; }
+    public virtual DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
+    public virtual DbSet<Rental> Rentals { get; set; }
+    public virtual DbSet<RentalPlan> RentalPlans { get; set; }
+    public virtual DbSet<MotorcycleEvent> MotorcycleEvents { get; set; }
+    public virtual DbSet<MotorcycleMessage> MotorcycleMessages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente
                 .Build();
 
-        // Configure the connection string for PostgreSQL
+          // Check if the connection string is set in the environment
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         
-        Console.WriteLine($"ConnectionString {connectionString}");
+        Console.WriteLine($"UseNpgsql::ConnectionString {connectionString}");
         
-        Log.Information($"Log.Information {connectionString}");
+        Log.Information($"UseNpgsql::ConnectionString {connectionString}");
 
         optionsBuilder
             // .LogTo(Console.WriteLine)

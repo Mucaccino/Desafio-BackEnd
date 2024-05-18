@@ -95,6 +95,10 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 
 ### Para executar e testar
 
+#### Makefile
+
+O Makefile está configurado com as principais tarefas para a execução da solução.
+
 #### API com Swagger UI
 
 - Realize o __up__ dos containers e __migrations__ do EF Core (pode usar o make do makefile)
@@ -112,15 +116,22 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 - As mensagens recebidas são exibidas como mensagens do ILogger
 - Para verificar seu funcionamento, consultar o `output` do container
 
-#### Makefile
+#### Projeto de testes
 
-O Makefile está configurado com as principais tarefas para a execução da solução.
+Projeto ./tests com testes de integração de API (`ApiIntegrationTests`) e base de testes unitários (`AuthControllerTests`).
+
+- `ApiIntegrationTests`: executa o programa ./api e teste conexão e login em base de dados real para testar funcionamento da API.
+- `AuthControllerTests`: executa os testes unitários relacionado ao gerenciador de autenticação, usando dados do Mock. 
+
+```
+> make tests
+```
 
 ## Adicional
 
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
 - ~~Passo a passo para execução do projeto~~.
-- A solução ainda carece da implementação do projeto de testes.
+- ~~A solução ainda carece da implementação do projeto de testes.~~
 - ~~Necessário repassar o projeto incluindo Loggers no decorrer da execução~~.
 - Usado para criar os certificados para HTTPS dentro do Docker:
 `dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123`

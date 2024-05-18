@@ -6,5 +6,10 @@
         - [x] seed db
         - [x] docker
     - [x] run docker
-- [ ] Projeto de Tests
+- [x] Projeto de Tests
+    - [x] Testes de integração API
+    - [x] Testes unitários
+        - [x] AuthController
+        - [ ] UserController
+        - [ ] ...
 - [x] Loggers nos projetos

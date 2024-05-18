@@ -36,3 +36,8 @@ up-seq:
 	$(DOCKER_COMPOSE) up -d $(SEQ_CONTAINER)
 
 up-services: up-postgres up-rabbitmq up-minio up-seq
+
+tests: up-services run-tests
+
+run-tests:
+	$(DOTNET) test ./tests/tests.csproj
