@@ -112,6 +112,14 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 - As mensagens recebidas são exibidas como mensagens do ILogger
 - Para verificar seu funcionamento, consultar o `output` do container
 
+#### Projeto de testes
+
+Projeto ./tests com testes de integração de API e base de testes unitários.
+
+```
+> make tests
+```
+
 #### Makefile
 
 O Makefile está configurado com as principais tarefas para a execução da solução.
@@ -120,7 +128,7 @@ O Makefile está configurado com as principais tarefas para a execução da solu
 
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
 - ~~Passo a passo para execução do projeto~~.
-- A solução ainda carece da implementação do projeto de testes.
+- ~~A solução ainda carece da implementação do projeto de testes.~~
 - ~~Necessário repassar o projeto incluindo Loggers no decorrer da execução~~.
 - Usado para criar os certificados para HTTPS dentro do Docker:
 `dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123`
