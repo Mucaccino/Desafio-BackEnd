@@ -35,18 +35,18 @@ services:
         - ./api/https/aspnetapp.pfx:/https/aspnetapp.pfx
         - ./tests:/tests
 
-  workers:
-    container_name: workers
-    build:
-      context: .
-      dockerfile: workers/Dockerfile
-    ports:
-      - "5002:5002"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - motto-net
+  # workers:
+  #   container_name: workers
+  #   build:
+  #     context: .
+  #     dockerfile: workers/Dockerfile
+  #   ports:
+  #     - "5002:5002"
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #   networks:
+  #     - motto-net
 
   postgres:
     image: postgres:latest
