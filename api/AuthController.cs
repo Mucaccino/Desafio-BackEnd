@@ -40,7 +40,7 @@ namespace Motto.Api
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> AuthenticateUser(LoginModel loginModel)
+        public async Task<ActionResult<LoginModelResponse>> AuthenticateUser(LoginModel loginModel)
         {
             // Verifique se o modelo de login é válido (ex: campos obrigatórios preenchidos)
             if (loginModel == null || string.IsNullOrEmpty(loginModel.Username) || string.IsNullOrEmpty(loginModel.Password))
@@ -75,7 +75,7 @@ namespace Motto.Api
             return Ok(response);
         }
         
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtKey); // Defina sua chave secreta

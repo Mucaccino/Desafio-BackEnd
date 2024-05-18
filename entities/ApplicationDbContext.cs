@@ -15,13 +15,13 @@ public class ApplicationDbContext : DbContext
         Console.WriteLine("ApplicationDbContext");
     }
 
-    public DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
-    public DbSet<Motorcycle> Motorcycles { get; set; }
-    public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
-    public DbSet<Rental> Rentals { get; set; }
-    public DbSet<RentalPlan> RentalPlans { get; set; }
-    public DbSet<MotorcycleEvent> MotorcycleEvents { get; set; }
-    public DbSet<MotorcycleMessage> MotorcycleMessages { get; set; }
+    public virtual DbSet<User> Users { get; set; } // Adicionando o DbSet para a classe User
+    public virtual DbSet<Motorcycle> Motorcycles { get; set; }
+    public virtual DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
+    public virtual DbSet<Rental> Rentals { get; set; }
+    public virtual DbSet<RentalPlan> RentalPlans { get; set; }
+    public virtual DbSet<MotorcycleEvent> MotorcycleEvents { get; set; }
+    public virtual DbSet<MotorcycleMessage> MotorcycleMessages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
