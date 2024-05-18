@@ -28,14 +28,15 @@ public class ApplicationDbContext : DbContext
         var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente
                 .Build();
 
-        // Configure the connection string for PostgreSQL
+          // Check if the connection string is set in the environment
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         
-        Console.WriteLine($"ConnectionString {connectionString}");
+        Console.WriteLine($"UseNpgsql::ConnectionString {connectionString}");
         
-        Log.Information($"Log.Information {connectionString}");
+        Log.Information($"UseNpgsql::ConnectionString {connectionString}");
 
         optionsBuilder
             // .LogTo(Console.WriteLine)
