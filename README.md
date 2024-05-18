@@ -95,6 +95,10 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 
 ### Para executar e testar
 
+#### Makefile
+
+O Makefile está configurado com as principais tarefas para a execução da solução.
+
 #### API com Swagger UI
 
 - Realize o __up__ dos containers e __migrations__ do EF Core (pode usar o make do makefile)
@@ -114,15 +118,14 @@ A solução do aplicativo possui dois tipos de usuários - admin (`Admin`) e ent
 
 #### Projeto de testes
 
-Projeto ./tests com testes de integração de API e base de testes unitários.
+Projeto ./tests com testes de integração de API (`ApiIntegrationTests`) e base de testes unitários (`AuthControllerTests`).
+
+- `ApiIntegrationTests`: executa o programa ./api e teste conexão e login em base de dados real para testar funcionamento da API.
+- `AuthControllerTests`: executa os testes unitários relacionado ao gerenciador de autenticação, usando dados do Mock. 
 
 ```
 > make tests
 ```
-
-#### Makefile
-
-O Makefile está configurado com as principais tarefas para a execução da solução.
 
 ## Adicional
 
