@@ -77,6 +77,7 @@ services:
       - motto-net
     volumes:
         - ./api/https/aspnetapp.pfx:/https/aspnetapp.pfx
+        - ./tests:/tests
 
   workers:
     container_name: workers
