@@ -27,6 +27,9 @@ jobs:
         docker --version
         docker-compose --version
 
+    - name: Down any existing docker-compose
+      run: docker compose down
+
     - name: Build and run docker-compose
       run: docker-compose up -d --build
 
