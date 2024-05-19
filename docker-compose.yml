@@ -48,7 +48,7 @@ services:
     ports:
       - "5002:5002"
     depends_on:
-      rabbitmq:
+      api:
         condition: service_healthy
     networks:
       - motto-net
