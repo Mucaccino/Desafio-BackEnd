@@ -38,7 +38,7 @@ jobs:
 
     - name: Wait for services to be healthy
       run: |
-        while ! docker-compose exec api curl -sSf http://localhost:5000/health; do
+        while ! docker-compose exec api curl -sSf http://api:5000/health; do
           echo "Waiting for API to be healthy..."
           sleep 5
         done
