@@ -44,7 +44,7 @@ jobs:
         done
 
     - name: Run tests
-      run: docker-compose exec api dotnet test /tests
+      run: docker-compose exec -T api dotnet test /tests
 
     - name: Tear down Docker containers
       run: docker-compose down
