@@ -6,6 +6,7 @@ COPY api/ ./api
 COPY models/ ./models
 COPY entities/ ./entities
 COPY utils/ ./utils
+COPY tests/ ./tests
 
 # Restore as distinct layers
 WORKDIR /app/api
