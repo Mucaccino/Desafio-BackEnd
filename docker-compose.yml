@@ -8,8 +8,8 @@ services:
       context: .
       dockerfile: api/Dockerfile
     ports:
-      - "5000:8080"
-      - "5001:8081"
+      - "5000:5000"
+      - "5001:5001"
     depends_on:
       postgres: 
         condition: service_started
@@ -19,8 +19,8 @@ services:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_HTTPS_PORT=8081
+      - ASPNETCORE_URLS=https://+:5001;http://+:5000
+      - ASPNETCORE_HTTPS_PORT=5001
       - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=mottodb;Username=mottouser;Password=mottopassword
