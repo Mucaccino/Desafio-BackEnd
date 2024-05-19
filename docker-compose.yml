@@ -34,6 +34,11 @@ services:
     volumes:
         - ./api/https/aspnetapp.pfx:/https/aspnetapp.pfx
         - ./tests:/tests
+    healthcheck:
+      test: curl -sSf http://api:5000/health
+      interval: 10s
+      timeout: 10s
+      retries: 10
 
   workers:
     container_name: workers
