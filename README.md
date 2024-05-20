@@ -14,6 +14,7 @@ Swagger UI rodando no Docker
 * Projeto `api`
     * Webapp com controllers e serviços relacionados.
     * Interface Swagger UI quando executado em Development.
+    * [learn.microsoft::apis](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/apis?view=aspnetcore-8.0)
 * Projeto `models`
     * Classlib com modelos e classes de dominio.
 * Projeto `entities`
