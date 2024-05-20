@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using Motto.Models;
+using Serilog;
 
 namespace Motto.Tests;
 
@@ -33,6 +34,8 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
     {
         var client = _factory.CreateClient();
 
+        Log.Information($"BaseAddress: {client.BaseAddress}");
+
         var json = JsonSerializer.Serialize(new LoginModel() { Username = userType == UserType.Admin ? "admin" : "entregador", Password = "123mudar" });
         var data = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -40,10 +43,8 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<LoginModelResponse>();
-
         _loggedToken = result?.Token;
         _loggedUserType = userType;
-
         Assert.IsTrue(_loggedToken != null && _loggedToken.Length > 0);
     }
 
