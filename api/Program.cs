@@ -103,8 +103,8 @@ var app = builder.Build();
 // Log information about the environment
 Log.Information($"IsStaging: {app.Environment.IsStaging()}");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsStaging())
+// Configure the HTTP request pipeline when is not Production mode
+if (!app.Environment.IsProduction())
 {    
     app.UseOpenApi();
     app.UseSwaggerUi();
