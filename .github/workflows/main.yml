@@ -40,6 +40,12 @@ jobs:
           sleep 5
         done
 
+    - name: Update database
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool restore
+        dotnet ef database update -c ApplicationDbContext -p entities
+
     - name: Setup dotnet
       uses: actions/setup-dotnet@v3
       with:
