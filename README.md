@@ -130,6 +130,19 @@ Projeto ./tests com testes de integração de API (`ApiIntegrationTests`) e base
 
 ## Adicional
 
+### Github Actions
+
+O projeto está configurado com um workflow de execução principal no [Github Action](https://github.com/Mucaccino/Desafio-BackEnd/actions), preparado para compilar os projetos, subir os containers, realizar o migration da base de dados e executar todos os testes.
+
+
+```
+> .github/workflows/main.yml
+```
+
+Link do [primeiro run completo com sucesso](https://github.com/Mucaccino/Desafio-BackEnd/actions/runs/9165020101).
+
+### Anotações
+
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
 - ~~Passo a passo para execução do projeto~~.
 - ~~A solução ainda carece da implementação do projeto de testes.~~
