@@ -5,6 +5,8 @@ using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using Motto.Models;
 using Serilog;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Motto.Tests;
 
@@ -17,12 +19,25 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
     
     public ApiIntegrationTests()    
     {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true)                
+            .Build();
+
         _factory = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<Program>()
         .WithWebHostBuilder(builder =>
-        {
+        { 
+            builder.ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.AddConfiguration(configuration);
+            });
+
             builder.ConfigureServices(services =>
             {
-                
+                //
             });
         });
     }
