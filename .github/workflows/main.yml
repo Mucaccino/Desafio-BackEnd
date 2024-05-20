@@ -46,7 +46,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Run tests
-      run: dotnet test ./tests  -e ASPNETCORE_ENVIRONMENT=Staging
+      run: dotnet test ./tests -e ASPNETCORE_ENVIRONMENT=Local
 
     - name: Tear down Docker containers
       run: docker-compose down

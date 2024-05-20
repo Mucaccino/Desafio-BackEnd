@@ -22,9 +22,9 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment}.json", optional: true)                
+            .AddJsonFile($"appsettings.{environment}.json", optional: true)             
+            .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente   
             .Build();
 
         _factory = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<Program>()
