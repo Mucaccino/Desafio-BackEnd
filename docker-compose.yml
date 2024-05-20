@@ -18,17 +18,11 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:5001;http://+:5000
-      - ASPNETCORE_HTTPS_PORT=5001
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass123
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=mottodb;Username=mottouser;Password=mottopassword
-      - RabbitMQ__ConnectionString=amqp://guest:guest@rabbitmq:5672/
-      - MINIO_ENDPOINT=minio:9000
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-      - Serilog__WriteTo__1__Args__serverUrl=http://seq:5341
+      ASPNETCORE_ENVIRONMENT: Staging
+      ASPNETCORE_URLS: https://+:5001;http://+:5000
+      ASPNETCORE_HTTPS_PORT: 5001
+      ASPNETCORE_Kestrel__Certificates__Default__Password: mypass123
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
     networks:
       - motto-net
     volumes:

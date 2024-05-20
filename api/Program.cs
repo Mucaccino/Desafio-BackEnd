@@ -100,11 +100,11 @@ builder.Services.AddSingleton<MotorcycleEventProducer>();
 
 var app = builder.Build();
 
-// Console.WriteLine($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
-Log.Information($"MottoAPI (IsDevelopment: {app.Environment.IsDevelopment()})");
+// Log information about the environment
+Log.Information($"IsStaging: {app.Environment.IsStaging()}");
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsStaging())
 {    
     app.UseOpenApi();
     app.UseSwaggerUi();

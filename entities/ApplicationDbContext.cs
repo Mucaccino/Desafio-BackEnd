@@ -27,8 +27,9 @@ public class ApplicationDbContext : DbContext
     {
         var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
                 .Build();
 
           // Check if the connection string is set in the environment
