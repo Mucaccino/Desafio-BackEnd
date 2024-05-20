@@ -175,7 +175,7 @@ public class RentalController : ControllerBase
     }
 
 
-    public RentalTotalCostModel GetTotalCost(Rental rental, DateTime endDate) {
+    private RentalTotalCostModel GetTotalCost(Rental rental, DateTime endDate) {
         // Se a data final for nula, marca como dia atual
         if (endDate == default(DateTime)) endDate = DateTime.Today;
 

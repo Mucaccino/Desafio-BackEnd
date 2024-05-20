@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Motto.Models;
 using Motto.Entities;
+using System.Security.Permissions;
 
 namespace Motto.Api
 {
@@ -70,12 +71,12 @@ namespace Motto.Api
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = new LoginModelResponse() { Token = $"Bearer {token}", UserId = user.Id };
+            var response = new LoginModelResponse() { Token = $"Bearer {token}", UserId = user.Id, Username = user.Username, Name = user.Name, IsAdmin = user.Type == UserType.Admin };
             _logger.LogInformation(JsonConvert.SerializeObject(response));
             return Ok(response);
         }
         
-        public string GenerateJwtToken(User user)
+        private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtKey); // Defina sua chave secreta
