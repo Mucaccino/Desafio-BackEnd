@@ -19,11 +19,18 @@ public class MotorcycleController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPost("create")]
-   public async Task<IActionResult> Create([FromBody] MotorcycleCreateModel model, [FromServices] MotorcycleEventProducer motorcycleEventProducer)
+   public async Task<ActionResult<object>> Create([FromBody] MotorcycleCreateModel model, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+
+        // Verificar se a placa já existe em outra moto
+        var existingPlateMotorcycle = await _dbContext.Motorcycles.FirstOrDefaultAsync(m => m.Plate == model.Plate);
+        if (existingPlateMotorcycle != null)
+        {
+            return Conflict("Já existe uma moto com essa placa");
         }
 
         try
@@ -39,8 +46,10 @@ public class MotorcycleController : ControllerBase
             _dbContext.Motorcycles.Add(motorcycle);            
             await _dbContext.SaveChangesAsync(); // mover pra baixo
 
-            // Disparar evento do RabbitMQ para moto cadastrada com sucesso
-            motorcycleEventProducer.PublishMotorcycleRegisteredEvent(motorcycle); // Chamada síncrona
+            if(motorcycleEventProducer != null) {
+                // Disparar evento do RabbitMQ para moto cadastrada com sucesso
+                motorcycleEventProducer.PublishMotorcycleRegisteredEvent(motorcycle); // Chamada síncrona
+            }
 
             return Ok("Moto cadastrada com sucesso");
         }
@@ -53,7 +62,7 @@ public class MotorcycleController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPut("update/{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] MotorcycleCreateModel model)
+    public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -86,9 +95,9 @@ public class MotorcycleController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<ActionResult<Motorcycle>> GetById(int id)
     {
-        var motorcycle = await _dbContext.Motorcycles.FindAsync(id);
+        var motorcycle = await _dbContext.Motorcycles.FirstOrDefaultAsync(x => x.Id == id);
 
         if (motorcycle == null)
         {
@@ -116,10 +125,10 @@ public class MotorcycleController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpDelete("remove/{id}")]
-    public async Task<IActionResult> RemoveMotorcycle(int id)
+    public async Task<ActionResult<string>> RemoveMotorcycle(int id)
     {
         // Busca a moto pelo ID
-        var motorcycle = await _dbContext.Motorcycles.FindAsync(id);
+        var motorcycle = await _dbContext.Motorcycles.FirstOrDefaultAsync(x => x.Id == id);
 
         // Se a moto não existe, retorna NotFound
         if (motorcycle == null)
