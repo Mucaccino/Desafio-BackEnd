@@ -22,15 +22,15 @@ public class RentalController : ControllerBase
     
     [Authorize(Roles = "DeliveryDriver")]
     [HttpPost("register")]
-    public async Task<ActionResult<User>> RentalRegister(RentalRegisterModel registerModel)
+    public async Task<ActionResult<Rental>> RentalRegister(RentalRegisterModel registerModel)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var userId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        var deliveryDriver = await _dbContext.DeliveryDrivers.FindAsync(userId);
+        var userId = Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int id) ? id : 0;
+        var deliveryDriver = await _dbContext.DeliveryDrivers.FirstOrDefaultAsync(x => x.Id == userId);
         if (deliveryDriver == null)
         {
             return BadRequest("O entregador não existe.");
@@ -43,7 +43,7 @@ public class RentalController : ControllerBase
         }
 
         // Verificar se o plano de aluguel é válido
-        var rentalPlan = await _dbContext.RentalPlans.FindAsync(registerModel.RentalPlanId);
+        var rentalPlan = await _dbContext.RentalPlans.FirstOrDefaultAsync(x => x.Id == registerModel.RentalPlanId);
         if (rentalPlan == null)
         {
             return BadRequest("Plano de aluguel inválido.");
@@ -64,7 +64,7 @@ public class RentalController : ControllerBase
             _dbContext.Rentals.Add(rental);
             await _dbContext.SaveChangesAsync();
 
-            return Ok("Aluguel criado com sucesso");
+            return Ok(rental);
         }
         catch (DbUpdateException ex)
         {
@@ -74,10 +74,12 @@ public class RentalController : ControllerBase
 
     [Authorize(Roles = "DeliveryDriver")]
     [HttpPost("{id}/deliver")]
-    public async Task<ActionResult> DeliverMotorcycle(int id, DateTime endDate)
+    public async Task<ActionResult<object>> DeliverMotorcycle(int id, DateTime endDate)
     {
         // Encontrar o aluguel com o ID fornecido
-        var rental = await _dbContext.Rentals.FindAsync(id);
+        var rental = await _dbContext.Rentals
+            .FirstOrDefaultAsync<Rental>(x => x.Id == id);
+
         if (rental == null)
         {
             return NotFound("Aluguel não encontrado.");
@@ -103,13 +105,13 @@ public class RentalController : ControllerBase
         rental.EndDate = endDate;
 
         // Verificar se o plano de aluguel é válido
-        var rentalPlan = await _dbContext.RentalPlans.FindAsync(rental.RentalPlanId);
+        var rentalPlan = await _dbContext.RentalPlans.FirstOrDefaultAsync<RentalPlan>(x => x.Id == rental.RentalPlanId);
         if (rentalPlan == null)
         {
             return BadRequest("Plano de aluguel inválido.");
         }
 
-        var totalCostInfo = GetTotalCost(rental, endDate);
+        var totalCostInfo = GetTotalCost(rental, rentalPlan, endDate);
         
         try
         {
@@ -169,13 +171,13 @@ public class RentalController : ControllerBase
             return BadRequest("A data de entrega não pode ser anterior à data de retirada.");
         }
 
-        var totalCostInfo = GetTotalCost(rental, endDate);
+        var totalCostInfo = GetTotalCost(rental, rental.RentalPlan, endDate);
 
         return Ok(totalCostInfo);
     }
 
 
-    private RentalTotalCostModel GetTotalCost(Rental rental, DateTime endDate) {
+    private RentalTotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate) {
         // Se a data final for nula, marca como dia atual
         if (endDate == default(DateTime)) endDate = DateTime.Today;
 
@@ -185,16 +187,16 @@ public class RentalController : ControllerBase
             int daysLate = (int)(rental.ExpectedEndDate - endDate).TotalDays;
 
             decimal lateFeePercentage = 0.0m;
-            if (rental.RentalPlan.Days == 7)
+            if (rentalPlan.Days == 7)
             {
                 lateFeePercentage = 0.2m;
             }
-            else if (rental.RentalPlan.Days == 15)
+            else if (rentalPlan.Days == 15)
             {
                 lateFeePercentage = 0.4m;
             }
 
-            decimal lateFee = rental.RentalPlan.DailyCost * daysLate * lateFeePercentage;
+            decimal lateFee = rentalPlan.DailyCost * daysLate * lateFeePercentage;
             rental.PenaltyCost = lateFee;
 
             rental.TotalCost += lateFee;

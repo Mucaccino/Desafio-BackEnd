@@ -23,6 +23,8 @@ public class RentalPlanController : ControllerBase
     {
         IQueryable<RentalPlan> query = _dbContext.RentalPlans;
 
-        return await query.ToListAsync();
+        var result = await query.ToListAsync();
+
+        return Ok(result);
     }
 }
