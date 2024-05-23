@@ -9,6 +9,8 @@ using NSwag.Generation.Processors.Security;
 using Motto.Utils;
 using Serilog;
 using Serilog.Exceptions;
+using Motto.Services;
+using Motto.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,35 +32,36 @@ builder.Host.UseSerilog((context, loggerConfig) =>
     // .MinimumLevel.Override("Motto.Entities", Serilog.Events.LogEventLevel.Warning) 
 );
 
-// Configure NSwag
+// Configuration for authentication service
+builder.Services.AddScoped<IAuthService, AuthService>(provider =>
+{
+    return new AuthService(provider.GetRequiredService<IUserRepository>(), new string(builder.Configuration["Jwt:Key"]), provider.GetRequiredService<ILogger<AuthService>>());
+});
 
+// Configuration for Swagger
+builder.Services.AddSwaggerDocument(config =>
+{
+    config.Title = "MottoAPI";
+    config.Version = "v1";
+    config.Description = "API Documentation using NSwag";
 
-// Configuração do Swagger
-    builder.Services.AddSwaggerDocument(config =>
+    // Configuração do esquema de segurança
+    config.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
     {
-        config.Title = "MottoAPI";
-        config.Version = "v1";
-        config.Description = "API Documentation using NSwag";
-
-        // Configuração do esquema de segurança
-        config.AddSecurity("Bearer", new NSwag.OpenApiSecurityScheme
-        {
-            Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
-            Name = "Authorization",
-            Description = "JWT Authorization header using the Bearer scheme (Ex: Bearer eyJhbGciOiJIUzI1NiIsI...)",
-            In = NSwag.OpenApiSecurityApiKeyLocation.Header
-        });
-
-        // Configuração do requisito de segurança
-        config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
-
-        // Adicione a descrição do esquema de segurança para a interface do usuário
-        config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
+        Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
+        Name = "Authorization",
+        Description = "JWT Authorization header using the Bearer scheme (Ex: Bearer eyJhbGciOiJIUzI1NiIsI...)",
+        In = NSwag.OpenApiSecurityApiKeyLocation.Header
     });
 
-// Configure JWT
+    // Configuração do requisito de segurança
+    config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
 
-var jwtKey = new string(builder.Configuration["Jwt:Key"]);
+    // Adicione a descrição do esquema de segurança para a interface do usuário
+    config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
+});
+
+// Configuration for JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -70,29 +73,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""))
         };
     });
 
+// Configuration for authorization
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireRole(UserType.Admin.ToString()));
     options.AddPolicy("DeliveryDriver", policy => policy.RequireRole(UserType.DeliveryDriver.ToString()));
 });
 
-builder.Services.AddSingleton(jwtKey);
-
-// Configuração do MinIO
+// Configuration for Minio
 builder.Services.AddSingleton<IMinioService>(sp =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
     return new LicenseImageService(configuration);
 });
 
-// Adicione o serviço RabbitMQ ao contêiner de serviços
+// Add RabbitMQ Service
 builder.Services.AddSingleton<RabbitMQService>();
-
-
+// Add Event Producer
 builder.Services.AddSingleton<MotorcycleEventProducer>();
 
 // Adicionado consumidor de evento
@@ -113,6 +114,7 @@ if (!app.Environment.IsProduction())
         options.Path = "/redoc";
     });
 }
+
 
 app.UseSerilogRequestLogging();
 app.UseRouting();

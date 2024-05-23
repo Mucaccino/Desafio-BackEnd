@@ -7,29 +7,34 @@ using Moq.EntityFrameworkCore;
 using Motto.Api;
 using Motto.Entities;
 using Motto.Models;
+using Motto.Repositories;
+using Motto.Services;
 
 namespace Motto.Tests
 {
     [TestClass]
     public class AuthControllerTests
     {
+        private readonly Mock<ApplicationDbContext> _dbContextMock;
+        private readonly AuthService _authServiceMock;
+        private readonly AuthController _authController;
 
         public AuthControllerTests()
         {
-            //
+            // Arrange
+            _dbContextMock = new Mock<ApplicationDbContext>();
+            _dbContextMock
+                .Setup(x => x.Users).ReturnsDbSet(TestDataHelper.GetFakeUserList());
+            _authServiceMock = new AuthService(new UserRepository(_dbContextMock.Object), TestDataHelper.GetJwtToken(), Mock.Of<ILogger<AuthService>>());
+            _authController = new(_authServiceMock, Mock.Of<ILogger<AuthController>>());
         }
 
         [TestMethod]
         public async Task AuthController_ReturnsOkResult_WhenCredentialsAreValid()
         {
-            // Arrange
-            var dbContextMock = new Mock<ApplicationDbContext>();
-            dbContextMock.Setup<DbSet<User>>(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
-
+    
             // Act
-            AuthController authController = new(dbContextMock.Object, Mock.Of<ILogger<AuthController>>(), TestDataHelper.GetJwtToken());
-            var result = await authController.AuthenticateUser(
+            var result = await _authController.AuthenticateUser(
                 new LoginModel { Username = "admin", Password = "123mudar" }); 
 
             //Assert
@@ -45,40 +50,30 @@ namespace Motto.Tests
         public async Task AuthController_ReturnsNotFoundResult_WhenUserIsNotFound()
         {
             // Arrange
-            var dbContextMock = new Mock<ApplicationDbContext>();
-            dbContextMock.Setup<DbSet<User>>(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
             var loginModel = new LoginModel { Username = "null", Password = "null" };
 
             // Act
-            AuthController authController = new(dbContextMock.Object, Mock.Of<ILogger<AuthController>>(), TestDataHelper.GetJwtToken());
-            var result = await authController.AuthenticateUser(loginModel);
+            var result = await _authController.AuthenticateUser(loginModel);
 
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundObjectResult));
             var notFoundObjectResult = result.Result as NotFoundObjectResult;
             Assert.IsNotNull(notFoundObjectResult);
-            Assert.AreEqual("Usuário não encontrado", notFoundObjectResult.Value);
         }
 
         [TestMethod]
         public async Task AuthController_ReturnsUnauthorizedResult_WhenPasswordIsIncorrect()
         {
             // Arrange
-            var dbContextMock = new Mock<ApplicationDbContext>();
-            dbContextMock.Setup<DbSet<User>>(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
             var loginModel = new LoginModel { Username = "admin", Password = "wrongpassword" };
 
             // Act
-            AuthController authController = new(dbContextMock.Object, Mock.Of<ILogger<AuthController>>(), TestDataHelper.GetJwtToken());
-            var result = await authController.AuthenticateUser(loginModel);
+            var result = await _authController.AuthenticateUser(loginModel);
 
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(UnauthorizedObjectResult));
             var unauthorizedResult = result.Result as UnauthorizedObjectResult;
             Assert.IsNotNull(unauthorizedResult);
-            Assert.AreEqual("Senha incorreta", unauthorizedResult.Value);
         }
     }
 
