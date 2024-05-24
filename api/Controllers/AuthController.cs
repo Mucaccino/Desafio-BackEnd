@@ -4,7 +4,7 @@ using Serilog;
 using Motto.Models;
 using Motto.Services;
 
-namespace Motto.Api
+namespace Motto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

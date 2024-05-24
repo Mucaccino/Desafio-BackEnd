@@ -1,0 +1,8 @@
+﻿namespace Motto.Models
+{
+    public class RentalRegisterModel
+    {
+        public int MotorcycleId { get; set; }
+        public int RentalPlanId { get; set; }
+    }
+}
