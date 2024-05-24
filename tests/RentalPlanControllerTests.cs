@@ -7,6 +7,8 @@ using Moq.EntityFrameworkCore;
 using Motto.Controllers;
 using Motto.Entities;
 using Motto.Models;
+using Motto.Repositories;
+using Motto.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,9 +24,10 @@ namespace Motto.Tests
         public RentalPlanControllerTests()
         {
             _mockDbContext = new Mock<ApplicationDbContext>();
-            _mockDbContext.Setup<DbSet<RentalPlan>>(x => x.RentalPlans)
+            _mockDbContext.Setup(x => x.RentalPlans)
                 .ReturnsDbSet(TestDataHelper.GetFakeRentalPlanList());
-            _controller = new RentalPlanController(_mockDbContext.Object);
+            var _service = new RentalPlanService(new RentalPlanRepository(_mockDbContext.Object));
+            _controller = new RentalPlanController(_service);
         }
 
         [TestMethod]

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
-using Motto.Api;
+using Motto.Controllers;
 using Motto.Entities;
 using Motto.Models;
 using Motto.Repositories;
