@@ -4,15 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Motto.Controllers;
 using Motto.Entities;
 using Motto.Models;
-using Motto.Repositories;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
 namespace Motto.Services
 {
-    public interface IUserService
-    {
-        Task<ServiceResult<string>> RegisterAdmin(RegisterAdminModel registerModel);
-        Task<ServiceResult<string>> RegisterDeliveryDriver(RegisterDeliveryDriverModel registerModel);
-    }
 
     public class UserService : IUserService
     {
@@ -23,7 +19,7 @@ namespace Motto.Services
             _userRepository = userRepository;
         }
 
-        public async Task<ServiceResult<string>> RegisterAdmin(RegisterAdminModel registerModel)
+        public async Task<ServiceResult<string>> RegisterAdmin(CreateAdminRequest registerModel)
         {
             var user = new User
             {
@@ -36,8 +32,8 @@ namespace Motto.Services
 
             try
             {
-                await _userRepository.AddUserAsync(user);
-                await _userRepository.SaveChangesAsync();
+                await _userRepository.Add(user);
+                await _userRepository.SaveChanges();
                 return ServiceResult<string>.Successed("Administrador criado com sucesso");
             }
             catch (DbUpdateException ex)
@@ -46,7 +42,7 @@ namespace Motto.Services
             }
         }
 
-        public async Task<ServiceResult<string>> RegisterDeliveryDriver(RegisterDeliveryDriverModel registerModel)
+        public async Task<ServiceResult<string>> RegisterDeliveryDriver(CreateDeliveryDriverRequest registerModel)
         {
             var user = new DeliveryDriver
             {
@@ -63,8 +59,8 @@ namespace Motto.Services
 
             try
             {
-                await _userRepository.AddUserAsync(user);
-                await _userRepository.SaveChangesAsync();
+                await _userRepository.Add(user);
+                await _userRepository.SaveChanges();
                 return ServiceResult<string>.Successed("Entregador criado com sucesso");
             }
             catch (DbUpdateException ex)

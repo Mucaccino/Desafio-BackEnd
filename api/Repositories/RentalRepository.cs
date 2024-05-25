@@ -1,17 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Motto.Entities;
 using Motto.Models;
+using Motto.Repositories.Interfaces;
 
 namespace Motto.Repositories
 {
-
-    public interface IRentalRepository
-    {
-        Task<Rental?> GetRentalByIdAsync(int id);
-        Task<IEnumerable<Rental>> GetAllRentalsAsync();
-        Task AddRentalAsync(Rental rental);
-        Task SaveChangesAsync();
-    }
 
     public class RentalRepository : IRentalRepository
     {
@@ -22,7 +15,7 @@ namespace Motto.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Rental?> GetRentalByIdAsync(int id)
+        public async Task<Rental?> GetById(int id)
         {
             return await _dbContext.Rentals
                 .Include(r => r.Motorcycle)
@@ -31,17 +24,17 @@ namespace Motto.Repositories
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<IEnumerable<Rental>> GetAllRentalsAsync()
+        public async Task<IEnumerable<Rental>> GetAll()
         {
             return await _dbContext.Rentals.ToListAsync();
         }
 
-        public async Task AddRentalAsync(Rental rental)
+        public async Task Add(Rental rental)
         {
             await _dbContext.Rentals.AddAsync(rental);
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChanges()
         {
             await _dbContext.SaveChangesAsync();
         }

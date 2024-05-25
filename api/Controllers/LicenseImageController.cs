@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motto.Entities;
-using Motto.Services;
-using Motto.Repositories;
 using Motto.Utils;
 using System.IO;
 using System.Threading.Tasks;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
 namespace Motto.Controllers
 {
@@ -38,7 +38,7 @@ namespace Motto.Controllers
                 return BadRequest("O formato do arquivo deve ser PNG ou BMP.");
             }
 
-            var driver = await _deliveryDriverRepository.GetByIdAsync(id);
+            var driver = await _deliveryDriverRepository.GetById(id);
             if (driver == null)
             {
                 return NotFound("Entregador não encontrado.");
@@ -52,7 +52,7 @@ namespace Motto.Controllers
 
                 // Atualizar o campo DriverLicenseImage do DeliveryDriver
                 driver.DriverLicenseImage = imagePath;
-                await _deliveryDriverRepository.UpdateAsync(driver);
+                await _deliveryDriverRepository.Update(driver);
 
                 return Ok("Imagem enviada e atualizada com sucesso.");
             }
@@ -66,7 +66,7 @@ namespace Motto.Controllers
         [Authorize(Roles = "Admin, DeliveryDriver")]
         public async Task<IActionResult> GetImage(int id)
         {
-            var deliveryDriver = await _deliveryDriverRepository.GetByIdAsync(id);
+            var deliveryDriver = await _deliveryDriverRepository.GetById(id);
             if (deliveryDriver == null)
             {
                 return NotFound();

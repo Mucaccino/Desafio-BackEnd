@@ -1,6 +1,6 @@
 ﻿namespace Motto.Models
 {
-    public class RegisterDeliveryDriverModel
+    public class CreateDeliveryDriverRequest
     {
         public required string Name { get; set; }
         public required string Username { get; set; }

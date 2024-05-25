@@ -35,7 +35,7 @@ namespace Motto.Tests
         public async Task TestRegisterAdmin()
         {
             // Arrange
-            var registerModel = new RegisterAdminModel
+            var registerModel = new CreateAdminRequest
             {
                 Name = "Murillo Carmo",
                 Username = "murillodocarmo@gmail.com",
@@ -58,7 +58,7 @@ namespace Motto.Tests
         public async Task TestRegisterDeliveryDriver()
         {
             // Arrange
-            var registerModel = new RegisterDeliveryDriverModel
+            var registerModel = new CreateDeliveryDriverRequest
             {
                 Name = "Murillo Carmo",
                 Username = "murillodocarmo@gmail.com",

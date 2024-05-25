@@ -1,16 +1,10 @@
 using Minio.DataModel.Args;
 using Minio.Exceptions;
 using Minio;
-using Motto.Repositories;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
 namespace Motto.Services;
-
-public interface ILicenseImageService
-{
-        Task<string> UploadImageAsync(IFormFile image, string fileName);
-        Task<MemoryStream> GetImageAsync(string fileName);
-}
-
 
 public class LicenseImageService : ILicenseImageService
 {
@@ -27,7 +21,7 @@ public class LicenseImageService : ILicenseImageService
         var rootPassword = configuration["Minio:RootPassword"];
 
         _minioClient = new MinioClient()
-            .WithEndpoint(new Uri(minioEndpoint))
+            .WithEndpoint(new Uri(minioEndpoint ?? ""))
             .WithCredentials(rootUser, rootPassword)
             .Build();
     }

@@ -8,19 +8,11 @@ using Motto.Entities;
 using Motto.Models;
 using Motto.Repositories;
 using Namotion.Reflection;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
 namespace Motto.Services
 {
-    public interface IRentalService
-    {
-        Task<ServiceResult<Rental>> RegisterRental(int userId, RentalRegisterModel registerModel);
-        Task<ServiceResult<RentalDeliveryResult>> DeliverMotorcycle(int userId, int rentalId, DateTime endDate);
-        Task<IEnumerable<Rental>> GetAllRentals();
-        Task<Rental> GetRentalById(int id);
-        Task<ServiceResult<RentalTotalCostModel>> GetTotalCostById(int id, DateTime endDate);
-        RentalTotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate);
-    }
-
     public class RentalService : IRentalService
     {
         private readonly IRentalRepository _rentalRepository;
@@ -37,9 +29,9 @@ namespace Motto.Services
             _rentalPlanRepository = rentalPlanRepository;
         }
 
-        public async Task<ServiceResult<Rental>> RegisterRental(int userId, RentalRegisterModel registerModel)
+        public async Task<ServiceResult<Rental>> RegisterRental(int userId, CreateRentalRequest registerModel)
         {
-            var deliveryDriver = await _deliveryDriverRepository.GetByIdAsync(userId);
+            var deliveryDriver = await _deliveryDriverRepository.GetById(userId);
             if (deliveryDriver == null)
             {
                 return ServiceResult<Rental>.Failed("O entregador não existe.");
@@ -50,7 +42,7 @@ namespace Motto.Services
                 return ServiceResult<Rental>.Failed("O entregador não está habilitado na categoria A.");
             }
 
-            var rentalPlan = await _rentalPlanRepository.GetByIdAsync(registerModel.RentalPlanId);
+            var rentalPlan = await _rentalPlanRepository.GetById(registerModel.RentalPlanId);
             if (rentalPlan == null)
             {
                 return ServiceResult<Rental>.Failed("Plano de aluguel inválido.");
@@ -67,7 +59,7 @@ namespace Motto.Services
 
             try
             {
-                await _rentalRepository.AddRentalAsync(rental);
+                await _rentalRepository.Add(rental);
                 return ServiceResult<Rental>.Successed(rental);
             }
             catch (DbUpdateException ex)
@@ -76,33 +68,33 @@ namespace Motto.Services
             }
         }
 
-        public async Task<ServiceResult<RentalDeliveryResult>> DeliverMotorcycle(int userId, int rentalId, DateTime endDate)
+        public async Task<ServiceResult<RentalDeliveryResponse>> DeliverMotorcycle(int userId, int rentalId, DateTime endDate)
         {
-            var rental = await _rentalRepository.GetRentalByIdAsync(rentalId);
+            var rental = await _rentalRepository.GetById(rentalId);
             if (rental == null)
             {
-                return ServiceResult<RentalDeliveryResult>.Failed("Aluguel não encontrado.");
+                return ServiceResult<RentalDeliveryResponse>.Failed("Aluguel não encontrado.");
             }
 
             if (rental.DeliveryDriverId != userId)
             {
-                return ServiceResult<RentalDeliveryResult>.Failed("Você não está autorizado a entregar esta moto.");
+                return ServiceResult<RentalDeliveryResponse>.Failed("Você não está autorizado a entregar esta moto.");
             }
 
             if (!rental.EndDate.HasValidNullability())
             {
-                return ServiceResult<RentalDeliveryResult>.Failed("A moto já foi entregue.");
+                return ServiceResult<RentalDeliveryResponse>.Failed("A moto já foi entregue.");
             }
 
             if (endDate < rental.StartDate)
             {
-                return ServiceResult<RentalDeliveryResult>.Failed("A data de entrega não pode ser anterior à data de retirada.");
+                return ServiceResult<RentalDeliveryResponse>.Failed("A data de entrega não pode ser anterior à data de retirada.");
             }
 
-            var rentalPlan = await _rentalPlanRepository.GetByIdAsync(rental.RentalPlanId);
+            var rentalPlan = await _rentalPlanRepository.GetById(rental.RentalPlanId);
             if (rentalPlan == null)
             {
-                return ServiceResult<RentalDeliveryResult>.Failed("Plano de aluguel inválido.");
+                return ServiceResult<RentalDeliveryResponse>.Failed("Plano de aluguel inválido.");
             }
 
             rental.EndDate = endDate;
@@ -110,8 +102,8 @@ namespace Motto.Services
 
             try
             {
-                await _rentalRepository.SaveChangesAsync();
-                return ServiceResult<RentalDeliveryResult>.Successed(new RentalDeliveryResult
+                await _rentalRepository.SaveChanges();
+                return ServiceResult<RentalDeliveryResponse>.Successed(new RentalDeliveryResponse
                 {
                     Cost = totalCostInfo,
                     Message = "Entrega registrada com sucesso."
@@ -119,39 +111,39 @@ namespace Motto.Services
             }
             catch (DbUpdateException ex)
             {
-                return ServiceResult<RentalDeliveryResult>.Failed("Erro ao salvar os dados no banco de dados: " + ex.Message);
+                return ServiceResult<RentalDeliveryResponse>.Failed("Erro ao salvar os dados no banco de dados: " + ex.Message);
             }
         }
 
-        public async Task<IEnumerable<Rental>> GetAllRentals()
+        public async Task<IEnumerable<Rental>> GetAll()
         {
-            return await _rentalRepository.GetAllRentalsAsync();
+            return await _rentalRepository.GetAll();
         }
 
-        public async Task<Rental> GetRentalById(int id)
+        public async Task<Rental?> GetById(int id)
         {
-            return await _rentalRepository.GetRentalByIdAsync(id);
+            return await _rentalRepository.GetById(id);
         }
 
-        public async Task<ServiceResult<RentalTotalCostModel>> GetTotalCostById(int id, DateTime endDate)
+        public async Task<ServiceResult<TotalCostModel>> GetTotalCostById(int id, DateTime endDate)
         {
-            var rental = await _rentalRepository.GetRentalByIdAsync(id);
+            var rental = await _rentalRepository.GetById(id);
             if (rental == null)
             {
-                return ServiceResult<RentalTotalCostModel>.Failed("Aluguel não encontrado.");
+                return ServiceResult<TotalCostModel>.Failed("Aluguel não encontrado.");
             }
 
             if (endDate < rental.StartDate)
             {
-                return ServiceResult<RentalTotalCostModel>.Failed("A data de entrega não pode ser anterior à data de retirada.");
+                return ServiceResult<TotalCostModel>.Failed("A data de entrega não pode ser anterior à data de retirada.");
             }
 
             var totalCostInfo = GetTotalCost(rental, rental.RentalPlan, endDate);
 
-            return ServiceResult<RentalTotalCostModel>.Successed(totalCostInfo);
+            return ServiceResult<TotalCostModel>.Successed(totalCostInfo);
         }
 
-        public RentalTotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate)
+        public TotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate)
         {
             if (endDate == default(DateTime)) endDate = DateTime.Today;
 
@@ -182,7 +174,7 @@ namespace Motto.Services
                 rental.TotalCost += rental.PenaltyCost;
             }
 
-            return new RentalTotalCostModel
+            return new TotalCostModel
             {
                 BaseCost = rental.TotalCost - rental.PenaltyCost,
                 PenaltyCost = rental.PenaltyCost,

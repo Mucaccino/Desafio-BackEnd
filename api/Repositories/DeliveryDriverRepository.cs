@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Motto.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Motto.Entities;
 using Motto.Models;
@@ -15,29 +16,29 @@ namespace Motto.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<DeliveryDriver> GetByIdAsync(int id)
+        public async Task<DeliveryDriver?> GetById(int id)
         {
             return await _dbContext.DeliveryDrivers.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<DeliveryDriver>> GetAllAsync()
+        public async Task<IEnumerable<DeliveryDriver>> GetAll()
         {
             return await _dbContext.DeliveryDrivers.ToListAsync();
         }
 
-        public async Task AddAsync(DeliveryDriver driver)
+        public async Task Add(DeliveryDriver driver)
         {
             await _dbContext.DeliveryDrivers.AddAsync(driver);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(DeliveryDriver driver)
+        public async Task Update(DeliveryDriver driver)
         {
             _dbContext.DeliveryDrivers.Update(driver);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
             var driver = await _dbContext.DeliveryDrivers.FindAsync(id);
             if (driver != null)

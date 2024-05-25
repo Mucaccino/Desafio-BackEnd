@@ -1,6 +1,6 @@
 ﻿namespace Motto.Models
 {
-    public class RentalTotalCostModel
+    public class TotalCostModel
     {
         public decimal BaseCost { get; set; }
         public decimal PenaltyCost { get; set; }

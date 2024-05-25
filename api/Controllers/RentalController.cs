@@ -1,12 +1,10 @@
 using System.Security.Claims;
+using Motto.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motto.Models;
-using Motto.Services;
 
 namespace Motto.Controllers;
-
-
 
 [ApiController]
 [Route("api/[controller]")]
@@ -21,7 +19,7 @@ public class RentalController : ControllerBase
 
     [Authorize(Roles = "DeliveryDriver")]
     [HttpPost("register")]
-    public async Task<ActionResult<Rental>> RentalRegister(RentalRegisterModel registerModel)
+    public async Task<ActionResult<Rental>> RentalRegister(CreateRentalRequest registerModel)
     {
         if (!ModelState.IsValid)
         {
@@ -58,7 +56,7 @@ public class RentalController : ControllerBase
     [HttpGet("list")]
     public async Task<ActionResult<IEnumerable<Rental>>> GetAll()
     {
-        var rentals = await _rentalService.GetAllRentals();
+        var rentals = await _rentalService.GetAll();
         return Ok(rentals);
     }
 
@@ -66,7 +64,7 @@ public class RentalController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Rental>> GetById(int id)
     {
-        var rental = await _rentalService.GetRentalById(id);
+        var rental = await _rentalService.GetById(id);
 
         if (rental == null)
         {

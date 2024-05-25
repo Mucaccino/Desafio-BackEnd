@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Serilog;
 using Motto.Models;
 using Motto.Services;
+using Motto.Services.Interfaces;
 
 namespace Motto.Controllers
 {

@@ -1,4 +1,5 @@
 using System.Text;
+using Motto.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,10 +8,10 @@ using Motto.Models;
 using Motto.Repositories;
 using Motto.Services;
 using Motto.Services.EventProducers;
-using Motto.Utils;
 using NSwag.Generation.Processors.Security;
 using Serilog;
 using Serilog.Exceptions;
+using Motto.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,12 +37,14 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDeliveryDriverRepository, DeliveryDriverRepository>();
 builder.Services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();
+builder.Services.AddScoped<IRentalPlanRepository, RentalPlanRepository>();
 
 // Register services
 builder.Services.AddScoped<IAuthService, AuthService>(provider =>
 {
     return new AuthService(provider.GetRequiredService<IUserRepository>(), builder.Configuration["Jwt:Key"] ?? "", provider.GetRequiredService<ILogger<AuthService>>());
 });
+builder.Services.AddScoped<IRentalPlanService, RentalPlanService>();
 builder.Services.AddScoped<ILicenseImageService, LicenseImageService>();
 builder.Services.AddScoped<LicenseImageService>();
 

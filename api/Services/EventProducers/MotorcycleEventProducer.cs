@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 using Motto.Models;
+using Motto.Services.Interfaces;
 
 namespace Motto.Services.EventProducers
 {

@@ -1,25 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Motto.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Motto.Entities;
 using Motto.Models;
 
 namespace Motto.Repositories
 {
-    public interface IMotorcycleRepository
-    {
-        Task<Motorcycle?> GetMotorcycleById(int id);
-        Task<Motorcycle?> GetMotorcycleByPlate(string plate);
-        Task<Motorcycle?> GetMotorcycleByPlateAndDifferentId(string plate, int id);
-        Task<IEnumerable<Motorcycle>> GetMotorcycles(string? plateFilter);
-        Task<bool> HasRentals(int motorcycleId);
-        Task AddMotorcycle(Motorcycle motorcycle);
-        Task UpdateMotorcycle(int id);
-        Task RemoveMotorcycle(int id);
-        Task SaveChangesAsync();
-    }
-
     public class MotorcycleRepository : IMotorcycleRepository
     {
         private readonly ApplicationDbContext _dbContext;
@@ -29,22 +14,24 @@ namespace Motto.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Motorcycle?> GetMotorcycleById(int id)
+        public async Task<Motorcycle?> GetById(int id)
         {
             return await _dbContext.Motorcycles.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task<Motorcycle?> GetMotorcycleByPlate(string plate)
+        public async Task<Motorcycle?> GetByPlate(string plate)
         {
             return await _dbContext.Motorcycles.FirstOrDefaultAsync(m => m.Plate == plate);
         }
 
-        public async Task<Motorcycle?> GetMotorcycleByPlateAndDifferentId(string plate, int id)
+        public async Task<bool> HasPlate(string plate, int id)
         {
-            return await _dbContext.Motorcycles.FirstOrDefaultAsync(m => m.Plate == plate && m.Id != id);
+            var motorcycle = await _dbContext.Motorcycles.FirstOrDefaultAsync(m => m.Plate == plate && m.Id != id);
+
+            return motorcycle != null;
         }
 
-        public async Task<IEnumerable<Motorcycle>> GetMotorcycles(string? plateFilter)
+        public async Task<IEnumerable<Motorcycle>> GetAll(string? plateFilter)
         {
             IQueryable<Motorcycle> query = _dbContext.Motorcycles;
 
@@ -61,12 +48,12 @@ namespace Motto.Repositories
             return await _dbContext.Rentals.AnyAsync(r => r.MotorcycleId == motorcycleId);
         }
 
-        public async Task AddMotorcycle(Motorcycle motorcycle)
+        public async Task Add(Motorcycle motorcycle)
         {
             await _dbContext.Motorcycles.AddAsync(motorcycle);
         }
 
-        public async Task UpdateMotorcycle(int id)
+        public async Task Update(int id)
         {
             var motorcycle = await _dbContext.Motorcycles.FindAsync(id);
             if (motorcycle != null)
@@ -76,7 +63,7 @@ namespace Motto.Repositories
             }
         }
 
-        public async Task RemoveMotorcycle(int id)
+        public async Task Remove(int id)
         {
             var motorcycle = await _dbContext.Motorcycles.FindAsync(id);
             if (motorcycle != null)
@@ -86,7 +73,7 @@ namespace Motto.Repositories
             }
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChanges()
         {
             await _dbContext.SaveChangesAsync();
         }

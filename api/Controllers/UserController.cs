@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Motto.Models;
 using Microsoft.AspNetCore.Authorization;
-using Motto.Services;
+using Motto.Services.Interfaces;
 
 namespace Motto.Controllers
 {
@@ -19,7 +19,7 @@ namespace Motto.Controllers
 
         [HttpPost("register/admin")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<User>> RegisterAdmin(RegisterAdminModel registerModel)
+        public async Task<ActionResult<User>> RegisterAdmin(CreateAdminRequest registerModel)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +37,7 @@ namespace Motto.Controllers
         }
 
         [HttpPost("register/deliveryDriver")]
-        public async Task<ActionResult<User>> RegisterDeliveryDriver(RegisterDeliveryDriverModel registerModel)
+        public async Task<ActionResult<User>> RegisterDeliveryDriver(CreateDeliveryDriverRequest registerModel)
         {
             if (!ModelState.IsValid)
             {

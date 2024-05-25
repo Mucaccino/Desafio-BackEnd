@@ -1,4 +1,4 @@
-﻿namespace Motto.Models
+﻿namespace Motto.Services
 {
     public class ServiceResult<T>
     {

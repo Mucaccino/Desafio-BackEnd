@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Motto.Controllers;
-using Motto.Entities;
+﻿using Motto.Services.Interfaces;
 using Motto.Models;
-using Motto.Repositories;
+using Motto.Repositories.Interfaces;
 
 namespace Motto.Services
 {
@@ -16,9 +13,9 @@ namespace Motto.Services
             _rentalPlanRepository = rentalPlanRepository;
         }
 
-        public async Task<IEnumerable<RentalPlan>> GetAllRentalPlans()
+        public async Task<IEnumerable<RentalPlan>> GetAll()
         {
-            return await _rentalPlanRepository.GetAllRentalPlans();
+            return await _rentalPlanRepository.GetAll();
         }
     }
 }

@@ -1,15 +1,11 @@
+using Motto.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motto.Entities;
 using Motto.Models;
-using Motto.Services;
 
 namespace Motto.Controllers
 {
-    public interface IRentalPlanService
-    {
-        Task<IEnumerable<RentalPlan>> GetAllRentalPlans();
-    }
 
     [ApiController]
     [Route("api/[controller]")]
@@ -26,7 +22,7 @@ namespace Motto.Controllers
         [HttpGet("list")]
         public async Task<ActionResult<IEnumerable<RentalPlan>>> GetAll()
         {
-            var result = await _rentalPlanService.GetAllRentalPlans();
+            var result = await _rentalPlanService.GetAll();
 
             if (result == null)
             {

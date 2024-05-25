@@ -1,12 +1,8 @@
+using Motto.Services.Interfaces;
 using RabbitMQ.Client;
 
 namespace Motto.Services
 {
-    public interface IRabbitMQService
-    {
-        IConnection GetConnection();
-        IModel GetChannel();
-    }
 
     public class RabbitMQService : IRabbitMQService
     {

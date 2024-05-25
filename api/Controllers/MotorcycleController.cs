@@ -1,19 +1,11 @@
+using Motto.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motto.Models;
-using Motto.Services;
 using Motto.Services.EventProducers;
 
 namespace Motto.Controllers
 {
-    public interface IMotorcycleService
-    {
-        Task<ServiceResult<string>> CreateMotorcycle(MotorcycleCreateModel model, MotorcycleEventProducer? motorcycleEventProducer);
-        Task<ServiceResult<string>> UpdateMotorcycle(int id, MotorcycleCreateModel model);
-        Task<Motorcycle?> GetMotorcycleById(int id);
-        Task<IEnumerable<Motorcycle>> GetMotorcycles(string? plateFilter);
-        Task<ServiceResult<string>> RemoveMotorcycle(int id);
-    }
 
     [ApiController]
     [Route("api/[controller]")]
@@ -28,7 +20,7 @@ namespace Motto.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("create")]
-        public async Task<ActionResult<object>> Create([FromBody] MotorcycleCreateModel model, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
+        public async Task<ActionResult<object>> Create([FromBody] CreateMotorcycleRequest model, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +39,7 @@ namespace Motto.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateModel model)
+        public async Task<ActionResult<object>> Update(int id, [FromBody] CreateMotorcycleRequest model)
         {
             if (!ModelState.IsValid)
             {

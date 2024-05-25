@@ -1,6 +1,6 @@
-﻿namespace Motto.Models
+namespace Motto.Models
 {
-    public class MotorcycleCreateModel
+    public class CreateMotorcycleRequest
     {
         public required int Year { get; set; }
         public required string Model { get; set; }

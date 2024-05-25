@@ -4,17 +4,13 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Motto.Models;
 using Motto.Entities;
-using Motto.Repositories;
 using Newtonsoft.Json;
 using Serilog;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
 namespace Motto.Services
 {
-    public interface IAuthService
-    {
-        Task<LoginModelResponse?> AuthenticateUserAsync(string username, string password);
-        string GenerateJwtToken(User user);
-    }
 
     public class AuthService : IAuthService
     {
@@ -31,7 +27,7 @@ namespace Motto.Services
 
         public async Task<LoginModelResponse?> AuthenticateUserAsync(string username, string password)
         {
-            var user = await _userRepository.GetUserByUsernameAsync(username);
+            var user = await _userRepository.GetByUsername(username);
 
             if (user == null)
             {
