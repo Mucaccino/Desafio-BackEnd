@@ -1,23 +1,25 @@
-using Microsoft.AspNetCore.Mvc;
-using Motto.Models;
-using Motto.Utils;
-using Motto.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Motto.Entities;
+using Motto.Utils;
+using System.IO;
+using System.Threading.Tasks;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
-namespace Motto.Api
+namespace Motto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class LicenseImageController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IMinioService _minioService;
+        private readonly IDeliveryDriverRepository _deliveryDriverRepository;
+        private readonly ILicenseImageService _licenseImageService;
 
-        public LicenseImageController(ApplicationDbContext dbContext, IMinioService minioService)
+        public LicenseImageController(IDeliveryDriverRepository deliveryDriverRepository, ILicenseImageService licenseImageService)
         {
-            _dbContext = dbContext;
-            _minioService = minioService;
+            _deliveryDriverRepository = deliveryDriverRepository;
+            _licenseImageService = licenseImageService;
         }
 
         [HttpPost("{id}/upload-image")]
@@ -26,7 +28,7 @@ namespace Motto.Api
         {
             if (image == null || image.Length == 0)
             {
-                return BadRequest("A imagem n√£o foi enviada.");
+                return BadRequest("A imagem n„o foi enviada.");
             }
 
             // Verificar o tipo MIME do arquivo
@@ -36,22 +38,21 @@ namespace Motto.Api
                 return BadRequest("O formato do arquivo deve ser PNG ou BMP.");
             }
 
-            var driver = await _dbContext.DeliveryDrivers.FindAsync(id);
+            var driver = await _deliveryDriverRepository.GetById(id);
             if (driver == null)
             {
-                return NotFound("Entregador n√£o encontrado.");
+                return NotFound("Entregador n„o encontrado.");
             }
 
             try
             {
                 // Salvar a imagem no MinIO
-                var fileName = $"DeliveryDriverImage_{driver.Id}{System.IO.Path.GetExtension(image.FileName)}";
-                var imagePath = await _minioService.UploadImageAsync(image, fileName);
+                var fileName = $"DeliveryDriverImage_{driver.Id}{Path.GetExtension(image.FileName)}";
+                var imagePath = await _licenseImageService.UploadImageAsync(image, fileName);
 
                 // Atualizar o campo DriverLicenseImage do DeliveryDriver
                 driver.DriverLicenseImage = imagePath;
-                _dbContext.Update(driver);
-                await _dbContext.SaveChangesAsync();
+                await _deliveryDriverRepository.Update(driver);
 
                 return Ok("Imagem enviada e atualizada com sucesso.");
             }
@@ -65,8 +66,7 @@ namespace Motto.Api
         [Authorize(Roles = "Admin, DeliveryDriver")]
         public async Task<IActionResult> GetImage(int id)
         {
-            // Verificar se o DeliveryDriver com o ID especificado existe
-            var deliveryDriver = await _dbContext.DeliveryDrivers.FindAsync(id);
+            var deliveryDriver = await _deliveryDriverRepository.GetById(id);
             if (deliveryDriver == null)
             {
                 return NotFound();
@@ -74,9 +74,7 @@ namespace Motto.Api
 
             try
             {
-                // Recuperar a imagem do MinIO
-                var imageStream = await _minioService.GetImageAsync(deliveryDriver.DriverLicenseImage);
-                // Retornar a imagem como resposta
+                var imageStream = await _licenseImageService.GetImageAsync(deliveryDriver.DriverLicenseImage);
                 return File(imageStream.ToArray(), "image/png");
             }
             catch (Exception ex)

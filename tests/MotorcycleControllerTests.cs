@@ -13,23 +13,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Moq.EntityFrameworkCore;
 using Motto.Tests;
+using Motto.Repositories;
+using Motto.Services;
 
 namespace Motto.Tests
 {
 
-
-    
     [TestClass]
     public class MotorcycleControllerTests
     {
 
-        private readonly Mock<ApplicationDbContext> _dbContext;
+        private Mock<ApplicationDbContext> _dbContext;
         private MotorcycleController _controller;
 
         private IList<Motorcycle> _motorcycleFakeList = TestDataHelper.GetFakeMotorcycleList();
         private IList<Rental> _rentalFakeRentalList = TestDataHelper.GetFakeRentalList();
 
-        public MotorcycleControllerTests()
+        [TestInitialize]
+        public void Initialize()
         {
             _dbContext = new Mock<ApplicationDbContext>();
 
@@ -69,7 +70,11 @@ namespace Motto.Tests
 
             new Mock<IHttpContextAccessor>().Setup(_ => _.HttpContext).Returns(httpContext);
 
-            _controller = new MotorcycleController(_dbContext.Object)
+            // Mock do serviço
+            var _serviceMock = new MotorcycleService(new MotorcycleRepository(_dbContext.Object));
+
+            // Configure o contexto do controlador
+            _controller = new MotorcycleController(_serviceMock)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -82,7 +87,7 @@ namespace Motto.Tests
         public async Task Create_ValidModel_ReturnsOk()
         {
             // Arrange
-            var model = new MotorcycleCreateModel
+            var model = new CreateMotorcycleRequest
             {
                 Year = 2021,
                 Model = "Model Y",
@@ -113,7 +118,7 @@ namespace Motto.Tests
             _dbContext.Object.SaveChanges();
 
             // Arrange
-            var model = new MotorcycleCreateModel
+            var model = new CreateMotorcycleRequest
             {
                 Year = 2021,
                 Model = "Model Y",
@@ -143,7 +148,7 @@ namespace Motto.Tests
             _dbContext.Object.Add(newMotorcycle);
             _dbContext.Object.SaveChanges();
 
-            var model = new MotorcycleCreateModel
+            var model = new CreateMotorcycleRequest
             {
                 Year = 2021,
                 Model = "Model Y",
@@ -183,7 +188,7 @@ namespace Motto.Tests
 
             _dbContext.Object.SaveChanges();
 
-            var model = new MotorcycleCreateModel
+            var model = new CreateMotorcycleRequest
             {
                 Year = updateMotorcycle.Year,
                 Model = updateMotorcycle.Model,
@@ -282,8 +287,8 @@ namespace Motto.Tests
             var result = await _controller.RemoveMotorcycle(1);
 
             // Assert
-            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
-            var badRequestResult = result.Result as BadRequestObjectResult;
+            Assert.IsInstanceOfType(result.Result, typeof(ConflictObjectResult));
+            var badRequestResult = result.Result as ConflictObjectResult;
             Assert.AreEqual("Não é possível remover a moto porque existem locações associadas a ela.", badRequestResult?.Value);
         }
         

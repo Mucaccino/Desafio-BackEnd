@@ -6,6 +6,8 @@ using Moq.EntityFrameworkCore;
 using Motto.Controllers;
 using Motto.Entities;
 using Motto.Models;
+using Motto.Repositories;
+using Motto.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,11 +16,12 @@ namespace Motto.Tests
     [TestClass]
     public class RentalControllerTests
     {
-        private readonly Mock<ApplicationDbContext> _mockDbContext;
+        private Mock<ApplicationDbContext> _mockDbContext;
         private RentalController _controller;
         private List<Rental> _rentalFakeRentalList = TestDataHelper.GetFakeRentalList();
 
-        public RentalControllerTests()
+        [TestInitialize]
+        public void Initialize()
         {
             _mockDbContext = new Mock<ApplicationDbContext>();
             
@@ -53,7 +56,10 @@ namespace Motto.Tests
 
             new Mock<IHttpContextAccessor>().Setup(_ => _.HttpContext).Returns(httpContext);
 
-            _controller = new RentalController(_mockDbContext.Object)
+            _controller = new RentalController(new RentalService(
+                new RentalRepository(_mockDbContext.Object),
+                new DeliveryDriverRepository(_mockDbContext.Object),
+                new RentalPlanRepository(_mockDbContext.Object)))
             {
                 ControllerContext = new ControllerContext
                 {
@@ -66,7 +72,7 @@ namespace Motto.Tests
         public async Task RentalRegister_ValidModel_ReturnsOk()
         {
             // Arrange
-            var registerModel = new RentalRegisterModel
+            var registerModel = new CreateRentalRequest
             {
                 MotorcycleId = 1,
                 RentalPlanId = 1
@@ -84,7 +90,7 @@ namespace Motto.Tests
         public async Task RentalRegister_InvalidModel_ReturnsBadRequest()
         {
             // Arrange
-            var registerModel = new RentalRegisterModel
+            var registerModel = new CreateRentalRequest
             {
                 MotorcycleId = 1,
                 RentalPlanId = 1
@@ -105,7 +111,7 @@ namespace Motto.Tests
         public async Task RentalRegister_InvalidDriverLicense_ReturnsBadRequest()
         {
             // Arrange
-            var model = new RentalRegisterModel
+            var model = new CreateRentalRequest
             {
                 MotorcycleId = 1,
                 RentalPlanId = 1

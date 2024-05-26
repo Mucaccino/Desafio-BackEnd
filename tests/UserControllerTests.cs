@@ -1,52 +1,64 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Motto.Api;
+using Motto.Controllers;
 using Motto.Entities;
 using Motto.Models;
 using Moq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moq.EntityFrameworkCore;
+using Motto.Services;
+using Motto.Repositories;
 
 namespace Motto.Tests
 {
     [TestClass]
     public class UserControllerTests
     {
+        private UserController _userController;
+        private Mock<ApplicationDbContext> _mockDbContext;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+
+            _mockDbContext = new Mock<ApplicationDbContext>();
+            _mockDbContext.Setup(x => x.SaveChangesAsync(default)).ReturnsAsync(1);
+            _mockDbContext.Setup(x => x.Users)
+                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
+            var _service = new UserService(new UserRepository(_mockDbContext.Object));
+            _userController = new UserController(_service);
+        }
+
+
         [TestMethod]
         public async Task TestRegisterAdmin()
         {
             // Arrange
-            var registerModel = new RegisterAdminModel
+            var registerModel = new CreateAdminRequest
             {
                 Name = "Murillo Carmo",
                 Username = "murillodocarmo@gmail.com",
                 Password = "123mudar"
             };
 
-            var mockDbContext = new Mock<ApplicationDbContext>();
-            mockDbContext.Setup(x => x.SaveChangesAsync(default)).ReturnsAsync(1);
-            mockDbContext.Setup<DbSet<User>>(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
-            var userController = new UserController(mockDbContext.Object);
-
             // Act
-            var result = await userController.RegisterAdmin(registerModel);
+            var result = await _userController.RegisterAdmin(registerModel);
 
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             var okResult = result.Result as OkObjectResult;
             Assert.AreEqual("Administrador criado com sucesso", okResult?.Value);
 
-            mockDbContext.Verify(db => db.Users.Add(It.IsAny<User>()), Times.Once);
-            mockDbContext.Verify(db => db.SaveChangesAsync(default), Times.Once);
+            _mockDbContext.Verify(db => db.Users.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mockDbContext.Verify(db => db.SaveChangesAsync(default), Times.Once);
         }
 
         [TestMethod]
         public async Task TestRegisterDeliveryDriver()
         {
             // Arrange
-            var registerModel = new RegisterDeliveryDriverModel
+            var registerModel = new CreateDeliveryDriverRequest
             {
                 Name = "Murillo Carmo",
                 Username = "murillodocarmo@gmail.com",
@@ -57,22 +69,16 @@ namespace Motto.Tests
                 DriverLicenseType = UserType.DeliveryDriver.ToString()
             };
 
-            var mockDbContext = new Mock<ApplicationDbContext>();
-            mockDbContext.Setup(x => x.SaveChangesAsync(default)).ReturnsAsync(1);
-            mockDbContext.Setup<DbSet<User>>(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
-            var userController = new UserController(mockDbContext.Object);
-
             // Act
-            var result = await userController.RegisterDeliveryDriver(registerModel);
+            var result = await _userController.RegisterDeliveryDriver(registerModel);
 
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             var okResult = result.Result as OkObjectResult;
             Assert.AreEqual("Entregador criado com sucesso", okResult?.Value);
 
-            mockDbContext.Verify(db => db.Users.Add(It.IsAny<DeliveryDriver>()), Times.Once);
-            mockDbContext.Verify(db => db.SaveChangesAsync(default), Times.Once);
+            _mockDbContext.Verify(db => db.Users.AddAsync(It.IsAny<DeliveryDriver>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mockDbContext.Verify(db => db.SaveChangesAsync(default), Times.Once);
         }
     }
 }

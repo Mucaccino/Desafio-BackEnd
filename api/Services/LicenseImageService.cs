@@ -1,39 +1,35 @@
-
-using System.Security.Policy;
-using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
+using Minio;
+using Motto.Repositories.Interfaces;
+using Motto.Services.Interfaces;
 
-namespace Motto.Api;
+namespace Motto.Services;
 
-public interface IMinioService
-{
-    Task<string> UploadImageAsync(IFormFile image, string fileName);
-    Task<MemoryStream> GetImageAsync(string fileName);
-}
-
-public class LicenseImageService : IMinioService
+public class LicenseImageService : ILicenseImageService
 {
     private readonly IMinioClient _minioClient;
+    private readonly IDeliveryDriverRepository _deliveryDriverRepository;
     private readonly string _bucketName = "delivery-driver-images";
 
-    public LicenseImageService(IConfiguration configuration)
+    public LicenseImageService(IConfiguration configuration, IDeliveryDriverRepository deliveryDriverRepository)
     {
+        _deliveryDriverRepository = deliveryDriverRepository;
+
         var minioEndpoint = configuration["Minio:Endpoint"];
         var rootUser = configuration["Minio:RootUser"];
         var rootPassword = configuration["Minio:RootPassword"];
 
         _minioClient = new MinioClient()
-        .WithEndpoint(new Uri(minioEndpoint))
-        .WithCredentials(rootUser, rootPassword)
-        .Build();
+            .WithEndpoint(new Uri(minioEndpoint ?? ""))
+            .WithCredentials(rootUser, rootPassword)
+            .Build();
     }
 
     private async Task<bool> VerifyAndCreateBucket()
     {
         try
         {
-            // Verifica se o bucket já existe
             var bucketExistsArgs = new BucketExistsArgs()
                 .WithBucket(_bucketName);
 
@@ -41,9 +37,7 @@ public class LicenseImageService : IMinioService
 
             if (!bucketExists)
             {
-                // Se o bucket não existe, cria o novo bucket
                 await _minioClient.MakeBucketAsync(new MakeBucketArgs().WithBucket(_bucketName));
-
                 Console.WriteLine($"Bucket '{_bucketName}' criado com sucesso.");
                 return true;
             }
@@ -56,22 +50,22 @@ public class LicenseImageService : IMinioService
         {
             Console.WriteLine($"Erro ao verificar ou criar o bucket '{_bucketName}': {ex.Message}");
         }
-            
+
         return false;
     }
 
     public async Task<MemoryStream> GetImageAsync(string fileName)
     {
-
         try
         {
-            StatObjectArgs statObjectArgs = new StatObjectArgs()
-                                           .WithBucket(_bucketName)
-                                           .WithObject(fileName);
+            var statObjectArgs = new StatObjectArgs()
+                .WithBucket(_bucketName)
+                .WithObject(fileName);
+
             await _minioClient.StatObjectAsync(statObjectArgs);
 
             var memStream = new MemoryStream();
-            GetObjectArgs getObjectArgs = new GetObjectArgs()
+            var getObjectArgs = new GetObjectArgs()
                 .WithBucket(_bucketName)
                 .WithObject(fileName)
                 .WithCallbackStream(async (stream) =>
@@ -85,13 +79,11 @@ public class LicenseImageService : IMinioService
         }
         catch (MinioException ex)
         {
-            // Trata o erro de MinioException
             Console.WriteLine($"Erro ao obter imagem '{fileName}' do MinIO: {ex.Message}");
             throw;
         }
         catch (Exception ex)
         {
-            // Trata outros tipos de exceções
             Console.WriteLine($"Erro ao obter imagem '{fileName}': {ex.Message}");
             throw;
         }
@@ -99,8 +91,6 @@ public class LicenseImageService : IMinioService
 
     public async Task<string> UploadImageAsync(IFormFile image, string fileName)
     {
-
-        // remover daqui para o startup do docker =[
         await VerifyAndCreateBucket();
 
         try

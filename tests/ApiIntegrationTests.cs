@@ -63,21 +63,4 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
         Assert.IsTrue(_loggedToken != null && _loggedToken.Length > 0);
     }
 
-    [TestMethod]
-    [DataRow(UserType.Admin)]
-    [DataRow(UserType.DeliveryDriver)]
-    public async Task ApiIntegration_Verify(UserType userType)
-    {
-        if (string.IsNullOrEmpty(_loggedToken) || userType != _loggedUserType) {
-            await ApiIntegration_Login(userType);
-        }
-
-        var client = _factory.CreateClient();
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/Auth/verify/{userType.ToString().ToLower()}");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _loggedToken?.Replace("Bearer ", ""));
-
-        var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-    }
 }

@@ -26,7 +26,7 @@ services:
     networks:
       - motto-net
     volumes:
-        - ./api/https/aspnetapp.pfx:/https/aspnetapp.pfx
+        - ./api/.https/aspnetapp.pfx:/https/aspnetapp.pfx
     healthcheck:
       test: curl -sSf http://api:5000/health
       interval: 10s
