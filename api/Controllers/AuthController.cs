@@ -11,15 +11,25 @@ namespace Motto.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// </summary>
+        /// <param name="authService">The authentication service.</param>
+        /// <param name="logger">The logger.</param>
         public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Authenticates a user with the provided login credentials.
+        /// </summary>
+        /// <param name="loginModel">The login credentials of the user.</param>
+        /// <returns>The login response containing the authentication token and user information.</returns>
         [HttpPost("login")]
         public async Task<ActionResult<LoginModelResponse>> AuthenticateUser(LoginModel loginModel)
         {
