@@ -2,17 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Motto.Controllers
 {
+    /// <summary>
+    /// Controller for checking the health of the application.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class HealthController : ControllerBase
     {
+        /// <summary>
+        /// Checks the health of the application.
+        /// </summary>
+        /// <returns>An IActionResult with a 200 OK status code if the application is healthy.</returns>
         [HttpGet]
         public IActionResult CheckHealth()
         {
-            // Aqui você pode adicionar lógica para verificar a saúde da sua aplicação.
-            // Por exemplo, você pode verificar conexões com bancos de dados, serviços externos, etc.
-
-            // Se tudo estiver bem, você pode retornar um código 200 OK.
+            // Here you can add logic to check the health of your application.
             return Ok("Healthy");
         }
     }

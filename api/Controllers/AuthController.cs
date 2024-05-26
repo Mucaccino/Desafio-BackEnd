@@ -7,6 +7,9 @@ using Motto.Services.Interfaces;
 
 namespace Motto.Controllers
 {
+    /// <summary>
+    /// Represents a controller for authentication operations.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
