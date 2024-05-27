@@ -31,6 +31,12 @@ Swagger UI rodando no Docker
 
 A solução do projeto inclui o __makefile__, e para executar toda a solução usando o Docker, subindo os serviçoes e os projetos com a api e o consumidor. 
 
+Sobe serviços no docker e realiza seed inicial do database.
+```
+> make setup-db
+> make up-services
+```
+
 Compila, sobe serviços e projetos e realiza seed inicial do database.
 ```
 > make
@@ -144,8 +150,6 @@ Link do [primeiro run completo com sucesso](https://github.com/Mucaccino/Desafio
 ### Anotações
 
 - O projeto contém um [TODO](TODO.md), que deve ser mantido.
-- ~~Passo a passo para execução do projeto~~.
-- ~~A solução ainda carece da implementação do projeto de testes.~~
-- ~~Necessário repassar o projeto incluindo Loggers no decorrer da execução~~.
 - Usado para criar os certificados para HTTPS dentro do Docker:
 `dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p mypass123`
+- https://dotnet.github.io/docfx/index.html
