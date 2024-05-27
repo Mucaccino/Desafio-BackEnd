@@ -89,21 +89,18 @@ namespace Motto.Repositories
         public async Task Add(Motorcycle motorcycle)
         {
             await _dbContext.Motorcycles.AddAsync(motorcycle);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Updates a motorcycle with the given ID.
+        /// Updates a motorcycle in the database.
         /// </summary>
-        /// <param name="id">The ID of the motorcycle to update.</param>
+        /// <param name="motorcycle">The motorcycle object to update.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task Update(int id)
+        public async Task Update(Motorcycle motorcycle)
         {
-            var motorcycle = await _dbContext.Motorcycles.FindAsync(id);
-            if (motorcycle != null)
-            {
-                _dbContext.Motorcycles.Update(motorcycle);
-                await _dbContext.SaveChangesAsync();
-            }
+            _dbContext.Motorcycles.Update(motorcycle);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -119,14 +116,6 @@ namespace Motto.Repositories
                 _dbContext.Motorcycles.Remove(motorcycle);
                 await _dbContext.SaveChangesAsync();
             }
-        }
-
-        /// <summary>
-        /// Saves changes to the database.
-        /// </summary>
-        public async Task SaveChanges()
-        {
-            await _dbContext.SaveChangesAsync();
         }
     }
 }

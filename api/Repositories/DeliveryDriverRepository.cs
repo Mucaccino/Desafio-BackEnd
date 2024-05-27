@@ -66,7 +66,7 @@ namespace Motto.Repositories
         /// Deletes a delivery driver by its ID.
         /// </summary>
         /// <param name="id">The ID of the delivery driver to be deleted.</param>
-        public async Task Delete(int id)
+        public async Task Remove(int id)
         {
             var driver = await _dbContext.DeliveryDrivers.FindAsync(id);
             if (driver != null)

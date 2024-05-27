@@ -45,6 +45,7 @@ namespace Motto.Repositories
         public async Task Add(User user)
         {
             await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -53,14 +54,6 @@ namespace Motto.Repositories
         public async Task Update(User user)
         {
             _dbContext.Users.Update(user);
-            await SaveChanges();
-        }
-
-        /// <summary>
-        /// Saves changes to the database.
-        /// </summary>
-        public async Task SaveChanges()
-        {
             await _dbContext.SaveChangesAsync();
         }
     }

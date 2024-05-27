@@ -52,7 +52,6 @@ namespace Motto.Services
             try
             {
                 await _motorcycleRepository.Add(motorcycle);
-                await _motorcycleRepository.SaveChanges();
 
                 motorcycleEventProducer?.PublishMotorcycleRegisteredEvent(motorcycle);
 
@@ -91,8 +90,7 @@ namespace Motto.Services
 
             try
             {
-                await _motorcycleRepository.Update(existingMotorcycle.Id);
-                await _motorcycleRepository.SaveChanges();
+                await _motorcycleRepository.Update(existingMotorcycle);
 
                 return ServiceResult<string>.Successed("Moto atualizada com sucesso");
             }

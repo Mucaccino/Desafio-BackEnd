@@ -45,7 +45,6 @@ namespace Motto.Services
             try
             {
                 await _userRepository.Add(user);
-                await _userRepository.SaveChanges();
                 return ServiceResult<string>.Successed("Administrador criado com sucesso");
             }
             catch (DbUpdateException ex)
@@ -78,7 +77,6 @@ namespace Motto.Services
             try
             {
                 await _userRepository.Add(user);
-                await _userRepository.SaveChanges();
                 return ServiceResult<string>.Successed("Entregador criado com sucesso");
             }
             catch (DbUpdateException ex)

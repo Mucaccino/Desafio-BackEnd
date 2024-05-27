@@ -117,7 +117,7 @@ namespace Motto.Services
 
             try
             {
-                await _rentalRepository.SaveChanges();
+                await _rentalRepository.Update(rental);
                 return ServiceResult<RentalDeliveryResponse>.Successed(new RentalDeliveryResponse
                 {
                     Cost = totalCostInfo,

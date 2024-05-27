@@ -52,14 +52,33 @@ namespace Motto.Repositories
         public async Task Add(Rental rental)
         {
             await _dbContext.Rentals.AddAsync(rental);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Saves changes to the database.
+        /// Updates the given rental in the database.
         /// </summary>
-        public async Task SaveChanges()
+        /// <param name="rental">The rental to update.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task Update(Rental rental)
         {
+            _dbContext.Update(rental);
             await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Removes the rental with the given ID from the database.
+        /// </summary>
+        /// <param name="id">The ID of the rental to remove.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task Remove(int id)
+        {
+            var rentalPlan = await _dbContext.RentalPlans.FindAsync(id);
+            if (rentalPlan != null)
+            {
+                _dbContext.RentalPlans.Remove(rentalPlan);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }
