@@ -31,7 +31,7 @@ namespace Motto.Controllers
         /// <returns>The created admin user if successful, otherwise a bad request with the error message.</returns>
         [HttpPost("register/admin")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<User>> RegisterAdmin(CreateAdminRequest registerModel)
+        public async Task<ActionResult<User>> RegisterAdmin(UserCreateRequest registerModel)
         {
             if (!ModelState.IsValid)
             {

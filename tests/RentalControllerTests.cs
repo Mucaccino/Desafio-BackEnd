@@ -73,7 +73,7 @@ namespace Motto.Tests
         public async Task RentalRegister_ValidModel_ReturnsOk()
         {
             // Arrange
-            var registerModel = new CreateRentalRequest
+            var registerModel = new RentalCreateRequest
             {
                 MotorcycleId = 1,
                 RentalPlanId = 1
@@ -91,7 +91,7 @@ namespace Motto.Tests
         public async Task RentalRegister_InvalidModel_ReturnsBadRequest()
         {
             // Arrange
-            var registerModel = new CreateRentalRequest
+            var registerModel = new RentalCreateRequest
             {
                 MotorcycleId = 1,
                 RentalPlanId = 1
@@ -112,7 +112,7 @@ namespace Motto.Tests
         public async Task RentalRegister_InvalidDriverLicense_ReturnsBadRequest()
         {
             // Arrange
-            var model = new CreateRentalRequest
+            var model = new RentalCreateRequest
             {
                 MotorcycleId = 1,
                 RentalPlanId = 1

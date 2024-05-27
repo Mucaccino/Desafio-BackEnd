@@ -4,6 +4,6 @@ namespace Motto.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<ServiceResult<string>> RegisterAdmin(CreateAdminRequest registerModel);
+    Task<ServiceResult<string>> RegisterAdmin(UserCreateRequest registerModel);
     Task<ServiceResult<string>> RegisterDeliveryDriver(CreateDeliveryDriverRequest registerModel);
 }

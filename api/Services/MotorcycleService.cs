@@ -144,7 +144,6 @@ namespace Motto.Services
             try
             {
                 await _motorcycleRepository.Remove(motorcycle.Id);
-                await _motorcycleRepository.SaveChanges();
 
                 return ServiceResult<string>.Successed("Moto removida com sucesso.");
             }

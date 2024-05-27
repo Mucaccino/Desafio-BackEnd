@@ -31,7 +31,7 @@ namespace Motto.Services
         /// </summary>
         /// <param name="registerModel">The registration model.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task<ServiceResult<string>> RegisterAdmin(CreateAdminRequest registerModel)
+        public async Task<ServiceResult<string>> RegisterAdmin(UserCreateRequest registerModel)
         {
             var user = new User
             {

@@ -33,7 +33,7 @@ namespace Motto.Tests
         public async Task TestRegisterAdmin()
         {
             // Arrange
-            var registerModel = new CreateAdminRequest
+            var registerModel = new UserCreateRequest
             {
                 Name = "Murillo Carmo",
                 Username = "murillodocarmo@gmail.com",

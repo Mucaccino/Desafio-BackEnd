@@ -32,7 +32,7 @@ public class RentalController : ControllerBase
     /// <returns>The created rental.</returns>
     [Authorize(Roles = "DeliveryDriver")]
     [HttpPost("register")]
-    public async Task<ActionResult<Rental>> RentalRegister(CreateRentalRequest registerModel)
+    public async Task<ActionResult<Rental>> RentalRegister(RentalCreateRequest registerModel)
     {
         if (!ModelState.IsValid)
         {

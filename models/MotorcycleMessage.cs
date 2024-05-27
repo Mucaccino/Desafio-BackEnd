@@ -2,7 +2,7 @@
 
 public class MotorcycleMessage
 {
-    public int Id { get; set; }
-    public string Content { get; set; }
+    public required int Id { get; set; }
+    public required string Content { get; set; }
     public DateTime ReceivedDate { get; set; }
 }
