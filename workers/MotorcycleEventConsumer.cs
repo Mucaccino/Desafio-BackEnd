@@ -1,5 +1,5 @@
 using System.Text;
-using Motto.DTOs;
+using Motto.Models;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
