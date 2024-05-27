@@ -29,5 +29,4 @@ namespace Motto.Services
             return await _rentalPlanRepository.GetAll();
         }
     }
-    }
 }
