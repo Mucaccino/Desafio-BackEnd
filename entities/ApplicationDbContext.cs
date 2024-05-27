@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
 using Motto.Models;
 using Serilog;
-using Microsoft.Extensions.Logging;
 
 namespace Motto.Entities;
 

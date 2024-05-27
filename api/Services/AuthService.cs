@@ -1,34 +1,46 @@
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Motto.Models;
-using Motto.Entities;
+using Motto.DTOs;
 using Newtonsoft.Json;
-using Serilog;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
-using System.Threading.Tasks;
-using Motto.DTOs;
 using Motto.Controllers;
+using Motto.Models;
 
 namespace Motto.Services
 {
-    
+    /// <summary>
+    /// Provides authentication-related services.
+    /// </summary>
     public class AuthService : IAuthService
     {
         private readonly string _jwtKey;
         private readonly IUserRepository _userRepository;
         private readonly ILogger<AuthService> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthService"/> class.
+        /// </summary>
+        /// <param name="userRepository">The user repository.</param>
+        /// <param name="jwtKey">The JWT key.</param>
+        /// <param name="logger">The logger.</param>
         public AuthService(IUserRepository userRepository, string jwtKey, ILogger<AuthService> logger)
         {
             _userRepository = userRepository;
             _jwtKey = jwtKey;
             _logger = logger;
         }
-
+        
+        /// <summary>
+        /// Authenticates a user with the provided username and password.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>A task that represents the asynchronous authentication operation. The task result contains a <see cref="LoginResponse"/> object if the authentication is successful, or null if the user is not found or the password is incorrect.</returns>
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found.</exception>
+        /// <exception cref="IncorrectPasswordException">Thrown when the password is incorrect.</exception>
         public async Task<LoginResponse?> AuthenticateUserAsync(string username, string password)
         {
             var user = await _userRepository.GetByUsername(username);
@@ -65,6 +77,14 @@ namespace Motto.Services
             return response;
         }
 
+        /// <summary>
+        /// Asynchronously refreshes the access token using the provided refresh token.
+        /// </summary>
+        /// <param name="token">The expired access token.</param>
+        /// <param name="refreshToken">The refresh token.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a TokenResponse object
+        /// with the new access token and refresh token.</returns>
+        /// <exception cref="InvalidTokenException">Thrown when the refresh token is invalid.</exception>
         public async Task<TokenResponse> RefreshTokenAsync(string token, string refreshToken)
         {
             var principal = GetPrincipalFromExpiredToken(token);
@@ -94,6 +114,11 @@ namespace Motto.Services
             };
         }
 
+        /// <summary>
+        /// Generates an access token for the given user.
+        /// </summary>
+        /// <param name="user">The user for whom the access token is generated.</param>
+        /// <returns>The generated access token.</returns>
         private string GenerateAccessToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -117,13 +142,23 @@ namespace Motto.Services
             return tokenHandler.WriteToken(token);
         }
 
+        /// <summary>
+        /// Generates a new refresh token.
+        /// </summary>
+        /// <returns>A new refresh token as a string.</returns>
         private string GenerateRefreshToken()
         {
             var refreshToken = Guid.NewGuid().ToString();
-            // Você também pode criptografar ou fazer outras manipulações no refresh token, dependendo dos requisitos de segurança da sua aplicação
+            // You can customize the refresh token generation logic here if needed
             return refreshToken;
         }
 
+        /// <summary>
+        /// Retrieves a ClaimsPrincipal object from an expired JWT token.
+        /// </summary>
+        /// <param name="token">The expired JWT token.</param>
+        /// <returns>A ClaimsPrincipal object representing the authenticated user.</returns>
+        /// <exception cref="SecurityTokenException">Thrown when the token is invalid.</exception>
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Motto.Entities;
-using Motto.Models;
+using Motto.DTOs;
 using Motto.Repositories;
 using Motto.Services;
 using Motto.Services.EventProducers;
@@ -12,6 +12,7 @@ using NSwag.Generation.Processors.Security;
 using Serilog;
 using Serilog.Exceptions;
 using Motto.Services.Interfaces;
+using Motto.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

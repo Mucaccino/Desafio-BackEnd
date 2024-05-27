@@ -1,5 +1,5 @@
 ﻿using Motto.DTOs;
-using Motto.Models;
+using Motto.DTOs;
 
 namespace Motto.Services.Interfaces;
 

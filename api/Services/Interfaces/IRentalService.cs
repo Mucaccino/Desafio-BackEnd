@@ -1,4 +1,5 @@
-﻿using Motto.Models;
+﻿using Motto.DTOs;
+using Motto.Models;
 
 namespace Motto.Services.Interfaces;
 

@@ -1,4 +1,4 @@
-﻿namespace Motto.Models
+﻿namespace Motto.DTOs
 {
     public class RentalDeliveryResponse
     {

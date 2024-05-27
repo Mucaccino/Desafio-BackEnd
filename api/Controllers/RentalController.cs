@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Motto.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Motto.DTOs;
 using Motto.Models;
 
 namespace Motto.Controllers;

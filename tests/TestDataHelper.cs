@@ -1,6 +1,6 @@
 
 
-using Motto.Models;
+using Motto.DTOs;
 
 namespace Motto.Tests;
 

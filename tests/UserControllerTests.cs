@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Motto.Controllers;
 using Motto.Entities;
-using Motto.Models;
+using Motto.DTOs;
 using Moq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;

@@ -7,7 +7,7 @@ using Moq.EntityFrameworkCore;
 using Motto.Controllers;
 using Motto.DTOs;
 using Motto.Entities;
-using Motto.Models;
+using Motto.DTOs;
 using Motto.Repositories;
 using Motto.Services;
 

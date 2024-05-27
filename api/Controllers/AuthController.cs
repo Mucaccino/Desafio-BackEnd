@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Serilog;
-using Motto.Models;
-using Motto.Services;
-using Motto.Services.Interfaces;
 using Motto.DTOs;
+using Motto.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Motto.Controllers

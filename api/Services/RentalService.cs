@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Motto.Controllers;
-using Motto.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Motto.DTOs;
 using Motto.Models;
-using Motto.Repositories;
 using Namotion.Reflection;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;

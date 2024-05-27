@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Motto.Controllers;
 using Motto.Entities;
-using Motto.Models;
+using Motto.DTOs;
 using Motto.Services.EventProducers;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
+using Motto.Models;
 
 namespace Motto.Services
 {

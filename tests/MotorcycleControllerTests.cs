@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Motto.Controllers;
 using Motto.Entities;
-using Motto.Models;
+using Motto.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

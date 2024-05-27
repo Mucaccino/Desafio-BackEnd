@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motto.Models;
 using Motto.Services.EventProducers;
+using Motto.DTOs;
 
 namespace Motto.Controllers
 {

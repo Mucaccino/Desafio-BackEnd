@@ -5,7 +5,7 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using Motto.Controllers;
 using Motto.Entities;
-using Motto.Models;
+using Motto.DTOs;
 using Motto.Repositories;
 using Motto.Services;
 using System.Security.Claims;

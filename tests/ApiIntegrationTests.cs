@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
-using Motto.Models;
+using Motto.DTOs;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

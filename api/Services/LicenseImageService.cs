@@ -6,12 +6,20 @@ using Motto.Services.Interfaces;
 
 namespace Motto.Services;
 
+/// <summary>
+/// Represents a service for handling license image operations.
+/// </summary>
 public class LicenseImageService : ILicenseImageService
 {
     private readonly IMinioClient _minioClient;
     private readonly IDeliveryDriverRepository _deliveryDriverRepository;
     private readonly string _bucketName = "delivery-driver-images";
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LicenseImageService"/> class.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="deliveryDriverRepository">The delivery driver repository.</param>
     public LicenseImageService(IConfiguration configuration, IDeliveryDriverRepository deliveryDriverRepository)
     {
         _deliveryDriverRepository = deliveryDriverRepository;
@@ -26,6 +34,10 @@ public class LicenseImageService : ILicenseImageService
             .Build();
     }
 
+    /// <summary>
+    /// Verifies if a bucket exists and creates it if it doesn't.
+    /// </summary>
+    /// <returns>A boolean indicating if the bucket was created or already exists.</returns>
     private async Task<bool> VerifyAndCreateBucket()
     {
         try
@@ -54,6 +66,13 @@ public class LicenseImageService : ILicenseImageService
         return false;
     }
 
+    /// <summary>
+    /// Retrieves an image from the specified file asynchronously.
+    /// </summary>
+    /// <param name="fileName">The name of the file containing the image.</param>
+    /// <returns>A MemoryStream containing the image data.</returns>
+    /// <exception cref="MinioException">Thrown if there is an error retrieving the image from MinIO.</exception>
+    /// <exception cref="Exception">Thrown if there is an error retrieving the image.</exception>
     public async Task<MemoryStream> GetImageAsync(string fileName)
     {
         try
@@ -89,6 +108,13 @@ public class LicenseImageService : ILicenseImageService
         }
     }
 
+    /// <summary>
+    /// Uploads an image asynchronously.
+    /// </summary>
+    /// <param name="image">The image file to upload.</param>
+    /// <param name="fileName">The name of the file to be saved.</param>
+    /// <returns>The name of the saved file.</returns>
+    /// <exception cref="Exception">Thrown if there is an error during the upload process.</exception>
     public async Task<string> UploadImageAsync(IFormFile image, string fileName)
     {
         await VerifyAndCreateBucket();

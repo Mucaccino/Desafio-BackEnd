@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Motto.DTOs;
 using Motto.Models;
 using Microsoft.AspNetCore.Authorization;
 using Motto.Services.Interfaces;

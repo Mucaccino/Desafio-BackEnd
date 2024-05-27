@@ -1,4 +1,5 @@
-﻿using Motto.Models;
+﻿using Motto.DTOs;
+using Motto.Models;
 using Motto.Services.EventProducers;
 
 namespace Motto.Services.Interfaces;
