@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Motto.Controllers;
 using Motto.Entities;
-using Motto.DTOs;
+using Motto.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,7 @@ using Moq.EntityFrameworkCore;
 using Motto.Tests;
 using Motto.Repositories;
 using Motto.Services;
+using Motto.DTOs;
 
 namespace Motto.Tests
 {

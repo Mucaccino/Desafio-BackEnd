@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Motto.Controllers;
 using Motto.Entities;
-using Motto.DTOs;
+using Motto.Models;
 using Moq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Moq.EntityFrameworkCore;
 using Motto.Services;
 using Motto.Repositories;
+using Motto.DTOs;
 
 namespace Motto.Tests
 {

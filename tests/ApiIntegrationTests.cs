@@ -7,7 +7,7 @@ using Motto.DTOs;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Motto.DTOs;
+using Motto.Models;
 
 namespace Motto.Tests;
 
