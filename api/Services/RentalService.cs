@@ -13,6 +13,12 @@ namespace Motto.Services
         private readonly IDeliveryDriverRepository _deliveryDriverRepository;
         private readonly IRentalPlanRepository _rentalPlanRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RentalService"/> class.
+        /// </summary>
+        /// <param name="rentalRepository">The rental repository.</param>
+        /// <param name="deliveryDriverRepository">The delivery driver repository.</param>
+        /// <param name="rentalPlanRepository">The rental plan repository.</param>        
         public RentalService(
             IRentalRepository rentalRepository,
             IDeliveryDriverRepository deliveryDriverRepository,
@@ -23,6 +29,13 @@ namespace Motto.Services
             _rentalPlanRepository = rentalPlanRepository;
         }
 
+        /// <summary>
+        /// Registers a rental for a given user and rental request.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="registerModel">The rental request.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
+        /// contains the registered rental if successful, or an error message if the registration fails.</returns>        
         public async Task<ServiceResult<Rental>> RegisterRental(int userId, CreateRentalRequest registerModel)
         {
             var deliveryDriver = await _deliveryDriverRepository.GetById(userId);
@@ -62,6 +75,14 @@ namespace Motto.Services
             }
         }
 
+        /// <summary>
+        /// Delivers a motorcycle for a given user and rental.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="rentalId">The ID of the rental.</param>
+        /// <param name="endDate">The end date of the rental.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
+        /// contains the delivery response if successful, or an error message if the delivery fails.</returns>
         public async Task<ServiceResult<RentalDeliveryResponse>> DeliverMotorcycle(int userId, int rentalId, DateTime endDate)
         {
             var rental = await _rentalRepository.GetById(rentalId);
@@ -109,16 +130,31 @@ namespace Motto.Services
             }
         }
 
+        /// <summary>
+        /// Retrieves all rentals from the repository asynchronously.
+        /// </summary>
+        /// <returns>An enumerable collection of Rental objects.</returns>
         public async Task<IEnumerable<Rental>> GetAll()
         {
             return await _rentalRepository.GetAll();
         }
 
+        /// <summary>
+        /// Retrieves a rental by its ID asynchronously.
+        /// </summary>
+        /// <param name="id">The ID of the rental.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the rental if found, or null if not found.</returns>
         public async Task<Rental?> GetById(int id)
         {
             return await _rentalRepository.GetById(id);
         }
 
+        /// <summary>
+        /// Retrieves the total cost of a rental by its ID and end date.
+        /// </summary>
+        /// <param name="id">The ID of the rental.</param>
+        /// <param name="endDate">The end date of the rental.</param>
+        /// <returns>An asynchronous task that returns a ServiceResult containing the total cost as a TotalCostModel if successful, or a failed ServiceResult with an error message if the rental is not found or the end date is earlier than the start date.</returns>
         public async Task<ServiceResult<TotalCostModel>> GetTotalCostById(int id, DateTime endDate)
         {
             var rental = await _rentalRepository.GetById(id);
@@ -136,7 +172,14 @@ namespace Motto.Services
 
             return ServiceResult<TotalCostModel>.Successed(totalCostInfo);
         }
-
+        
+        /// <summary>
+        /// Calculates the total cost of a rental based on the provided rental, rental plan, and end date.
+        /// </summary>
+        /// <param name="rental">The rental object.</param>
+        /// <param name="rentalPlan">The rental plan object.</param>
+        /// <param name="endDate">The end date of the rental. If not provided, the current date is used.</param>
+        /// <returns>A TotalCostModel object containing the base cost, penalty cost, and total cost of the rental.</returns>
         public TotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate)
         {
             if (endDate == default(DateTime)) endDate = DateTime.Today;

@@ -6,8 +6,8 @@ using Motto.DTOs;
 using Newtonsoft.Json;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
-using Motto.Controllers;
 using Motto.Models;
+using Motto.Exceptions;
 
 namespace Motto.Services
 {
@@ -167,7 +167,7 @@ namespace Motto.Services
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtKey)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                ValidateLifetime = false // Esta opção permite a validação de tokens expirados
+                ValidateLifetime = false // This option allows you to validate the expiration date of the token
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

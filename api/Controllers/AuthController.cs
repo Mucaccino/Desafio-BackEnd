@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Motto.DTOs;
 using Motto.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
+using Motto.Exceptions;
 
 namespace Motto.Controllers
 {

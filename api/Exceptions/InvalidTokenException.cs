@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Motto.Controllers
+namespace Motto.Exceptions
 {
     [Serializable]
     internal class InvalidTokenException : Exception
