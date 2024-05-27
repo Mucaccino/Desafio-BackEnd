@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
 using Motto.Controllers;
+using Motto.DTOs;
 using Motto.Entities;
 using Motto.Models;
 using Motto.Repositories;
@@ -35,22 +36,22 @@ namespace Motto.Tests
     
             // Act
             var result = await _authController.AuthenticateUser(
-                new LoginModel { Username = "admin", Password = "123mudar" }); 
+                new LoginRequest { Username = "admin", Password = "123mudar" }); 
 
             //Assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             var okResult = result.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            var response = okResult.Value as LoginModelResponse;
+            var response = okResult.Value as LoginResponse;
             Assert.IsNotNull(response);
-            StringAssert.Contains(response.Token, "Bearer ");
+            Assert.IsNotNull(response.AccessToken);
         }
 
         [TestMethod]
         public async Task AuthController_ReturnsNotFoundResult_WhenUserIsNotFound()
         {
             // Arrange
-            var loginModel = new LoginModel { Username = "null", Password = "null" };
+            var loginModel = new LoginRequest { Username = "null", Password = "null" };
 
             // Act
             var result = await _authController.AuthenticateUser(loginModel);
@@ -65,7 +66,7 @@ namespace Motto.Tests
         public async Task AuthController_ReturnsUnauthorizedResult_WhenPasswordIsIncorrect()
         {
             // Arrange
-            var loginModel = new LoginModel { Username = "admin", Password = "wrongpassword" };
+            var loginModel = new LoginRequest { Username = "admin", Password = "wrongpassword" };
 
             // Act
             var result = await _authController.AuthenticateUser(loginModel);

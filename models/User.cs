@@ -25,6 +25,7 @@ public class User
         return PasswordHasher.VerifyPassword(password, Salt, PasswordHash);
     }
     public UserType Type { get; set; }
+    public string? RefreshToken { get; set; }
 }
 
 public class Admin : User

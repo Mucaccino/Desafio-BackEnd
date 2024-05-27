@@ -20,9 +20,21 @@ namespace Motto.Repositories
         {
             return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
+
+        public async Task<User?> GetById(int userId)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
         public async Task Add(User user)
         {
             await _dbContext.Users.AddAsync(user);
+        }
+
+        public async Task Update(User user)
+        {
+            _dbContext.Users.Update(user);
+            await SaveChanges();
         }
 
         public async Task SaveChanges()

@@ -7,6 +7,7 @@ using Motto.Models;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Motto.DTOs;
 
 namespace Motto.Tests;
 
@@ -51,14 +52,14 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
 
         Log.Information($"BaseAddress: {client.BaseAddress}");
 
-        var json = JsonSerializer.Serialize(new LoginModel() { Username = userType == UserType.Admin ? "admin" : "entregador", Password = "123mudar" });
+        var json = JsonSerializer.Serialize(new LoginRequest() { Username = userType == UserType.Admin ? "admin" : "entregador", Password = "123mudar" });
         var data = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await client.PostAsync("/api/Auth/login", data);
         response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<LoginModelResponse>();
-        _loggedToken = result?.Token;
+        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        _loggedToken = result?.AccessToken;
         _loggedUserType = userType;
         Assert.IsTrue(_loggedToken != null && _loggedToken.Length > 0);
     }

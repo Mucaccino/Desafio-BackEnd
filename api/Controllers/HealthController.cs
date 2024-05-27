@@ -9,6 +9,17 @@ namespace Motto.Controllers
     [Route("[controller]")]
     public class HealthController : ControllerBase
     {
+        private readonly ILogger<HealthController> _logger;
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HealthController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance used for logging.</param>
+        public HealthController(ILogger<HealthController> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Checks the health of the application.
         /// </summary>
@@ -16,7 +27,9 @@ namespace Motto.Controllers
         [HttpGet]
         public IActionResult CheckHealth()
         {
+            _logger.LogInformation("Health check request received");
             // Here you can add logic to check the health of your application.
+            _logger.LogInformation("Application is healthy");
             return Ok("Healthy");
         }
     }
