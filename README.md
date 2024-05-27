@@ -33,7 +33,6 @@ A solução do projeto inclui o __makefile__, e para executar toda a solução u
 
 Sobe serviços no docker e realiza seed inicial do database.
 ```
-> make setup-db
 > make up-services
 ```
 
