@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
       
   api:
@@ -28,7 +26,7 @@ services:
     volumes:
         - ./api/.https/aspnetapp.pfx:/https/aspnetapp.pfx
     healthcheck:
-      test: curl -sSf http://localhost:5000/health
+      test: curl -sSf http://api:5000/health
       interval: 10s
       timeout: 10s
       retries: 10

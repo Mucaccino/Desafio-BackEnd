@@ -33,23 +33,26 @@ jobs:
     - name: List running Docker containers
       run: docker ps
 
-    - name: Wait for services to be healthy
-      run: |
-        while ! docker-compose exec -T api curl -sSf http://localhost:5000/health; do
-          echo "Waiting for API to be healthy..."
-          sleep 5
-        done
-
     - name: Update database
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
         dotnet ef database update -c ApplicationDbContext -p entities
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'
+    - name: Wait for services to be healthy
+      run: |
+        count=0
+        max_retries=10
+        while ! docker-compose exec -T api curl -sSf http://api:5000/health; do
+          count=$((count + 1))
+          if [ $count -ge $max_retries ]; then
+            echo "Max retries reached. Exiting..."
+            exit 1
+          fi
+          echo "Waiting for API to be healthy... Attempt $count"
+          sleep 5
+        done
+        echo "API is healthy!"
 
     - name: Run tests
       run: dotnet test ./tests -e ASPNETCORE_ENVIRONMENT=Local
