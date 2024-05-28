@@ -28,7 +28,7 @@ jobs:
         docker-compose --version
 
     - name: Build and run docker-compose
-      run: docker-compose up -d --build
+      run: docker-compose -f docker-compose.yml -f docker-compose.projects.yml up -d --build
 
     - name: List running Docker containers
       run: docker ps

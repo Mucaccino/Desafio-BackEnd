@@ -2,50 +2,6 @@ version: '3.8'
 
 services:
       
-  api:
-    container_name: api
-    build:
-      context: .
-      dockerfile: api/Dockerfile
-    ports:
-      - "5000:5000"
-      - "5001:5001"
-    depends_on:
-      postgres: 
-        condition: service_started
-      minio: 
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-    environment:
-      ASPNETCORE_ENVIRONMENT: Staging
-      ASPNETCORE_URLS: https://+:5001;http://+:5000
-      ASPNETCORE_HTTPS_PORT: 5001
-      ASPNETCORE_Kestrel__Certificates__Default__Password: mypass123
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
-    networks:
-      - motto-net
-    volumes:
-        - ./api/.https/aspnetapp.pfx:/https/aspnetapp.pfx
-    healthcheck:
-      test: curl -sSf http://api:5000/health
-      interval: 10s
-      timeout: 10s
-      retries: 10
-
-  workers:
-    container_name: workers
-    build:
-      context: .
-      dockerfile: workers/Dockerfile
-    ports:
-      - "5002:5002"
-    depends_on:
-      api:
-        condition: service_healthy
-    networks:
-      - motto-net
-
   postgres:
     image: postgres:latest
     container_name: postgres
