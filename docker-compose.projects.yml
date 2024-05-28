@@ -45,6 +45,3 @@ services:
         condition: service_healthy
     networks:
       - motto-net
-
-networks:
-  motto-net:
