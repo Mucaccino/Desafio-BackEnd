@@ -56,7 +56,7 @@ namespace Motto.Tests
         public async Task TestRegisterDeliveryDriver()
         {
             // Arrange
-            var registerModel = new CreateDeliveryDriverRequest
+            var registerModel = new DeliveryDriverCreateRequest
             {
                 Name = "Murillo Carmo",
                 Username = "murillodocarmo@gmail.com",

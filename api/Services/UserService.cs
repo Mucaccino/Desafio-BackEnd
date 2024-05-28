@@ -59,7 +59,7 @@ namespace Motto.Services
         /// <param name="registerModel">The model containing the delivery driver registration details.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
         /// contains a success message if the registration is successful, or an error message if the registration fails.</returns>
-        public async Task<ServiceResult<string>> RegisterDeliveryDriver(CreateDeliveryDriverRequest registerModel)
+        public async Task<ServiceResult<string>> RegisterDeliveryDriver(DeliveryDriverCreateRequest registerModel)
         {
             var user = new DeliveryDriver
             {

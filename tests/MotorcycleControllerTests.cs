@@ -88,7 +88,7 @@ namespace Motto.Tests
         public async Task Create_ValidModel_ReturnsOk()
         {
             // Arrange
-            var model = new CreateMotorcycleRequest
+            var model = new MotorcycleCreateRequest
             {
                 Year = 2021,
                 Model = "Model Y",
@@ -119,7 +119,7 @@ namespace Motto.Tests
             _dbContext.Object.SaveChanges();
 
             // Arrange
-            var model = new CreateMotorcycleRequest
+            var model = new MotorcycleCreateRequest
             {
                 Year = 2021,
                 Model = "Model Y",
@@ -149,7 +149,7 @@ namespace Motto.Tests
             _dbContext.Object.Add(newMotorcycle);
             _dbContext.Object.SaveChanges();
 
-            var model = new CreateMotorcycleRequest
+            var model = new MotorcycleCreateRequest
             {
                 Year = 2021,
                 Model = "Model Y",
@@ -189,7 +189,7 @@ namespace Motto.Tests
 
             _dbContext.Object.SaveChanges();
 
-            var model = new CreateMotorcycleRequest
+            var model = new MotorcycleCreateRequest
             {
                 Year = updateMotorcycle.Year,
                 Model = updateMotorcycle.Model,

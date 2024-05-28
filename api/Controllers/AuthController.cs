@@ -35,6 +35,11 @@ namespace Motto.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> AuthenticateUser([FromBody] LoginRequest loginRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _logger.LogInformation("Authenticating user with username: {Username}", loginRequest.Username);
 
             try
@@ -52,6 +57,11 @@ namespace Motto.Controllers
             {
                 _logger.LogError(ex, "Incorrect password: {Message}", ex.Message);
                 return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error refreshing token: {Message}", ex.Message);
+                return StatusCode(500, "Internal server error");
             }
         }
 

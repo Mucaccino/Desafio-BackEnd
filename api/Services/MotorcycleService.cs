@@ -34,7 +34,7 @@ namespace Motto.Services
         /// <param name="model">The request model containing the motorcycle's information.</param>
         /// <param name="motorcycleEventProducer">The motorcycle event producer used to send the registered event. Can be null.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult with a string message. If the motorcycle already exists, the result will be a failed ServiceResult with an error message. Otherwise, it will be a successful ServiceResult with a success message.</returns>
-        public async Task<ServiceResult<string>> CreateMotorcycle(CreateMotorcycleRequest model, MotorcycleEventProducer? motorcycleEventProducer)
+        public async Task<ServiceResult<string>> CreateMotorcycle(MotorcycleCreateRequest model, MotorcycleEventProducer? motorcycleEventProducer)
         {
             var existingPlateMotorcycle = await _motorcycleRepository.GetByPlate(model.Plate);
             if (existingPlateMotorcycle != null)
@@ -69,7 +69,7 @@ namespace Motto.Services
         /// <param name="id">The ID of the motorcycle to update.</param>
         /// <param name="model">The request model containing the updated motorcycle information.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult with a string message. If the motorcycle is not found, the result will be a failed ServiceResult with an error message. If a motorcycle with the same plate already exists, the result will be a failed ServiceResult with an error message. Otherwise, the motorcycle will be updated and the result will be a successful ServiceResult with a success message.</returns>
-        public async Task<ServiceResult<string>> UpdateMotorcycle(int id, CreateMotorcycleRequest model)
+        public async Task<ServiceResult<string>> UpdateMotorcycle(int id, MotorcycleCreateRequest model)
         {
             var existingMotorcycle = await _motorcycleRepository.GetById(id);
 

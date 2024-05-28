@@ -36,7 +36,7 @@ namespace Motto.Controllers
         /// <response code="200">If the motorcycle is successfully created.</response>
         [Authorize(Roles = "Admin")]
         [HttpPost("create")]
-        public async Task<ActionResult<object>> Create([FromBody] CreateMotorcycleRequest model, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
+        public async Task<ActionResult<object>> Create([FromBody] MotorcycleCreateRequest model, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
         {
             if (!ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace Motto.Controllers
         /// <response code="200">If the motorcycle is successfully updated.</response>
         [Authorize(Roles = "Admin")]
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<object>> Update(int id, [FromBody] CreateMotorcycleRequest model)
+        public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateRequest model)
         {
             if (!ModelState.IsValid)
             {

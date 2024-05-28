@@ -54,7 +54,7 @@ namespace Motto.Controllers
         /// <param name="registerModel">The model containing the delivery driver registration details.</param>
         /// <returns>The created delivery driver user if successful, otherwise a bad request with the error message or a 500 status code with the error message.</returns>
         [HttpPost("register/deliveryDriver")]
-        public async Task<ActionResult<User>> RegisterDeliveryDriver(CreateDeliveryDriverRequest registerModel)
+        public async Task<ActionResult<User>> RegisterDeliveryDriver(DeliveryDriverCreateRequest registerModel)
         {
             if (!ModelState.IsValid)
             {
