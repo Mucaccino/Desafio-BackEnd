@@ -39,9 +39,13 @@ jobs:
         dotnet tool restore
         dotnet ef database update -c ApplicationDbContext -p entities
 
+    - name: Install curl
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl
+
     - name: Wait for api to be healthy
       run: |
-        apt-get update && apt-get install -y curl
         count=0
         max_retries=10
         while ! curl -sSf http://localhost:5000/health; do
