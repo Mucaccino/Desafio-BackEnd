@@ -24,7 +24,7 @@ namespace Motto.DTOs
         /// <summary>
         /// Gets or sets the password of the user.
         /// </summary>
-        /// <value>The password must be between 8 and 20 characters, contain at least one letter and one number</value>
+        /// <remarks>The password must be between 8 and 20 characters, contain at least one letter and one number</remarks>
         [RegularExpression("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}$",
             ErrorMessage = "A senha deve ter no mínimo 8 e no máximo 20 caracteres, contendo pelo menos uma letra e um número.")]
         public required string Password { get; set; }

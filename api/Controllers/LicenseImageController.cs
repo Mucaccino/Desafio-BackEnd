@@ -48,8 +48,12 @@ namespace Motto.Controllers
         [Authorize(Roles = "DeliveryDriver")]
         public async Task<IActionResult> UploadImage(int id, IFormFile image)
         {
+            _logger.LogInformation("UploadImage method called with id: {Id}", id);
+
             if (image == null || image.Length == 0)
             {
+                _logger.LogWarning("Image not provided.");
+
                 return BadRequest("A imagem não foi enviada.");
             }
 
