@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Motto.Models;
+using Motto.Entities;
+using Motto.Enums;
 using Motto.Utils;
-using System;
 
 public static class SeedData
 {
@@ -11,14 +10,14 @@ public static class SeedData
         // Seed Users
         var password = PasswordHasher.HashPassword("123mudar");
         modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, Name = "Usuário Administrador", Username = "admin",
+            new User { Id = 1, Name = "Administrador", Username = "admin",
                 PasswordHash = password.HashedPassword,
                 Salt = password.Salt, Type = UserType.Admin }
         );
 
         password = PasswordHasher.HashPassword("123mudar");
-        modelBuilder.Entity<DeliveryDriver>().HasData(
-            new DeliveryDriver { Id = 2, Name = "Usuário Entregador", Username = "entregador",
+        modelBuilder.Entity<DeliveryDriverUser>().HasData(
+            new DeliveryDriverUser { Id = 2, Name = "Motoboy", Username = "motoboy",
                 PasswordHash = password.HashedPassword,
                 Salt = password.Salt, Type = UserType.DeliveryDriver,
                 DriverLicenseNumber = "12345678901",
@@ -34,12 +33,6 @@ public static class SeedData
             new RentalPlan { Id = 3, Days = 30, DailyCost = 22.00m },
             new RentalPlan { Id = 4, Days = 45, DailyCost = 20.00m },
             new RentalPlan { Id = 5, Days = 50, DailyCost = 18.00m }
-        );
-
-        // Seed RentalPlans
-        modelBuilder.Entity<Motorcycle>().HasData(
-            new Motorcycle { Id = 1, Year = 1985, Model = "Halley Davidson", Plate = "AAA-1234" },
-            new Motorcycle { Id = 2, Year = 1995, Model = "Honda", Plate = "AAA-4321" }
         );
     }
 }

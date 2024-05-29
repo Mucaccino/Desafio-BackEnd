@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Motto.Entities;
+using Motto.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -22,7 +22,7 @@ namespace entities.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Motto.Models.Motorcycle", b =>
+            modelBuilder.Entity("Motto.Entities.Motorcycle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,41 +38,20 @@ namespace entities.Migrations
                     b.Property<string>("Plate")
                         .IsRequired()
                         .HasMaxLength(8)
-                        .IsUnicode(false)
-                        .HasColumnType("character(8)")
-                        .IsFixedLength();
+                        .HasColumnType("char(8)");
 
                     b.Property<int>("Year")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Plate")
                         .IsUnique();
 
-                    b.ToTable("Motorcycle", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Motorcycle_Plate_Format", "\"Plate\" ~ '[A-Z]{3}-[0-9]{4}'");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Model = "Halley Davidson",
-                            Plate = "AAA-1234",
-                            Year = 1985
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Model = "Honda",
-                            Plate = "AAA-4321",
-                            Year = 1995
-                        });
+                    b.ToTable("Motorcycles");
                 });
 
-            modelBuilder.Entity("Motto.Models.MotorcycleEvent", b =>
+            modelBuilder.Entity("Motto.Entities.MotorcycleEvent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,10 +69,10 @@ namespace entities.Migrations
 
                     b.HasIndex("MotorcycleId");
 
-                    b.ToTable("MotorcycleEvent", (string)null);
+                    b.ToTable("MotorcycleEvents");
                 });
 
-            modelBuilder.Entity("Motto.Models.MotorcycleMessage", b =>
+            modelBuilder.Entity("Motto.Entities.MotorcycleMessage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,10 +89,10 @@ namespace entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MotorcycleMessage", (string)null);
+                    b.ToTable("MotorcycleMessages");
                 });
 
-            modelBuilder.Entity("Motto.Models.Rental", b =>
+            modelBuilder.Entity("Motto.Entities.Rental", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,25 +104,25 @@ namespace entities.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("ExpectedEndDate")
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("MotorcycleId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("PenaltyCost")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("RentalPlanId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("TotalCost")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -153,10 +132,10 @@ namespace entities.Migrations
 
                     b.HasIndex("RentalPlanId");
 
-                    b.ToTable("Rental", (string)null);
+                    b.ToTable("Rentals");
                 });
 
-            modelBuilder.Entity("Motto.Models.RentalPlan", b =>
+            modelBuilder.Entity("Motto.Entities.RentalPlan", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -172,7 +151,7 @@ namespace entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RentalPlan", (string)null);
+                    b.ToTable("RentalPlans");
 
                     b.HasData(
                         new
@@ -207,7 +186,7 @@ namespace entities.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Motto.Models.User", b =>
+            modelBuilder.Entity("Motto.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,14 +196,16 @@ namespace entities.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Salt")
                         .IsRequired()
@@ -240,7 +221,7 @@ namespace entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users");
 
                     b.UseTptMappingStrategy();
 
@@ -248,17 +229,17 @@ namespace entities.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Usuário Administrador",
-                            PasswordHash = "rsaoaxMhI/FAJ8ZpOtNk/dhsAxTh66YG3LbRoc0crAE=",
-                            Salt = "hKsYQ8kL2S9DszU68sDiVQ==",
+                            Name = "Administrador",
+                            PasswordHash = "RbF6T+NE4VY2LhOYI2tAeb7PNFxIwhq0VVPDLRu/nig=",
+                            Salt = "vHcSA5HnmKGt0RzUDUD3Uw==",
                             Type = 0,
                             Username = "admin"
                         });
                 });
 
-            modelBuilder.Entity("Motto.Models.DeliveryDriver", b =>
+            modelBuilder.Entity("Motto.Entities.DeliveryDriverUser", b =>
                 {
-                    b.HasBaseType("Motto.Models.User");
+                    b.HasBaseType("Motto.Entities.User");
 
                     b.Property<string>("CNPJ")
                         .IsRequired()
@@ -284,24 +265,17 @@ namespace entities.Migrations
                     b.HasIndex("DriverLicenseNumber")
                         .IsUnique();
 
-                    b.ToTable("DeliveryDriver", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_DeliveryDriver_CNPJ_Format", "\"CNPJ\" ~ '[0-9]{14}'");
-
-                            t.HasCheckConstraint("CK_DeliveryDriver_DriverLicenseNumber_Format", "\"DriverLicenseNumber\" ~ '[0-9]{11}'");
-
-                            t.HasCheckConstraint("CK_DeliveryDriver_DriverLicenseType_Format", "\"DriverLicenseType\" IN ('A', 'B', 'AB')");
-                        });
+                    b.ToTable("DeliveryDrivers");
 
                     b.HasData(
                         new
                         {
                             Id = 2,
-                            Name = "Usuário Entregador",
-                            PasswordHash = "OU5+wgxuE2buS6XcImES3LnxlVIg4cTv72O86qDqX20=",
-                            Salt = "+MWMG4rnlnWd/T5G3x9WnA==",
+                            Name = "Motoboy",
+                            PasswordHash = "5xO4CxGENty1RE7aahNgnUbFFK/AzJX3yaFsaLz/FAk=",
+                            Salt = "d2lZVq+wguqtVvahL/f+oQ==",
                             Type = 1,
-                            Username = "entregador",
+                            Username = "motoboy",
                             CNPJ = "12345678901234",
                             DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DriverLicenseNumber = "12345678901",
@@ -309,9 +283,9 @@ namespace entities.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Motto.Models.MotorcycleEvent", b =>
+            modelBuilder.Entity("Motto.Entities.MotorcycleEvent", b =>
                 {
-                    b.HasOne("Motto.Models.Motorcycle", "Motorcycle")
+                    b.HasOne("Motto.Entities.Motorcycle", "Motorcycle")
                         .WithMany()
                         .HasForeignKey("MotorcycleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -320,21 +294,21 @@ namespace entities.Migrations
                     b.Navigation("Motorcycle");
                 });
 
-            modelBuilder.Entity("Motto.Models.Rental", b =>
+            modelBuilder.Entity("Motto.Entities.Rental", b =>
                 {
-                    b.HasOne("Motto.Models.DeliveryDriver", "DeliveryDriver")
+                    b.HasOne("Motto.Entities.DeliveryDriverUser", "DeliveryDriver")
                         .WithMany()
                         .HasForeignKey("DeliveryDriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Motto.Models.Motorcycle", "Motorcycle")
+                    b.HasOne("Motto.Entities.Motorcycle", "Motorcycle")
                         .WithMany()
                         .HasForeignKey("MotorcycleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Motto.Models.RentalPlan", "RentalPlan")
+                    b.HasOne("Motto.Entities.RentalPlan", "RentalPlan")
                         .WithMany()
                         .HasForeignKey("RentalPlanId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -347,11 +321,11 @@ namespace entities.Migrations
                     b.Navigation("RentalPlan");
                 });
 
-            modelBuilder.Entity("Motto.Models.DeliveryDriver", b =>
+            modelBuilder.Entity("Motto.Entities.DeliveryDriverUser", b =>
                 {
-                    b.HasOne("Motto.Models.User", null)
+                    b.HasOne("Motto.Entities.User", null)
                         .WithOne()
-                        .HasForeignKey("Motto.Models.DeliveryDriver", "Id")
+                        .HasForeignKey("Motto.Entities.DeliveryDriverUser", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
