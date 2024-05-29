@@ -1,5 +1,5 @@
 using System.Text;
-using Motto.Models;
+using Motto.Entities;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -19,12 +19,19 @@ public class MotorcycleEventConsumer : BackgroundService
 
     public override async Task StartAsync(CancellationToken cancellationToken)
     {
+        var connectionString = _configuration["RabbitMQ:ConnectionString"];
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            _logger.LogError("RabbitMQ connection string is not configured or is null");
+            return;
+        }
+
         var factory = new ConnectionFactory
         {
-            Uri = new Uri(_configuration["RabbitMQ:ConnectionString"])
+            Uri = new Uri(connectionString)
         };
         
-        _logger.LogInformation($"RabbitMQ:ConnectionString {_configuration["RabbitMQ:ConnectionString"]}");
+        _logger.LogInformation($"RabbitMQ connection string is {connectionString}.");
         
         try {
             _connection =  factory.CreateConnection();
@@ -45,7 +52,7 @@ public class MotorcycleEventConsumer : BackgroundService
                            routingKey: "motorcycle_registered");
 
         var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += async (sender, ea) =>
+        consumer.Received += (sender, ea) =>
         {
             // Receive message
             var body = ea.Body.ToArray();
