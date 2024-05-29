@@ -37,7 +37,7 @@ namespace Motto.Services
         public async Task<ServiceResult<string>> CreateMotorcycle(MotorcycleCreateRequest model, MotorcycleEventProducer? motorcycleEventProducer)
         {
             var existingPlateMotorcycle = await _motorcycleRepository.GetByPlate(model.Plate);
-            if (existingPlateMotorcycle != null)
+            if (existingPlateMotorcycle)
             {
                 return ServiceResult<string>.Failed("Já existe uma moto com essa placa");
             }
