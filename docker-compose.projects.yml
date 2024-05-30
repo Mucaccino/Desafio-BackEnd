@@ -4,7 +4,7 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: Motto.WebApi/Dockerfile
     ports:
       - "5000:5000"
       - "5001:5001"
@@ -24,7 +24,7 @@ services:
     networks:
       - motto-net
     volumes:
-        - ./api/.https/aspnetapp.pfx:/https/aspnetapp.pfx
+        - ./Motto.WebApi/.https/aspnetapp.pfx:/https/aspnetapp.pfx
     healthcheck:
       test: curl -sSf http://api:5000/health
       interval: 10s
@@ -32,10 +32,10 @@ services:
       retries: 10
 
   workers:
-    container_name: workers
+    container_name: consumer
     build:
       context: .
-      dockerfile: workers/Dockerfile
+      dockerfile: Motto.ConsumerApp/Dockerfile
     ports:
       - "5002:5002"
     depends_on:

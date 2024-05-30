@@ -3,25 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{B7D3C38B-C58F-4153-87D7-DCBAE8E94F0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.WebApi", "Motto.WebApi\Motto.WebApi.csproj", "{B7D3C38B-C58F-4153-87D7-DCBAE8E94F0B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "entities", "entities\entities.csproj", "{64AB3981-D380-46C9-8C25-8E7E38FFDBB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.Domain", "Motto.Domain\Motto.Domain.csproj", "{64AB3981-D380-46C9-8C25-8E7E38FFDBB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "models", "models\models.csproj", "{5E3F399F-7714-4942-B68F-40BBF0F8F697}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.Data", "Motto.Data\Motto.Data.csproj", "{5E3F399F-7714-4942-B68F-40BBF0F8F697}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests", "tests\tests.csproj", "{07886578-0DA0-40D3-9B3C-8B3C6F822853}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.Utils", "Motto.Utils\Motto.Utils.csproj", "{07886578-0DA0-40D3-9B3C-8B3C6F822853}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "utils", "utils\utils.csproj", "{19CB2A6C-BD81-49D9-8F6F-3E1CD55C24C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.Tests", "Motto.Tests\Motto.Tests.csproj", "{19CB2A6C-BD81-49D9-8F6F-3E1CD55C24C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "workers", "workers\workers.csproj", "{4F877FC8-E45C-4387-BDCC-CFEB5ABA4EE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.ConsumerApp", "Motto.ConsumerApp\Motto.ConsumerApp.csproj", "{4F877FC8-E45C-4387-BDCC-CFEB5ABA4EE9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{D9692B75-9199-4862-85C6-525FFAF479EF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9692B75-9199-4862-85C6-525FFAF479EF}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.projects.yml = docker-compose.projects.yml
-		docker-compose.yml = docker-compose.yml
 		makefile = makefile
 		README.md = README.md
 		TODO.md = TODO.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker Composers", "Docker Composers", "{EB38BC9D-2E41-42BA-A450-7DC1F55EF150}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.projects.yml = docker-compose.projects.yml
+		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Global
