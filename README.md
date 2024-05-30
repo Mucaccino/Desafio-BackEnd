@@ -37,7 +37,7 @@ O projeto é integralmente desenvolvido em [.NET 8](https://learn.microsoft.com/
 
 ### Benefícios da Nova Estrutura:
 
-- **Separação de Responsabilidades**: A separação clara entre lógica de negócio (Motto.Core) e acesso a dados (Motto.Database) melhora a coesão e a modularidade.
+- **Separação de Responsabilidades**: A separação clara entre lógica de negócio (Motto.Domain) e acesso a dados (Motto.Data) melhora a coesão e a modularidade.
 - **Manutenibilidade**: Facilita a manutenção e a evolução do código, já que cada camada tem uma responsabilidade bem definida.
 - **Testabilidade**: A separação permite que a lógica de negócio e o acesso a dados sejam testados de forma independente.
 - **Reutilização**: Os serviços de negócio e os repositórios podem ser reutilizados em diferentes partes da aplicação.
