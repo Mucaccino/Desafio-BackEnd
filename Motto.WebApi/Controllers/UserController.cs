@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Motto.Services.Interfaces;
+using AutoMapper;
 
 namespace Motto.Controllers
 {
@@ -14,14 +15,17 @@ namespace Motto.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="userService">The user service.</param>
-        public UserController(IUserService userService)
+        /// <param name="mapper">The mapper.</param>
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -38,7 +42,8 @@ namespace Motto.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.RegisterAdmin(registerModel);
+            AdminUser user = _mapper.Map<AdminUser>(registerModel);
+            var result = await _userService.RegisterAdmin(user);
 
             if (!result.Success)
             {
@@ -61,7 +66,8 @@ namespace Motto.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.RegisterDeliveryDriver(registerModel);
+            DeliveryDriverUser deliveryDriverUser = _mapper.Map<DeliveryDriverUser>(registerModel);
+            var result = await _userService.RegisterDeliveryDriver(deliveryDriverUser);
 
             if (!result.Success)
             {

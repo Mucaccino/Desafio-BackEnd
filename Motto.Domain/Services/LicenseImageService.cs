@@ -3,6 +3,8 @@ using Minio.Exceptions;
 using Minio;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace Motto.Services;
 

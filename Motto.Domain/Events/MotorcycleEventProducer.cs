@@ -4,7 +4,7 @@ using System.Text;
 using Motto.Entities;
 using Motto.Services.Interfaces;
 
-namespace Motto.Services.EventProducers
+namespace Motto.Domain.Events
 {
     public class MotorcycleEventProducer
     {

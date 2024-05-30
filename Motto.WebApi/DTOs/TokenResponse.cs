@@ -1,4 +1,4 @@
-﻿namespace Motto.DTOs
+﻿namespace Motto.Dtos
 {
     /// <summary>
     /// Represents a token response containing an access token and a refresh token.

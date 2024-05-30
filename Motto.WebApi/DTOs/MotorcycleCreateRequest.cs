@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Motto.DTOs
+namespace Motto.Dtos
 {
     /// <summary>
     /// Represents a request to create a motorcycle.

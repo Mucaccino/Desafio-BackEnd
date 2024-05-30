@@ -1,4 +1,6 @@
-﻿namespace Motto.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Motto.Services.Interfaces;
 
 public interface ILicenseImageService
 {

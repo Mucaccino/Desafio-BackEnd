@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
-using Motto.Exceptions;
+using Motto.Domain.Exceptions;
+using Microsoft.VisualBasic;
 
 namespace Motto.Controllers
 {
@@ -32,6 +33,9 @@ namespace Motto.Controllers
         /// </summary>
         /// <param name="loginRequest">The login credentials of the user. <see cref="LoginRequest"/></param>
         /// <returns>The login response containing the authentication token and user information. <see cref="LoginResponse"/></returns>
+        /// <remarks>statusCode: 200 - OK</remarks>
+        /// <remarks>statusCode: 404 - User not found</remarks>
+        /// <remarks>statusCode: 401 - Password is incorrect</remarks>
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> AuthenticateUser([FromBody] LoginRequest loginRequest)
         {
@@ -44,24 +48,30 @@ namespace Motto.Controllers
 
             try
             {
-                var response = await _authService.AuthenticateUserAsync(loginRequest.Username, loginRequest.Password);
+                var response = await _authService.AuthenticateUser(loginRequest.Username, loginRequest.Password);
+
                 _logger.LogInformation("User authentication successful. Returning response: {@Response}", response);
+
                 return Ok(response);
+
             }
             catch (UserNotFoundException ex)
             {
                 _logger.LogError(ex, "User not found: {Message}", ex.Message);
+
                 return NotFound(ex.Message);
             }
-            catch (IncorrectPasswordException ex)
+            catch (InvalidPasswordException ex)
             {
-                _logger.LogError(ex, "Incorrect password: {Message}", ex.Message);
+                _logger.LogError(ex, "Invalid password: {Message}", ex.Message);
+
                 return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error refreshing token: {Message}", ex.Message);
-                return StatusCode(500, "Internal server error");
+                _logger.LogError(ex, "Error authenticating user: {Message}", ex.Message);
+
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -69,7 +79,10 @@ namespace Motto.Controllers
         /// Refreshes the access token using the provided refresh token.
         /// </summary>
         /// <param name="refreshToken">The refresh token.</param>
-        /// <returns>The action result containing the token response.</returns>    
+        /// <returns>The action result containing the token response.</returns>  
+        /// <remarks>statusCode: 200 - OK</remarks>
+        /// <remarks>statusCode: 401 - Invalid token</remarks>
+        /// <remarks>statusCode: 401 - Invalid refresh token</remarks>
         [HttpPost("token")]
         public async Task<ActionResult<TokenResponse>> RefreshToken(string refreshToken)
         {
@@ -95,17 +108,22 @@ namespace Motto.Controllers
 
             try
             {
-                var response = await _authService.RefreshTokenAsync(authHeader, refreshToken);
-                return Ok(response);
-            }
-            catch (InvalidTokenException ex)
-            {
-                _logger.LogError(ex, "Invalid token: {Message}", ex.Message);
-                return Unauthorized(ex.Message);
+                var response = await _authService.RefreshToken(authHeader, refreshToken);
+
+                if(response.Success)
+                {
+                    _logger.LogInformation("Refresh token successful. Returning response: {@Response}", response);
+
+                    return Ok(response);
+                } else
+                {
+                    return StatusCode(response.StatusCode, response.Message);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error refreshing token: {Message}", ex.Message);
+
                 return StatusCode(500, "Internal server error");
             }
         }

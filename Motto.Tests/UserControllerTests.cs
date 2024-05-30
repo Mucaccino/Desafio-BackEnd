@@ -6,8 +6,10 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using Motto.Services;
 using Motto.Repositories;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Enums;
+using AutoMapper;
+using Motto.WebApi;
 
 namespace Motto.Tests
 {
@@ -26,7 +28,8 @@ namespace Motto.Tests
             _mockDbContext.Setup(x => x.Users)
                 .ReturnsDbSet(TestDataHelper.GetFakeUserList());
             var _service = new UserService(new UserRepository(_mockDbContext.Object));
-            _userController = new UserController(_service);
+            var _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile())));
+            _userController = new UserController(_service, _mapper);
         }
 
 

@@ -2,13 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Motto.DTOs;
 using Newtonsoft.Json;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
 using Motto.Entities;
-using Motto.Exceptions;
 using Motto.Enums;
+using Microsoft.Extensions.Logging;
+using Motto.Domain.Services.Results;
+using OneOf;
+using Motto.Domain.Exceptions;
 
 namespace Motto.Services
 {
@@ -33,48 +35,47 @@ namespace Motto.Services
             _jwtKey = jwtKey;
             _logger = logger;
         }
-        
+
         /// <summary>
         /// Authenticates a user with the provided username and password.
+        /// If the user is not found, returns a failed result with a 404 status code.
+        /// If the password is incorrect, returns a failed result with a 401 status code.
+        /// If the authentication is successful, returns a successful result with a LoginResponse object.
         /// </summary>
         /// <param name="username">The username of the user.</param>
         /// <param name="password">The password of the user.</param>
-        /// <returns>A task that represents the asynchronous authentication operation. The task result contains a <see cref="LoginResponse"/> object if the authentication is successful, or null if the user is not found or the password is incorrect.</returns>
-        /// <exception cref="UserNotFoundException">Thrown when the user is not found.</exception>
-        /// <exception cref="IncorrectPasswordException">Thrown when the password is incorrect.</exception>
-        public async Task<LoginResponse?> AuthenticateUserAsync(string username, string password)
+        /// <returns>A task that represents the asynchronous authentication operation. The task result contains a <see cref="ServiceResult{OneOf{AuthenticateUserResult, string}}"/> object.</returns>
+        public async Task<AuthenticateUserResult> AuthenticateUser(string username, string password)
         {
             var user = await _userRepository.GetByUsername(username);
 
             if (user == null)
             {
-                _logger.LogError("Usuário não encontrado");
-                throw new UserNotFoundException("Usuário não encontrado");
+                _logger.LogError("User not found");
+                throw new UserNotFoundException("User not found");
             }
 
             if (!user.VerifyPassword(password))
             {
-                _logger.LogError("Senha incorreta");
-                throw new IncorrectPasswordException("Senha incorreta");
+                _logger.LogError("Invalid password");
+                throw new InvalidPasswordException("Invalid password");
             }
 
-            var accessToken = GenerateAccessToken(user);
-            var refreshToken = GenerateRefreshToken();
-
-            var response = new LoginResponse
+            var response = new AuthenticateUserResult
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
-                UserId = user.Id,
+                Id = user.Id,
+                AccessToken = GenerateAccessToken(user),
+                RefreshToken = GenerateRefreshToken(),
                 Username = user.Username,
                 Name = user.Name,
                 IsAdmin = user.Type == UserType.Admin
             };
 
-            user.RefreshToken = refreshToken;
+            user.RefreshToken = response.RefreshToken;
             await _userRepository.Update(user);
 
             _logger.LogInformation(JsonConvert.SerializeObject(response));
+
             return response;
         }
 
@@ -86,19 +87,19 @@ namespace Motto.Services
         /// <returns>A task that represents the asynchronous operation. The task result contains a TokenResponse object
         /// with the new access token and refresh token.</returns>
         /// <exception cref="InvalidTokenException">Thrown when the refresh token is invalid.</exception>
-        public async Task<TokenResponse> RefreshTokenAsync(string token, string refreshToken)
+        public async Task<ServiceResult<OneOf<RefreshTokenResult, string>>> RefreshToken(string token, string refreshToken)
         {
             var principal = GetPrincipalFromExpiredToken(token);
             var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
             {
-                throw new InvalidTokenException("Invalid refresh token.");
+                return ServiceResult<OneOf<RefreshTokenResult, string>>.Failed("Invalid token", 401);
             }
 
             var user = await _userRepository.GetById(userId);
             if (user == null || user.RefreshToken != refreshToken)
             {
-                throw new InvalidTokenException("Invalid refresh token.");
+                return ServiceResult<OneOf<RefreshTokenResult, string>>.Failed("Invalid refresh token", 401);
             }
 
             var accessToken = GenerateAccessToken(user);
@@ -108,11 +109,11 @@ namespace Motto.Services
             user.RefreshToken = newRefreshToken;
             await _userRepository.Update(user);
 
-            return new TokenResponse
+            return ServiceResult<OneOf<RefreshTokenResult, string>>.Successed(new RefreshTokenResult
             {
                 AccessToken = accessToken,
                 RefreshToken = newRefreshToken
-            };
+            });
         }
 
         /// <summary>

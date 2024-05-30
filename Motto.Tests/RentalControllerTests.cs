@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moq.EntityFrameworkCore;
 using Motto.Controllers;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Entities;
 using Motto.Data;
 using Motto.Repositories;
 using Motto.Services;
 using System.Security.Claims;
+using AutoMapper;
+using Motto.WebApi;
 
 namespace Motto.Tests
 {
@@ -54,11 +56,12 @@ namespace Motto.Tests
             };
 
             new Mock<IHttpContextAccessor>().Setup(_ => _.HttpContext).Returns(httpContext);
+            var _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile())));
 
             _controller = new RentalController(new RentalService(
                 new RentalRepository(_mockDbContext.Object),
                 new DeliveryDriverUserRepository(_mockDbContext.Object),
-                new RentalPlanRepository(_mockDbContext.Object)))
+                new RentalPlanRepository(_mockDbContext.Object)), _mapper)
             {
                 ControllerContext = new ControllerContext
                 {

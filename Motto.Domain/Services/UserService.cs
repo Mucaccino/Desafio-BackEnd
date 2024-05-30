@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Motto.Entities;
-using Motto.DTOs;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
-using Motto.Enums;
+using Motto.Domain.Services.Results;
 
 namespace Motto.Services
 {
@@ -28,20 +27,11 @@ namespace Motto.Services
         /// </summary>
         /// <param name="registerModel">The registration model.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task<ServiceResult<string>> RegisterAdmin(UserCreateRequest registerModel)
+        public async Task<ServiceResult<string>> RegisterAdmin(AdminUser adminUser)
         {
-            var user = new User
-            {
-                Username = registerModel.Username,
-                Name = registerModel.Name,
-                Type = UserType.Admin
-            };
-
-            user.SetPassword(registerModel.Password);
-
             try
             {
-                await _userRepository.Add(user);
+                await _userRepository.Add(adminUser);
                 return ServiceResult<string>.Successed("Administrador criado com sucesso");
             }
             catch (DbUpdateException ex)
@@ -56,24 +46,11 @@ namespace Motto.Services
         /// <param name="registerModel">The model containing the delivery driver registration details.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
         /// contains a success message if the registration is successful, or an error message if the registration fails.</returns>
-        public async Task<ServiceResult<string>> RegisterDeliveryDriver(DeliveryDriverCreateRequest registerModel)
+        public async Task<ServiceResult<string>> RegisterDeliveryDriver(DeliveryDriverUser deliveryDriverUser)
         {
-            var user = new DeliveryDriverUser
-            {
-                Username = registerModel.Username,
-                Name = registerModel.Name,
-                CNPJ = registerModel.CNPJ,
-                DateOfBirth = registerModel.DateOfBirth,
-                DriverLicenseNumber = registerModel.DriverLicenseNumber,
-                DriverLicenseType = registerModel.DriverLicenseType,
-                Type = UserType.DeliveryDriver
-            };
-
-            user.SetPassword(registerModel.Password);
-
             try
             {
-                await _userRepository.Add(user);
+                await _userRepository.Add(deliveryDriverUser);
                 return ServiceResult<string>.Successed("Entregador criado com sucesso");
             }
             catch (DbUpdateException ex)

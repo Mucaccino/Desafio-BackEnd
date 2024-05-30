@@ -4,16 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Motto.Entities;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Repositories;
 using Motto.Services;
-using Motto.Services.EventProducers;
 using NSwag.Generation.Processors.Security;
 using Serilog;
 using Serilog.Exceptions;
 using Motto.Services.Interfaces;
 using Motto.Data;
 using Motto.Enums;
+using Motto.Domain.Events;
+using Motto.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,8 @@ builder.Services.AddScoped<IAuthService, AuthService>(provider =>
 builder.Services.AddScoped<IRentalPlanService, RentalPlanService>();
 builder.Services.AddScoped<ILicenseImageService, LicenseImageService>();
 builder.Services.AddScoped<LicenseImageService>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 // Register RabbitMQ services
 builder.Services.AddSingleton<IRabbitMQService, RabbitMQService>();

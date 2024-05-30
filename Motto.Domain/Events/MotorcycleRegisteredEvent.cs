@@ -1,4 +1,4 @@
-namespace Motto.Events;
+namespace Motto.Domain.Events;
 
 // Event class to be published when a new motorcycle is registered
 public class MotorcycleRegisteredEvent

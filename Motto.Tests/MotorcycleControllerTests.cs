@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Moq.EntityFrameworkCore;
 using Motto.Repositories;
 using Motto.Services;
-using Motto.DTOs;
+using Motto.Dtos;
+using AutoMapper;
+using Motto.WebApi;
 
 namespace Motto.Tests
 {
@@ -66,9 +68,10 @@ namespace Motto.Tests
 
             // Mock do serviço
             var _serviceMock = new MotorcycleService(new MotorcycleRepository(_dbContext.Object));
+            var _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile())));
 
             // Configure o contexto do controlador
-            _controller = new MotorcycleController(_serviceMock)
+            _controller = new MotorcycleController(_serviceMock, _mapper)
             {
                 ControllerContext = new ControllerContext
                 {

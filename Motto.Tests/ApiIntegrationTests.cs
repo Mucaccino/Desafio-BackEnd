@@ -2,10 +2,11 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
-using Motto.DTOs;
+using Motto.Dtos;
 using Serilog;
 using Microsoft.Extensions.Configuration;
 using Motto.Enums;
+using Motto.Domain.Services.Results;
 
 namespace Motto.Tests;
 
@@ -56,7 +57,7 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
         var response = await client.PostAsync("/api/Auth/login", data);
         response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        var result = await response.Content.ReadFromJsonAsync<AuthenticateUserResult>();
         _loggedToken = result?.AccessToken;
         _loggedUserType = userType;
         Assert.IsTrue(_loggedToken != null && _loggedToken.Length > 0);

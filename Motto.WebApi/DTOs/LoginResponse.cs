@@ -1,5 +1,5 @@
 
-namespace Motto.DTOs;
+namespace Motto.Dtos;
 
 /// <summary>
 /// Login response

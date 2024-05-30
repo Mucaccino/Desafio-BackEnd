@@ -2,8 +2,9 @@ using Motto.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Motto.Entities;
-using Motto.Services.EventProducers;
-using Motto.DTOs;
+using Motto.Dtos;
+using Motto.Domain.Events;
+using AutoMapper;
 
 namespace Motto.Controllers
 {
@@ -15,20 +16,23 @@ namespace Motto.Controllers
     public class MotorcycleController : ControllerBase
     {
         private readonly MotorcycleService _motorcycleService;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotorcycleController"/> class.
         /// </summary>
         /// <param name="motorcycleService">The motorcycle service used by the controller.</param>
-        public MotorcycleController(MotorcycleService motorcycleService)
+        /// <param name="mapper">The mapper used by the controller.</param>
+        public MotorcycleController(MotorcycleService motorcycleService, IMapper mapper)
         {
             _motorcycleService = motorcycleService;
+            _mapper = mapper;
         }
 
         /// <summary>
         /// Creates a new motorcycle with the given request model and sends a motorcycle registered event.
         /// </summary>
-        /// <param name="model">The request model containing the motorcycle's information.</param>
+        /// <param name="requestModel">The request model containing the motorcycle's information.</param>
         /// <param name="motorcycleEventProducer">The motorcycle event producer used to send the registered event.</param>
         /// <returns>An asynchronous task that returns an ActionResult containing the result message.</returns>
         /// <response code="400">If the request model is invalid.</response>
@@ -36,14 +40,15 @@ namespace Motto.Controllers
         /// <response code="200">If the motorcycle is successfully created.</response>
         [Authorize(Roles = "Admin")]
         [HttpPost("create")]
-        public async Task<ActionResult<object>> Create([FromBody] MotorcycleCreateRequest model, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
+        public async Task<ActionResult<string>> Create([FromBody] MotorcycleCreateRequest requestModel, [FromServices] MotorcycleEventProducer? motorcycleEventProducer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _motorcycleService.CreateMotorcycle(model, motorcycleEventProducer);
+            var motorcycle = _mapper.Map<Motorcycle>(requestModel);
+            var result = await _motorcycleService.CreateMotorcycle(motorcycle, motorcycleEventProducer);
 
             if (!result.Success)
             {
@@ -57,21 +62,22 @@ namespace Motto.Controllers
         /// Updates a motorcycle with the given ID using the provided request model.
         /// </summary>
         /// <param name="id">The ID of the motorcycle to update.</param>
-        /// <param name="model">The request model containing the updated motorcycle information.</param>
+        /// <param name="requestModel">The request model containing the updated motorcycle information.</param>
         /// <returns>An asynchronous task that returns an ActionResult containing the result message.</returns>
         /// <response code="400">If the request model is invalid.</response>
         /// <response code="409">If a motorcycle with the same plate already exists.</response>
         /// <response code="200">If the motorcycle is successfully updated.</response>
         [Authorize(Roles = "Admin")]
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateRequest model)
+        public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateRequest requestModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _motorcycleService.UpdateMotorcycle(id, model);
+            var motorcycle = _mapper.Map<Motorcycle>(requestModel);
+            var result = await _motorcycleService.UpdateMotorcycle(id, motorcycle);
 
             if (!result.Success)
             {

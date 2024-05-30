@@ -2,8 +2,9 @@ using System.Security.Claims;
 using Motto.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Entities;
+using AutoMapper;
 
 namespace Motto.Controllers;
 
@@ -15,14 +16,16 @@ namespace Motto.Controllers;
 public class RentalController : ControllerBase
 {
     private readonly IRentalService _rentalService;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RentalController"/> class.
     /// </summary>
     /// <param name="rentalService">The rental service.</param>
-    public RentalController(IRentalService rentalService)
+    public RentalController(IRentalService rentalService, IMapper mapper)
     {
         _rentalService = rentalService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -40,7 +43,8 @@ public class RentalController : ControllerBase
         }
 
         var userId = Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int id) ? id : 0;
-        var result = await _rentalService.RegisterRental(userId, registerModel);
+        var rental = _mapper.Map<Rental>(registerModel, opts => opts.AfterMap((src, dest) => dest.DeliveryDriverId = userId));
+        var result = await _rentalService.Register(rental);
 
         if (!result.Success)
         {
@@ -61,7 +65,7 @@ public class RentalController : ControllerBase
     public async Task<ActionResult<object>> DeliverMotorcycle(int id, DateTime endDate)
     {
         var userId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "");
-        var result = await _rentalService.DeliverMotorcycle(userId, id, endDate);
+        var result = await _rentalService.Deliver(userId, id, endDate);
 
         if (!result.Success)
         {

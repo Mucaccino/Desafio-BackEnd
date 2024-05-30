@@ -5,11 +5,12 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
 using Motto.Controllers;
-using Motto.DTOs;
+using Motto.Dtos;
 using Motto.Entities;
 using Motto.Data;
 using Motto.Repositories;
 using Motto.Services;
+using Motto.Domain.Services.Results;
 
 namespace Motto.Tests
 {
@@ -42,7 +43,7 @@ namespace Motto.Tests
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             var okResult = result.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            var response = okResult.Value as LoginResponse;
+            var response = okResult.Value as AuthenticateUserResult;
             Assert.IsNotNull(response);
             Assert.IsNotNull(response.AccessToken);
         }

@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Motto.DTOs;
 using Motto.Entities;
-using Namotion.Reflection;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
+using Motto.Services.Results;
+using Motto.Domain.Models;
+using Motto.Domain.Services.Results;
 
 namespace Motto.Services
 {
@@ -32,13 +33,12 @@ namespace Motto.Services
         /// <summary>
         /// Registers a rental for a given user and rental request.
         /// </summary>
-        /// <param name="userId">The ID of the user.</param>
-        /// <param name="registerModel">The rental request.</param>
+        /// <param name="rental">The rental model <see cref="Rental"/>.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
         /// contains the registered rental if successful, or an error message if the registration fails.</returns>        
-        public async Task<ServiceResult<Rental>> RegisterRental(int userId, RentalCreateRequest registerModel)
+        public async Task<ServiceResult<Rental>> Register(Rental rental)
         {
-            var deliveryDriver = await _deliveryDriverUserRepository.GetById(userId);
+            var deliveryDriver = rental.DeliveryDriver ?? await _deliveryDriverUserRepository.GetById(rental.DeliveryDriverId);
             if (deliveryDriver == null)
             {
                 return ServiceResult<Rental>.Failed("O entregador não existe.");
@@ -49,20 +49,14 @@ namespace Motto.Services
                 return ServiceResult<Rental>.Failed("O entregador não está habilitado na categoria A.");
             }
 
-            var rentalPlan = await _rentalPlanRepository.GetById(registerModel.RentalPlanId);
+            var rentalPlan = await _rentalPlanRepository.GetById(rental.RentalPlanId);
             if (rentalPlan == null)
             {
                 return ServiceResult<Rental>.Failed("Plano de aluguel inválido.");
             }
 
-            var rental = new Rental
-            {
-                DeliveryDriverId = deliveryDriver.Id,
-                MotorcycleId = registerModel.MotorcycleId,
-                RentalPlanId = registerModel.RentalPlanId,
-                StartDate = DateTime.Today.AddDays(1),
-                ExpectedEndDate = DateTime.Today.AddDays(rentalPlan.Days)
-            };
+            rental.StartDate = DateTime.Today.AddDays(1);
+            rental.ExpectedEndDate = DateTime.Today.AddDays(rentalPlan.Days);
 
             try
             {
@@ -78,47 +72,48 @@ namespace Motto.Services
         /// <summary>
         /// Delivers a motorcycle for a given user and rental.
         /// </summary>
-        /// <param name="userId">The ID of the user.</param>
+        /// <param name="deliveryDriverId">The ID of the user.</param>
         /// <param name="rentalId">The ID of the rental.</param>
         /// <param name="endDate">The end date of the rental.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
         /// contains the delivery response if successful, or an error message if the delivery fails.</returns>
-        public async Task<ServiceResult<RentalDeliverResponse>> DeliverMotorcycle(int userId, int rentalId, DateTime endDate)
+        public async Task<ServiceResult<RentalDeliverResult>> Deliver(int deliveryDriverId, int rentalId, DateTime endDate = default(DateTime))
         {
             var rental = await _rentalRepository.GetById(rentalId);
             if (rental == null)
             {
-                return ServiceResult<RentalDeliverResponse>.Failed("Aluguel não encontrado.");
+                return ServiceResult<RentalDeliverResult>.Failed("Aluguel não encontrado.");
             }
 
-            if (rental.DeliveryDriverId != userId)
+            if (rental.DeliveryDriverId != deliveryDriverId)
             {
-                return ServiceResult<RentalDeliverResponse>.Failed("Você não está autorizado a entregar esta moto.");
+                return ServiceResult<RentalDeliverResult>.Failed("Você não está autorizado a entregar esta moto.");
             }
 
-            if (!rental.EndDate.HasValidNullability())
+            if (rental.EndDate != default(DateTime))
             {
-                return ServiceResult<RentalDeliverResponse>.Failed("A moto já foi entregue.");
+                return ServiceResult<RentalDeliverResult>.Failed("A moto já foi entregue.");
             }
 
             if (endDate < rental.StartDate)
             {
-                return ServiceResult<RentalDeliverResponse>.Failed("A data de entrega não pode ser anterior à data de retirada.");
+                return ServiceResult<RentalDeliverResult>.Failed("A data de entrega não pode ser anterior à data de retirada.");
             }
 
             var rentalPlan = await _rentalPlanRepository.GetById(rental.RentalPlanId);
             if (rentalPlan == null)
             {
-                return ServiceResult<RentalDeliverResponse>.Failed("Plano de aluguel inválido.");
+                return ServiceResult<RentalDeliverResult>.Failed("Plano de aluguel inválido.");
             }
 
-            rental.EndDate = endDate;
+            rental.EndDate = (endDate == default(DateTime)) ? DateTime.Today : endDate;
+
             var totalCostInfo = GetTotalCost(rental, rentalPlan, endDate);
 
             try
             {
                 await _rentalRepository.Update(rental);
-                return ServiceResult<RentalDeliverResponse>.Successed(new RentalDeliverResponse
+                return ServiceResult<RentalDeliverResult>.Successed(new RentalDeliverResult
                 {
                     Cost = totalCostInfo,
                     Message = "Entrega registrada com sucesso."
@@ -126,7 +121,7 @@ namespace Motto.Services
             }
             catch (DbUpdateException ex)
             {
-                return ServiceResult<RentalDeliverResponse>.Failed("Erro ao salvar os dados no banco de dados: " + ex.Message);
+                return ServiceResult<RentalDeliverResult>.Failed("Erro ao salvar os dados no banco de dados: " + ex.Message);
             }
         }
 
@@ -155,22 +150,22 @@ namespace Motto.Services
         /// <param name="id">The ID of the rental.</param>
         /// <param name="endDate">The end date of the rental.</param>
         /// <returns>An asynchronous task that returns a ServiceResult containing the total cost as a TotalCostModel if successful, or a failed ServiceResult with an error message if the rental is not found or the end date is earlier than the start date.</returns>
-        public async Task<ServiceResult<TotalCostResponse>> GetTotalCostById(int id, DateTime endDate)
+        public async Task<ServiceResult<TotalCostModel>> GetTotalCostById(int id, DateTime endDate)
         {
             var rental = await _rentalRepository.GetById(id);
             if (rental == null)
             {
-                return ServiceResult<TotalCostResponse>.Failed("Aluguel não encontrado.");
+                return ServiceResult<TotalCostModel>.Failed("Aluguel não encontrado.");
             }
 
             if (endDate < rental.StartDate)
             {
-                return ServiceResult<TotalCostResponse>.Failed("A data de entrega não pode ser anterior à data de retirada.");
+                return ServiceResult<TotalCostModel>.Failed("A data de entrega não pode ser anterior à data de retirada.");
             }
 
             var totalCostInfo = GetTotalCost(rental, rental.RentalPlan, endDate);
 
-            return ServiceResult<TotalCostResponse>.Successed(totalCostInfo);
+            return ServiceResult<TotalCostModel>.Successed(totalCostInfo);
         }
         
         /// <summary>
@@ -180,7 +175,7 @@ namespace Motto.Services
         /// <param name="rentalPlan">The rental plan object.</param>
         /// <param name="endDate">The end date of the rental. If not provided, the current date is used.</param>
         /// <returns>A TotalCostModel object containing the base cost, penalty cost, and total cost of the rental.</returns>
-        public TotalCostResponse GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate)
+        public TotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate = default(DateTime))
         {
             if (endDate == default(DateTime)) endDate = DateTime.Today;
 
@@ -211,7 +206,7 @@ namespace Motto.Services
                 rental.TotalCost += rental.PenaltyCost;
             }
 
-            return new TotalCostResponse
+            return new TotalCostModel
             {
                 BaseCost = rental.TotalCost - rental.PenaltyCost,
                 PenaltyCost = rental.PenaltyCost,

@@ -28,7 +28,9 @@ public class User
     [Required(ErrorMessage = "Salt is required")]
     public string Salt { get; set; } = string.Empty;
 
-    public void SetPassword(string password)
+    public string Password { set => SetPassword(value); }
+
+    private void SetPassword(string password)
     {
         (PasswordHash, Salt) = PasswordHasher.HashPassword(password);
     }
