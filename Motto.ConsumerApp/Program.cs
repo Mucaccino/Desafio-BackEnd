@@ -1,3 +1,4 @@
+using Motto.Consumers;
 using Serilog;
 
 var builder = Host.CreateApplicationBuilder(args);

@@ -1,8 +1,8 @@
 using System.Text;
-using Motto.Entities;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+
+namespace Motto.Consumers;
 
 public class MotorcycleEventConsumer : BackgroundService
 {
