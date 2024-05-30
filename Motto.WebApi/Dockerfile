@@ -2,14 +2,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 # Copy everything
-COPY api/ ./api
-COPY models/ ./models
-COPY entities/ ./entities
-COPY utils/ ./utils
-COPY tests/ ./tests
+COPY Motto.WebApi/ ./Motto.WebApi
+COPY Motto.Data/ ./Motto.Data
+COPY Motto.Domain/ ./Motto.Domain
+COPY Motto.Utils/ ./Motto.Utils
+COPY Motto.Tests/ ./Motto.Tests
 
 # Restore as distinct layers
-WORKDIR /app/api
+WORKDIR /app/Motto.WebApi
 RUN dotnet restore
 
 # Build and publish a release
@@ -22,8 +22,8 @@ WORKDIR /app
 # Add curl to container
 RUN apt-get update && apt-get install -y curl
 
-COPY --from=build-env /app/api/out .
+COPY --from=build-env /app/Motto.WebApi/out .
 
 EXPOSE 5000
 
-ENTRYPOINT ["dotnet", "api.dll"]
+ENTRYPOINT ["dotnet", "Motto.WebApi.dll"]
