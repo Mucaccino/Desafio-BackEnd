@@ -10,11 +10,36 @@ O projeto é integralmente desenvolvida em [.NET 8](https://learn.microsoft.com/
 
 ### Estrutura da Solução
 
-* Projeto `api`: webapi
-* Projeto `models`: classlib com modelos usados como entidades
-* Projeto `entities`: configura os `models` com EF Core
-* Projeto `utils`: métodos estáticos de auxilio
-* Projeto `workers`: consumer da messageria
+```
+sln/
+├── Motto.ConsumerApp/
+│   ├── Consumers/
+│   ├── Program.cs
+│   ├── Motto.ConsumerApp.csproj
+├── Motto.Data/
+│   ├── Entities/
+│   ├── Enums/
+│   ├── Migrations/
+│   ├── Repositories/
+│   ├── ApplicationDbContext.cs
+│   ├── Motto.Data.csproj
+│   ├── SeedData.cs
+├── Motto.Domain/
+│   ├── Events/
+│   ├── Exceptions/
+│   ├── Models/
+│   ├── Services/
+│   ├── Motto.Core.csproj
+├── Motto.Tests/
+│   ├── Motto.Tests.csproj
+├── Motto.Utils/
+│   ├── Motto.Utils.csproj
+├── Motto.WebApi/
+│   ├── Controllers/
+│   ├── Dtos/
+│   ├── Program.cs
+│   ├── Motto.Api.csproj
+```
 
 ### Setup da solução
 
