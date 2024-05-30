@@ -37,7 +37,7 @@ jobs:
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        dotnet ef database update -c ApplicationDbContext -p entities
+        dotnet ef database update -c ApplicationDbContext -p Motto.Data
 
     - name: Install curl
       run: |
@@ -60,7 +60,7 @@ jobs:
         echo "API is healthy!"
 
     - name: Run tests
-      run: dotnet test ./tests -e ASPNETCORE_ENVIRONMENT=Local
+      run: dotnet test ./Motto.Tests -e ASPNETCORE_ENVIRONMENT=Local
 
     - name: Tear down Docker containers
       run: docker-compose -f docker-compose.yml -f docker-compose.projects.yml down

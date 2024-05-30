@@ -1,6 +1,8 @@
 # Variables
 DOCKER_COMPOSE = docker-compose
 DOTNET = dotnet
+TESTS_PROJECT = Motto.Tests
+EF_PROJECT = Motto.Data
 
 # Targets
 .PHONY: all build setup-db up-services
@@ -13,7 +15,7 @@ setup: up-services update-db
 
 # Update database
 update-db:
-	$(DOTNET) ef database update --project entities
+	$(DOTNET) ef database update --project $(EF_PROJECT)
 
 # Up services and projects
 up-all: up-services up-projects
@@ -32,4 +34,4 @@ down:
 
 # Run all tests
 run-tests: up-services
-	$(DOTNET) test ./tests/tests.csproj
+	$(DOTNET) test ./$(TESTS_PROJECT)/$(TESTS_PROJECT).csproj
