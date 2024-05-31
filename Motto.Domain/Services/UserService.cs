@@ -3,6 +3,8 @@ using Motto.Entities;
 using Motto.Repositories.Interfaces;
 using Motto.Services.Interfaces;
 using Motto.Domain.Services.Results;
+using Motto.Enums;
+using OneOf;
 
 namespace Motto.Services
 {
@@ -12,14 +14,27 @@ namespace Motto.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IDeliveryDriverUserRepository _deliveryDriverUserRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
         /// <param name="userRepository">The user repository.</param>
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IDeliveryDriverUserRepository deliveryDriverUserRepository)
         {
             _userRepository = userRepository;
+            _deliveryDriverUserRepository = deliveryDriverUserRepository;
+        }
+
+        public async Task<ServiceResult<List<User>>> GetAllUsers(UserType? type = null, string? filter = null)
+        {
+            var result = await _userRepository.GetAll(type, filter);
+            return ServiceResult<List<User>>.Successed(result);
+        }
+        public async Task<ServiceResult<List<DeliveryDriverUser>>> GetAllDeliveryDriverUsers(string? filter = null)
+        {
+            var result = await _deliveryDriverUserRepository.GetAll(filter);
+            return ServiceResult<List<DeliveryDriverUser>>.Successed(result);
         }
 
         /// <summary>

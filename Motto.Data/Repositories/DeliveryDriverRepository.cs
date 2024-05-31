@@ -35,9 +35,11 @@ namespace Motto.Repositories
         /// Retrieves all the delivery drivers.
         /// </summary>
         /// <returns>A collection of all the delivery drivers.</returns>
-        public async Task<IEnumerable<DeliveryDriverUser>> GetAll()
+        public async Task<List<DeliveryDriverUser>> GetAll(string? filter = null)
         {
-            return await _dbContext.DeliveryDriverUsers.ToListAsync();
+            return await _dbContext.DeliveryDriverUsers
+                .Where(x => filter == null || x.Name.Contains(filter) || x.Username.Contains(filter))
+                .ToListAsync();
         }
 
         /// <summary>
