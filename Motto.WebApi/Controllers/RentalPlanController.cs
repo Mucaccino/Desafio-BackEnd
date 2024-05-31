@@ -10,7 +10,7 @@ namespace Motto.Controllers
     /// Represents a controller for managing rental plans.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/rental-plan")]
     public class RentalPlanController : ControllerBase
     {
         private readonly IRentalPlanService _rentalPlanService;

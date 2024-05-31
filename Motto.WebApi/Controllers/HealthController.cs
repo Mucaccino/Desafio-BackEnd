@@ -6,7 +6,7 @@ namespace Motto.Controllers
     /// Controller for checking the health of the application.
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/health")]
     public class HealthController : ControllerBase
     {
         private readonly ILogger<HealthController> _logger;
@@ -23,7 +23,10 @@ namespace Motto.Controllers
         /// <summary>
         /// Checks the health of the application.
         /// </summary>
-        /// <returns>An IActionResult with a 200 OK status code if the application is healthy.</returns>
+        /// <returns>An result with a 200 OK status code if the application is healthy.</returns>
+        /// <response code="500">Internal server error</response>
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(500)]
         [HttpGet]
         public IActionResult CheckHealth()
         {

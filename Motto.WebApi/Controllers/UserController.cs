@@ -4,13 +4,14 @@ using Motto.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Motto.Services.Interfaces;
 using AutoMapper;
+using Motto.Enums;
 
 namespace Motto.Controllers
 {
     /// <summary>
     /// The UserController class is responsible for handling user registration requests.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -58,7 +59,7 @@ namespace Motto.Controllers
         /// </summary>
         /// <param name="registerModel">The model containing the delivery driver registration details.</param>
         /// <returns>The created delivery driver user if successful, otherwise a bad request with the error message or a 500 status code with the error message.</returns>
-        [HttpPost("register/deliveryDriver")]
+        [HttpPost("register/delivery-driver")]
         public async Task<ActionResult<User>> RegisterDeliveryDriver(DeliveryDriverCreateRequest registerModel)
         {
             if (!ModelState.IsValid)
@@ -76,5 +77,6 @@ namespace Motto.Controllers
 
             return Ok(result.Message);
         }
+
     }
 }

@@ -12,7 +12,7 @@ namespace Motto.Controllers
     /// Represents a controller for motorcycles.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/motorcycle")]
     public class MotorcycleController : ControllerBase
     {
         private readonly MotorcycleService _motorcycleService;

@@ -48,7 +48,7 @@ jobs:
       run: |
         count=0
         max_retries=10
-        while ! curl -sSf http://localhost:5000/health; do
+        while ! curl -sSf http://localhost:5000/api/health; do
           count=$((count + 1))
           if [ $count -ge $max_retries ]; then
             echo "Max retries reached. Exiting..."

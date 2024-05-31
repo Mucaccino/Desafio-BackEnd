@@ -12,7 +12,7 @@ namespace Motto.Controllers;
 /// Represents a controller for managing rentals.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/rental")]
 public class RentalController : ControllerBase
 {
     private readonly IRentalService _rentalService;
@@ -22,6 +22,7 @@ public class RentalController : ControllerBase
     /// Initializes a new instance of the <see cref="RentalController"/> class.
     /// </summary>
     /// <param name="rentalService">The rental service.</param>
+    /// <param name="mapper"></param>
     public RentalController(IRentalService rentalService, IMapper mapper)
     {
         _rentalService = rentalService;
