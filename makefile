@@ -11,21 +11,21 @@ EF_PROJECT = Motto.Data
 all: setup
 
 # Up services and setup database
-setup: up-services update-db
+setup: services update
 
 # Update database
-update-db:
+update:
 	$(DOTNET) ef database update --project $(EF_PROJECT)
 
 # Up services and projects
-up-all: up-services up-projects
+all: services projects
 
 # Up only services
-up-services:
+services:
 	$(DOCKER_COMPOSE) up -d --build
 
 # Up projects without services
-up-projects:
+projects:
 	$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.projects.yml up -d --build
 
 # Down containers
@@ -33,5 +33,5 @@ down:
 	$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.projects.yml down
 
 # Run all tests
-run-tests: up-services
+tests: services
 	$(DOTNET) test ./$(TESTS_PROJECT)/$(TESTS_PROJECT).csproj
