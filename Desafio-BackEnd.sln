@@ -17,8 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Motto.ConsumerApp", "Motto.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9692B75-9199-4862-85C6-525FFAF479EF}"
 	ProjectSection(SolutionItems) = preProject
+		docfx.json = docfx.json
 		makefile = makefile
 		README.md = README.md
+		toc.yml = toc.yml
 		TODO.md = TODO.md
 	EndProjectSection
 EndProject
