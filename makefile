@@ -1,11 +1,14 @@
 # Variables
 DOCKER_COMPOSE = docker-compose
 DOTNET = dotnet
+DOCKFX = docfx
 TESTS_PROJECT = Motto.Tests
 EF_PROJECT = Motto.Data
+Command := $(firstword $(MAKECMDGOALS))
+Arguments := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 
 # Targets
-.PHONY: all build setup-db up-services
+.PHONY: all build setup services projects docs
 
 # Build, setup and up
 all: setup
@@ -35,3 +38,14 @@ down:
 # Run all tests
 tests: services
 	$(DOTNET) test ./$(TESTS_PROJECT)/$(TESTS_PROJECT).csproj
+
+# Run docfx (with serve mode)
+docs:
+ifeq (serve, $(filter serve,$(MAKECMDGOALS)))
+	$(DOCKFX) --serve
+else
+	$(DOCKFX) 
+endif
+
+%:
+	@:
