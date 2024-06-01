@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
-using Motto.Repositories.Interfaces;
-using Motto.Services.Interfaces;
-using Motto.Services.Results;
-using Motto.Domain.Models;
 using Motto.Domain.Services.Results;
+using Motto.Domain.Models;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Entities;
+using Motto.Domain.Services.Interfaces;
 
-namespace Motto.Services
+namespace Motto.Domain.Services
 {
     public class RentalService : IRentalService
     {
@@ -77,7 +76,7 @@ namespace Motto.Services
         /// <param name="endDate">The end date of the rental.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a ServiceResult object that 
         /// contains the delivery response if successful, or an error message if the delivery fails.</returns>
-        public async Task<ServiceResult<RentalDeliverResult>> Deliver(int deliveryDriverId, int rentalId, DateTime endDate = default(DateTime))
+        public async Task<ServiceResult<RentalDeliverResult>> Deliver(int deliveryDriverId, int rentalId, DateTime endDate = default)
         {
             var rental = await _rentalRepository.GetById(rentalId);
             if (rental == null)
@@ -90,7 +89,7 @@ namespace Motto.Services
                 return ServiceResult<RentalDeliverResult>.Failed("Você não está autorizado a entregar esta moto.");
             }
 
-            if (rental.EndDate != default(DateTime))
+            if (rental.EndDate != default)
             {
                 return ServiceResult<RentalDeliverResult>.Failed("A moto já foi entregue.");
             }
@@ -106,7 +105,7 @@ namespace Motto.Services
                 return ServiceResult<RentalDeliverResult>.Failed("Plano de aluguel inválido.");
             }
 
-            rental.EndDate = (endDate == default(DateTime)) ? DateTime.Today : endDate;
+            rental.EndDate = endDate == default ? DateTime.Today : endDate;
 
             var totalCostInfo = GetTotalCost(rental, rentalPlan, endDate);
 
@@ -167,7 +166,7 @@ namespace Motto.Services
 
             return ServiceResult<TotalCostModel>.Successed(totalCostInfo);
         }
-        
+
         /// <summary>
         /// Calculates the total cost of a rental based on the provided rental, rental plan, and end date.
         /// </summary>
@@ -175,9 +174,9 @@ namespace Motto.Services
         /// <param name="rentalPlan">The rental plan object.</param>
         /// <param name="endDate">The end date of the rental. If not provided, the current date is used.</param>
         /// <returns>A TotalCostModel object containing the base cost, penalty cost, and total cost of the rental.</returns>
-        public TotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate = default(DateTime))
+        public TotalCostModel GetTotalCost(Rental rental, RentalPlan rentalPlan, DateTime endDate = default)
         {
-            if (endDate == default(DateTime)) endDate = DateTime.Today;
+            if (endDate == default) endDate = DateTime.Today;
 
             if (endDate < rental.ExpectedEndDate)
             {

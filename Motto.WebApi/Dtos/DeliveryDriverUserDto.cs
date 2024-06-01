@@ -1,3 +1,5 @@
+namespace Motto.WebApi.Dtos;
+
 public class DeliveryDriverUserDto
 {
     public int Id { get; set; }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
-using Motto.Repositories.Interfaces;
-using Motto.Services.Interfaces;
+using Motto.Data.Entities;
+using Motto.Domain.Services.Interfaces;
 using Motto.Domain.Events;
 using Motto.Domain.Services.Results;
+using Motto.Data.Repositories.Interfaces;
 
-namespace Motto.Services
+namespace Motto.Domain.Services
 {
     /// <summary>
     /// A service for managing motorcycles.
@@ -13,7 +13,7 @@ namespace Motto.Services
     public class MotorcycleService : IMotorcycleService
     {
         private readonly IMotorcycleRepository _motorcycleRepository;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MotorcycleService"/> class.
         /// </summary>

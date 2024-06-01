@@ -1,14 +1,13 @@
-﻿namespace Motto.Utils;
+﻿using System.Security.Cryptography;
 
-using System;
-using System.Security.Cryptography;
+namespace Motto.Utils;
 
 public static class PasswordHasher
 {
     public static (string HashedPassword, string Salt) HashPassword(string password)
     {
         byte[] saltBytes = new byte[16];
-        using (var rng = new RNGCryptoServiceProvider())
+        using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(saltBytes);
         }

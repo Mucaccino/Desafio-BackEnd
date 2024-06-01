@@ -1,7 +1,7 @@
 ﻿
 using AutoMapper;
-using Motto.Dtos;
-using Motto.Entities;
+using Motto.Data.Entities;
+using Motto.WebApi.Dtos;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Motto.WebApi;

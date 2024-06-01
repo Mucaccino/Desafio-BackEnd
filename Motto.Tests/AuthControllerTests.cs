@@ -1,16 +1,13 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
-using Motto.Controllers;
-using Motto.Dtos;
-using Motto.Entities;
+using Motto.WebApi.Dtos;
 using Motto.Data;
-using Motto.Repositories;
-using Motto.Services;
+using Motto.Data.Repositories;
 using Motto.Domain.Services.Results;
+using Motto.Domain.Services;
+using Motto.WebApi.Controllers;
 
 namespace Motto.Tests
 {
@@ -36,7 +33,7 @@ namespace Motto.Tests
         {
     
             // Act
-            var result = await _authController.AuthenticateUser(
+            var result = await _authController.Authenticate(
                 new LoginRequest { Username = "admin", Password = "123mudar" }); 
 
             //Assert
@@ -55,7 +52,7 @@ namespace Motto.Tests
             var loginModel = new LoginRequest { Username = "null", Password = "null" };
 
             // Act
-            var result = await _authController.AuthenticateUser(loginModel);
+            var result = await _authController.Authenticate(loginModel);
 
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundObjectResult));
@@ -70,7 +67,7 @@ namespace Motto.Tests
             var loginModel = new LoginRequest { Username = "admin", Password = "wrongpassword" };
 
             // Act
-            var result = await _authController.AuthenticateUser(loginModel);
+            var result = await _authController.Authenticate(loginModel);
 
             // Assert
             Assert.IsInstanceOfType(result.Result, typeof(UnauthorizedObjectResult));

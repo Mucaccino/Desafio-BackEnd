@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
-using Motto.Repositories.Interfaces;
-using Motto.Services.Interfaces;
 using Motto.Domain.Services.Results;
-using Motto.Enums;
 using OneOf;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Enums;
+using Motto.Data.Entities;
+using Motto.Domain.Services.Interfaces;
 
-namespace Motto.Services
+namespace Motto.Domain.Services
 {
     /// <summary>
     /// Represents a service for managing user operations.
@@ -54,7 +54,7 @@ namespace Motto.Services
                 return ServiceResult<string>.Failed("Erro ao salvar os dados no banco de dados: " + ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Registers a new delivery driver user.
         /// </summary>

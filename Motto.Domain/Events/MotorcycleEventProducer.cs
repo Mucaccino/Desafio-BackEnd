@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
-using Motto.Entities;
-using Motto.Services.Interfaces;
+using Motto.Domain.Services.Interfaces;
+using Motto.Data.Entities;
 
 namespace Motto.Domain.Events
 {

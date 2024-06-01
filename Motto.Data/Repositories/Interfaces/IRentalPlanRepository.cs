@@ -1,6 +1,6 @@
-﻿using Motto.Entities;
+﻿using Motto.Data.Entities;
 
-namespace Motto.Repositories.Interfaces
+namespace Motto.Data.Repositories.Interfaces
 {
     /// <summary>
     /// Represents a repository for <see cref="RentalPlan"/>

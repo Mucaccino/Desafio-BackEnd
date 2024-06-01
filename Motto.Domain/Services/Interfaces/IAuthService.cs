@@ -1,7 +1,7 @@
 ﻿using Motto.Domain.Services.Results;
 using OneOf;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface IAuthService
 {

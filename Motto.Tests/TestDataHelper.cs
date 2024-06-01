@@ -1,7 +1,7 @@
 
 
-using Motto.Entities;
-using Motto.Enums;
+using Motto.Data.Entities;
+using Motto.Data.Enums;
 
 namespace Motto.Tests;
 

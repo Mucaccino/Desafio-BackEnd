@@ -1,17 +1,25 @@
-using Motto.Consumers;
+using Motto.ConsumerApp.Consumers;
 using Serilog;
 
-var builder = Host.CreateApplicationBuilder(args);
+namespace Motto.ConsumerApp;
 
-builder.Services.AddHostedService<MotorcycleEventConsumer>();
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+        builder.Services.AddHostedService<MotorcycleEventConsumer>();
 
-builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console());
-    
-var host = builder.Build();
+        builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-host.Run();
+        builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
+            .ReadFrom.Configuration(builder.Configuration)
+            .Enrich.FromLogContext()
+            .WriteTo.Console());
+
+        var host = builder.Build();
+
+        host.Run();
+    }
+}

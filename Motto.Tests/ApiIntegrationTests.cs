@@ -2,11 +2,12 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
-using Motto.Dtos;
 using Serilog;
 using Microsoft.Extensions.Configuration;
-using Motto.Enums;
 using Motto.Domain.Services.Results;
+using Motto.Data.Enums;
+using Motto.WebApi;
+using Motto.WebApi.Dtos;
 
 namespace Motto.Tests;
 

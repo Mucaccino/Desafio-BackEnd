@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Motto.Entities;
+namespace Motto.Data.Entities;
 
 /// <summary>
 /// MotorcycleMessage class

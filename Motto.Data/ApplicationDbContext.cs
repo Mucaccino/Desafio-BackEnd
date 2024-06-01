@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Motto.Entities;
+using Motto.Data.Entities;
 using Serilog;
-using System;
 
 namespace Motto.Data;
 

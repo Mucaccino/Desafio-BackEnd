@@ -1,9 +1,9 @@
-﻿using Motto.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using Motto.Data;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Entities;
 
-namespace Motto.Repositories
+namespace Motto.Data.Repositories
 {
     /// <summary>
     /// Represents a repository for managing delivery drivers.

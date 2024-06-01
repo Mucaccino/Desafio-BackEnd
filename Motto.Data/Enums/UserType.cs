@@ -1,4 +1,4 @@
-﻿namespace Motto.Enums
+﻿namespace Motto.Data.Enums
 {
     /// <summary>
     /// User types

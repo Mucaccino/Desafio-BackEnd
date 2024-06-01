@@ -1,12 +1,12 @@
 using System.Security.Claims;
-using Motto.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Motto.Dtos;
-using Motto.Entities;
 using AutoMapper;
+using Motto.Data.Entities;
+using Motto.Domain.Services.Interfaces;
+using Motto.WebApi.Dtos;
 
-namespace Motto.Controllers;
+namespace Motto.WebApi.Controllers;
 
 /// <summary>
 /// Represents a controller for managing rentals.

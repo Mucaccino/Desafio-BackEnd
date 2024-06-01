@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
 using Motto.Data;
-using Motto.Repositories.Interfaces;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Entities;
 
-namespace Motto.Repositories
+namespace Motto.Data.Repositories
 {
     /// <summary>
     /// Represents a repository for managing rental plans.

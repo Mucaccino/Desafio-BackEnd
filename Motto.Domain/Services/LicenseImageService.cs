@@ -1,12 +1,12 @@
 using Minio.DataModel.Args;
 using Minio.Exceptions;
 using Minio;
-using Motto.Repositories.Interfaces;
-using Motto.Services.Interfaces;
+using Motto.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using Motto.Data.Repositories.Interfaces;
 
-namespace Motto.Services;
+namespace Motto.Domain.Services;
 
 /// <summary>
 /// Represents a service for handling license image operations.

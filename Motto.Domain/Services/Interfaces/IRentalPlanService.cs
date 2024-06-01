@@ -1,6 +1,6 @@
-﻿using Motto.Entities;
+﻿using Motto.Data.Entities;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface IRentalPlanService
 {

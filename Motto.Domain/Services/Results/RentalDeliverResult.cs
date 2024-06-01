@@ -1,6 +1,6 @@
 ﻿using Motto.Domain.Models;
 
-namespace Motto.Services.Results
+namespace Motto.Domain.Services.Results
 {
     /// <summary>
     /// Represents a response containing the total cost of a rental.

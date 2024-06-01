@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface ILicenseImageService
 {

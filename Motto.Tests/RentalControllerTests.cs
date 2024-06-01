@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moq.EntityFrameworkCore;
-using Motto.Controllers;
-using Motto.Dtos;
-using Motto.Entities;
+using Motto.WebApi.Controllers;
+using Motto.WebApi.Dtos;
 using Motto.Data;
-using Motto.Repositories;
-using Motto.Services;
+using Motto.Domain.Services;
 using System.Security.Claims;
 using AutoMapper;
 using Motto.WebApi;
+using Motto.Data.Entities;
+using Motto.Data.Repositories;
 
 namespace Motto.Tests
 {

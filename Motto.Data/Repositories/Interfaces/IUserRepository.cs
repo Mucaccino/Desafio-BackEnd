@@ -1,8 +1,8 @@
-﻿using Motto.Entities;
-using Motto.Enums;
+﻿using Motto.Data.Entities;
+using Motto.Data.Enums;
 using OneOf;
 
-namespace Motto.Repositories.Interfaces
+namespace Motto.Data.Repositories.Interfaces
 {
     /// <summary>
     /// Represents a repository for <see cref="User"/>

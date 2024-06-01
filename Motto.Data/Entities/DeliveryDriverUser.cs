@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Motto.Entities;
+namespace Motto.Data.Entities;
 
 /// <summary>
 /// DeliveryDriverUser class

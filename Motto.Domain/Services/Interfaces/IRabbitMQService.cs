@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface IRabbitMQService
 {

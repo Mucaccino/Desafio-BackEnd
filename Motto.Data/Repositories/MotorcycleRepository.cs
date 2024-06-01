@@ -1,9 +1,8 @@
-﻿using Motto.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
-using Motto.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Motto.Data.Entities;
+using Motto.Data.Repositories.Interfaces;
 
-namespace Motto.Repositories
+namespace Motto.Data.Repositories
 {
     /// <summary>
     /// Represents a repository for managing motorcycles.

@@ -1,10 +1,9 @@
-using Motto.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
-using Motto.Data;
-using Motto.Enums;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Enums;
+using Motto.Data.Entities;
 
-namespace Motto.Repositories
+namespace Motto.Data.Repositories
 {
 
     /// <summary>
@@ -65,9 +64,9 @@ namespace Motto.Repositories
         /// <returns></returns>
         public async Task<List<User>> GetAll(UserType? type = null, string? filter = null)
         {
-             var users = _dbContext.Users
-                .Where(u => type == null || u.Type == type)
-                .Where(u => filter == null || u.Username.Contains(filter) || u.Name.Contains(filter));
+            var users = _dbContext.Users
+               .Where(u => type == null || u.Type == type)
+               .Where(u => filter == null || u.Username.Contains(filter) || u.Name.Contains(filter));
 
             return await users.ToListAsync();
         }

@@ -1,9 +1,8 @@
-﻿using Motto.Domain.Models;
+﻿using Motto.Data.Entities;
+using Motto.Domain.Models;
 using Motto.Domain.Services.Results;
-using Motto.Entities;
-using Motto.Services.Results;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface IRentalService
 {

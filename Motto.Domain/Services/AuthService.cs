@@ -3,16 +3,16 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Motto.Repositories.Interfaces;
-using Motto.Services.Interfaces;
-using Motto.Entities;
-using Motto.Enums;
+using Motto.Domain.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Motto.Domain.Services.Results;
 using OneOf;
 using Motto.Domain.Exceptions;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Enums;
+using Motto.Data.Entities;
 
-namespace Motto.Services
+namespace Motto.Domain.Services
 {
     /// <summary>
     /// Provides authentication-related services.

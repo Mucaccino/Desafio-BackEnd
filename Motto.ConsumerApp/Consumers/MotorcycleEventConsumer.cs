@@ -2,7 +2,7 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Motto.Consumers;
+namespace Motto.ConsumerApp.Consumers;
 
 public class MotorcycleEventConsumer : BackgroundService
 {
@@ -30,13 +30,16 @@ public class MotorcycleEventConsumer : BackgroundService
         {
             Uri = new Uri(connectionString)
         };
-        
+
         _logger.LogInformation($"RabbitMQ connection string is {connectionString}.");
-        
-        try {
-            _connection =  factory.CreateConnection();
+
+        try
+        {
+            _connection = factory.CreateConnection();
             _logger.LogInformation("RabbitMQ connected!");
-        } catch(Exception ex) {
+        }
+        catch (Exception ex)
+        {
             _logger.LogError($"RabbitMQ not connected! {ex.Message}");
             return;
         }

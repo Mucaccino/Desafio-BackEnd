@@ -1,45 +1,44 @@
-using Motto.Services.Interfaces;
+using Motto.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Motto.Entities;
+using Motto.Data.Entities;
 
-namespace Motto.Controllers
+namespace Motto.WebApi.Controllers;
+
+
+/// <summary>
+/// Represents a controller for managing rental plans.
+/// </summary>
+[ApiController]
+[Route("api/rental-plan")]
+public class RentalPlanController : ControllerBase
 {
+    private readonly IRentalPlanService _rentalPlanService;
 
     /// <summary>
-    /// Represents a controller for managing rental plans.
+    /// Initializes a new instance of the <see cref="RentalPlanController"/> class.
     /// </summary>
-    [ApiController]
-    [Route("api/rental-plan")]
-    public class RentalPlanController : ControllerBase
+    /// <param name="rentalPlanService">The rental plan service.</param>
+    public RentalPlanController(IRentalPlanService rentalPlanService)
     {
-        private readonly IRentalPlanService _rentalPlanService;
+        _rentalPlanService = rentalPlanService;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RentalPlanController"/> class.
-        /// </summary>
-        /// <param name="rentalPlanService">The rental plan service.</param>
-        public RentalPlanController(IRentalPlanService rentalPlanService)
+    /// <summary>
+    /// Gets all rental plans.
+    /// </summary>
+    /// <returns>The list of rental plans.</returns>
+    [Authorize(Roles = "Admin, DeliveryDriver")]
+    [HttpGet("list")]
+    public async Task<ActionResult<IEnumerable<RentalPlan>>> GetAll()
+    {
+        var result = await _rentalPlanService.GetAll();
+
+        if (result == null)
         {
-            _rentalPlanService = rentalPlanService;
+            return NotFound("Nenhum plano de aluguel encontrado.");
         }
 
-        /// <summary>
-        /// Gets all rental plans.
-        /// </summary>
-        /// <returns>The list of rental plans.</returns>
-        [Authorize(Roles = "Admin, DeliveryDriver")]
-        [HttpGet("list")]
-        public async Task<ActionResult<IEnumerable<RentalPlan>>> GetAll()
-        {
-            var result = await _rentalPlanService.GetAll();
-
-            if (result == null)
-            {
-                return NotFound("Nenhum plano de aluguel encontrado.");
-            }
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

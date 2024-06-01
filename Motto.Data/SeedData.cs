@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Motto.Entities;
-using Motto.Enums;
+using Motto.Data.Entities;
+using Motto.Data.Enums;
 using Motto.Utils;
+
+namespace Motto.Data;
 
 public static class SeedData
 {

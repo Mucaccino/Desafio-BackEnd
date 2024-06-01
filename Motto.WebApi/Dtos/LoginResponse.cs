@@ -1,5 +1,4 @@
-
-namespace Motto.Dtos;
+namespace Motto.WebApi.Dtos;
 
 /// <summary>
 /// Login response

@@ -1,8 +1,8 @@
-﻿using Motto.Services.Interfaces;
-using Motto.Entities;
-using Motto.Repositories.Interfaces;
+﻿using Motto.Domain.Services.Interfaces;
+using Motto.Data.Repositories.Interfaces;
+using Motto.Data.Entities;
 
-namespace Motto.Services
+namespace Motto.Domain.Services
 {
     /// <summary>
     /// Represents a service for managing rental plans.

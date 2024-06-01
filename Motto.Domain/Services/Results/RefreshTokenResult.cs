@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the result of a refresh token.
 /// </summary>
-public  class RefreshTokenResult
+public class RefreshTokenResult
 {
     /// <summary>
     /// Gets or sets the access token.

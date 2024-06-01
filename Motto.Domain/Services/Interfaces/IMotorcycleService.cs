@@ -1,8 +1,8 @@
-﻿using Motto.Domain.Events;
+﻿using Motto.Data.Entities;
+using Motto.Domain.Events;
 using Motto.Domain.Services.Results;
-using Motto.Entities;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface IMotorcycleService
 {

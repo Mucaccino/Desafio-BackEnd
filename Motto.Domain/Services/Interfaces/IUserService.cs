@@ -1,9 +1,9 @@
-﻿using Motto.Domain.Services.Results;
-using Motto.Entities;
-using Motto.Enums;
+﻿using Motto.Data.Entities;
+using Motto.Data.Enums;
+using Motto.Domain.Services.Results;
 using OneOf;
 
-namespace Motto.Services.Interfaces;
+namespace Motto.Domain.Services.Interfaces;
 
 public interface IUserService
 {

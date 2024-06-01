@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Motto.Services.Interfaces;
+using Motto.Domain.Services.Interfaces;
 using RabbitMQ.Client;
 
-namespace Motto.Services
+namespace Motto.Domain.Services
 {
 
     /// <summary>
