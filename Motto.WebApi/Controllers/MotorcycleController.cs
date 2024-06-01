@@ -59,35 +59,6 @@ namespace Motto.Controllers
         }
 
         /// <summary>
-        /// Updates a motorcycle with the given ID using the provided request model.
-        /// </summary>
-        /// <param name="id">The ID of the motorcycle to update.</param>
-        /// <param name="requestModel">The request model containing the updated motorcycle information.</param>
-        /// <returns>An asynchronous task that returns an ActionResult containing the result message.</returns>
-        /// <response code="400">If the request model is invalid.</response>
-        /// <response code="409">If a motorcycle with the same plate already exists.</response>
-        /// <response code="200">If the motorcycle is successfully updated.</response>
-        [Authorize(Roles = "Admin")]
-        [HttpPut("update/{id}")]
-        public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateRequest requestModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var motorcycle = _mapper.Map<Motorcycle>(requestModel);
-            var result = await _motorcycleService.UpdateMotorcycle(id, motorcycle);
-
-            if (!result.Success)
-            {
-                return Conflict(result.Message);
-            }
-
-            return Ok(result.Message);
-        }
-
-        /// <summary>
         /// Retrieves a motorcycle by its ID.
         /// </summary>
         /// <param name="id">The ID of the motorcycle.</param>
@@ -107,25 +78,41 @@ namespace Motto.Controllers
         }
 
         /// <summary>
-        /// Retrieves a list of motorcycles filtered by plate.
+        /// Updates a motorcycle with the given ID using the provided request model.
         /// </summary>
-        /// <param name="plateFilter">The plate filter to apply to the motorcycles. Optional.</param>
-        /// <returns>An asynchronous task that returns an ActionResult containing an IEnumerable of Motorcycle objects.</returns>
+        /// <param name="id">The ID of the motorcycle to update.</param>
+        /// <param name="requestModel">The request model containing the updated motorcycle information.</param>
+        /// <returns>An asynchronous task that returns an ActionResult containing the result message.</returns>
+        /// <response code="400">If the request model is invalid.</response>
+        /// <response code="409">If a motorcycle with the same plate already exists.</response>
+        /// <response code="200">If the motorcycle is successfully updated.</response>
         [Authorize(Roles = "Admin")]
-        [HttpGet("list")]
-        public async Task<ActionResult<IEnumerable<Motorcycle>>> GetMotorcycles(string? plateFilter = null)
+        [HttpPut("{id}/update")]
+        public async Task<ActionResult<object>> Update(int id, [FromBody] MotorcycleCreateRequest requestModel)
         {
-            var motorcycles = await _motorcycleService.GetMotorcycles(plateFilter);
-            return Ok(motorcycles);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var motorcycle = _mapper.Map<Motorcycle>(requestModel);
+            var result = await _motorcycleService.UpdateMotorcycle(id, motorcycle);
+
+            if (!result.Success)
+            {
+                return Conflict(result.Message);
+            }
+
+            return Ok(result.Message);
         }
- 
+
         /// <summary>
         /// Removes a motorcycle with the specified ID.
         /// </summary>
         /// <param name="id">The ID of the motorcycle to be removed.</param>
         /// <returns>An asynchronous task that returns an ActionResult containing a string message. If the removal is successful, the message is "Moto removida com sucesso." Otherwise, it returns a Conflict result with the error message.</returns>
         [Authorize(Roles = "Admin")]
-        [HttpDelete("remove/{id}")]
+        [HttpDelete("{id}/remove")]
         public async Task<ActionResult<string>> RemoveMotorcycle(int id)
         {
             var result = await _motorcycleService.RemoveMotorcycle(id);
@@ -136,6 +123,19 @@ namespace Motto.Controllers
             }
 
             return Ok(result.Message);
+        }
+
+        /// <summary>
+        /// Retrieves a list of motorcycles filtered by plate.
+        /// </summary>
+        /// <param name="plateFilter">The plate filter to apply to the motorcycles. Optional.</param>
+        /// <returns>An asynchronous task that returns an ActionResult containing an IEnumerable of Motorcycle objects.</returns>
+        [Authorize(Roles = "Admin")]
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<Motorcycle>>> GetMotorcycles(string? plateFilter = null)
+        {
+            var motorcycles = await _motorcycleService.GetMotorcycles(plateFilter);
+            return Ok(motorcycles);
         }
     }
 }

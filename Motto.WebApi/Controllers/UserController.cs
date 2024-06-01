@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Motto.Services.Interfaces;
 using AutoMapper;
 using Motto.Enums;
+using Mapster;
 
 namespace Motto.Controllers
 {
@@ -77,6 +78,39 @@ namespace Motto.Controllers
 
             return Ok(result.Message);
         }
+        
+        /// <summary>
+        /// Retrieves a list of users based on the specified criteria.
+        /// </summary>
+        /// <param name="type">The type of users to retrieve. Optional.</param>
+        /// <param name="filter">The filter to apply to the user list. Optional.</param>
+        /// <returns>An asynchronous task that returns an ActionResult containing a list of UserDto objects.</returns>
+        [HttpGet("list/users")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<UserDto>>> GetAllUsers(UserType? type = null, string? filter = null)
+        {
+            var users = await _userService.GetAllUsers(type, filter);
 
+            var destination = users.Data.Adapt<List<UserDto>>();
+
+            return Ok(destination);
+        }
+
+        /// <summary>
+        /// Get all delivery drivers.
+        /// </summary>
+        /// <param name="filter">The filter to apply to the name and username.</param>
+        /// <returns>A list of delivery drivers.</returns>
+        [HttpGet("list/delivery-drivers")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<DeliveryDriverUserDto>>> GetAllDeliveryDrivers(string? filter = null)
+        {
+            var users = await _userService.GetAllDeliveryDriverUsers(filter);
+
+            var destination = users.Data.Adapt<List<DeliveryDriverUserDto>>();
+
+            return Ok(destination);
+        }
     }
+
 }

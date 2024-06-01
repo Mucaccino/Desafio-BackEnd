@@ -56,27 +56,6 @@ public class RentalController : ControllerBase
     }
 
     /// <summary>
-    /// Delivers a motorcycle.
-    /// </summary>
-    /// <param name="id">The ID of the motorcycle to be delivered.</param>
-    /// <param name="endDate">The end date of the delivery.</param>
-    /// <returns>An asynchronous task that returns an ActionResult containing the delivery cost and message, or a BadRequest result if the delivery was not successful.</returns>
-    [Authorize(Roles = "DeliveryDriver")]
-    [HttpPost("{id}/deliver")]
-    public async Task<ActionResult<object>> DeliverMotorcycle(int id, DateTime endDate)
-    {
-        var userId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "");
-        var result = await _rentalService.Deliver(userId, id, endDate);
-
-        if (!result.Success)
-        {
-            return BadRequest(result.Message);
-        }
-
-        return Ok(new { result.Data?.Cost, result.Data?.Message });
-    }
-
-    /// <summary>
     /// Retrieves a list of all rentals.
     /// </summary>
     /// <returns>An asynchronous task that returns an ActionResult containing a list of Rental objects, or a BadRequest result if the rentals could not be retrieved.</returns>
@@ -125,5 +104,26 @@ public class RentalController : ControllerBase
         }
 
         return Ok(result.Data);
+    }
+
+    /// <summary>
+    /// Delivers a motorcycle.
+    /// </summary>
+    /// <param name="id">The ID of the motorcycle to be delivered.</param>
+    /// <param name="endDate">The end date of the delivery.</param>
+    /// <returns>An asynchronous task that returns an ActionResult containing the delivery cost and message, or a BadRequest result if the delivery was not successful.</returns>
+    [Authorize(Roles = "DeliveryDriver")]
+    [HttpPost("{id}/deliver")]
+    public async Task<ActionResult<object>> DeliverMotorcycle(int id, DateTime endDate)
+    {
+        var userId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "");
+        var result = await _rentalService.Deliver(userId, id, endDate);
+
+        if (!result.Success)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(new { result.Data?.Cost, result.Data?.Message });
     }
 }
