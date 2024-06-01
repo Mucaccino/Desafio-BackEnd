@@ -36,3 +36,5 @@ msbuild.wrn
 obj/
 /Storage/
 TestResults/
+/_site/
+/api/
