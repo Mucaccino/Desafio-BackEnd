@@ -1,3 +1,5 @@
+name: Pages
+
 # Your GitHub workflow file under .github/workflows/
 # Trigger the action on push to master
 on:
@@ -32,7 +34,7 @@ jobs:
         dotnet-version: 8.x
 
     - run: dotnet tool update -g docfx
-    - run: docfx <docfx-project-path>/docfx.json
+    - run: docfx ./docfx.json
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
