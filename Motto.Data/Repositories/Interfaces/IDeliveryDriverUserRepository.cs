@@ -18,7 +18,7 @@ namespace Motto.Repositories.Interfaces
         /// Retrieves all <see cref="DeliveryDriverUser"/> objects.
         /// </summary>
         /// <returns>A <see cref="DeliveryDriverUser"/> representing the asynchronous operation. The task result contains a collection of all <see cref="DeliveryDriverUser"/> objects.</returns>
-        Task<IEnumerable<DeliveryDriverUser>> GetAll();
+        Task<List<DeliveryDriverUser>> GetAll(string? filter = null);
 
         /// <summary>
         /// Adds a new <see cref="DeliveryDriverUser"/> to the repository.

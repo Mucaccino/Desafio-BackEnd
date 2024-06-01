@@ -2,6 +2,7 @@ using Motto.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Motto.Entities;
 using Motto.Data;
+using Motto.Enums;
 
 namespace Motto.Repositories
 {
@@ -54,6 +55,21 @@ namespace Motto.Repositories
         {
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Retrieves all users.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public async Task<List<User>> GetAll(UserType? type = null, string? filter = null)
+        {
+             var users = _dbContext.Users
+                .Where(u => type == null || u.Type == type)
+                .Where(u => filter == null || u.Username.Contains(filter) || u.Name.Contains(filter));
+
+            return await users.ToListAsync();
         }
     }
 }

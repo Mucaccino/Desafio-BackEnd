@@ -12,7 +12,7 @@ namespace Motto.Controllers;
 /// Represents a controller for managing rentals.
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/rental")]
 public class RentalController : ControllerBase
 {
     private readonly IRentalService _rentalService;
@@ -22,6 +22,7 @@ public class RentalController : ControllerBase
     /// Initializes a new instance of the <see cref="RentalController"/> class.
     /// </summary>
     /// <param name="rentalService">The rental service.</param>
+    /// <param name="mapper"></param>
     public RentalController(IRentalService rentalService, IMapper mapper)
     {
         _rentalService = rentalService;
@@ -52,27 +53,6 @@ public class RentalController : ControllerBase
         }
 
         return Ok(result.Data);
-    }
-
-    /// <summary>
-    /// Delivers a motorcycle.
-    /// </summary>
-    /// <param name="id">The ID of the motorcycle to be delivered.</param>
-    /// <param name="endDate">The end date of the delivery.</param>
-    /// <returns>An asynchronous task that returns an ActionResult containing the delivery cost and message, or a BadRequest result if the delivery was not successful.</returns>
-    [Authorize(Roles = "DeliveryDriver")]
-    [HttpPost("{id}/deliver")]
-    public async Task<ActionResult<object>> DeliverMotorcycle(int id, DateTime endDate)
-    {
-        var userId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "");
-        var result = await _rentalService.Deliver(userId, id, endDate);
-
-        if (!result.Success)
-        {
-            return BadRequest(result.Message);
-        }
-
-        return Ok(new { result.Data?.Cost, result.Data?.Message });
     }
 
     /// <summary>
@@ -124,5 +104,26 @@ public class RentalController : ControllerBase
         }
 
         return Ok(result.Data);
+    }
+
+    /// <summary>
+    /// Delivers a motorcycle.
+    /// </summary>
+    /// <param name="id">The ID of the motorcycle to be delivered.</param>
+    /// <param name="endDate">The end date of the delivery.</param>
+    /// <returns>An asynchronous task that returns an ActionResult containing the delivery cost and message, or a BadRequest result if the delivery was not successful.</returns>
+    [Authorize(Roles = "DeliveryDriver")]
+    [HttpPost("{id}/deliver")]
+    public async Task<ActionResult<object>> DeliverMotorcycle(int id, DateTime endDate)
+    {
+        var userId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "");
+        var result = await _rentalService.Deliver(userId, id, endDate);
+
+        if (!result.Success)
+        {
+            return BadRequest(result.Message);
+        }
+
+        return Ok(new { result.Data?.Cost, result.Data?.Message });
     }
 }

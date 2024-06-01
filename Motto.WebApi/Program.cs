@@ -15,6 +15,7 @@ using Motto.Data;
 using Motto.Enums;
 using Motto.Domain.Events;
 using Motto.WebApi;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     Log.Information($"UseNpgsql (ConnectionString: {builder.Configuration.GetConnectionString("DefaultConnection")})");
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    // Add support for JSON string enums
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));;
 
 // Register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -47,6 +50,7 @@ builder.Services.AddScoped<IAuthService, AuthService>(provider =>
 {
     return new AuthService(provider.GetRequiredService<IUserRepository>(), builder.Configuration["Jwt:Key"] ?? "", provider.GetRequiredService<ILogger<AuthService>>());
 });
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRentalPlanService, RentalPlanService>();
 builder.Services.AddScoped<ILicenseImageService, LicenseImageService>();
 builder.Services.AddScoped<LicenseImageService>();

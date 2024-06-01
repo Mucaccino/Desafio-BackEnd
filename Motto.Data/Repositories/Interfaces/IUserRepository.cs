@@ -1,4 +1,6 @@
 ﻿using Motto.Entities;
+using Motto.Enums;
+using OneOf;
 
 namespace Motto.Repositories.Interfaces
 {
@@ -20,6 +22,13 @@ namespace Motto.Repositories.Interfaces
         /// <param name="userId">The ID of the user.</param>
         /// <returns>The user with the specified ID, or null if not found.</returns>
         Task<User?> GetById(int userId);
+
+        /// <summary>
+        /// Get all users that match the specified filter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <returns></returns>
+        Task<List<User>> GetAll(UserType? type = null, string? filter = null);
 
         /// <summary>
         /// Add a new <see cref="User"/>.

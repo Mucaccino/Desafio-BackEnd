@@ -9,7 +9,7 @@ namespace Motto.Controllers
     /// <summary>
     /// Represents a controller for handling license image operations.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/license-image")]
     [ApiController]
     public class LicenseImageController : ControllerBase
     {

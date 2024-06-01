@@ -27,7 +27,7 @@ namespace Motto.Tests
             _mockDbContext.Setup(x => x.SaveChangesAsync(default)).ReturnsAsync(1);
             _mockDbContext.Setup(x => x.Users)
                 .ReturnsDbSet(TestDataHelper.GetFakeUserList());
-            var _service = new UserService(new UserRepository(_mockDbContext.Object));
+            var _service = new UserService(new UserRepository(_mockDbContext.Object), new DeliveryDriverUserRepository(_mockDbContext.Object));
             var _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile())));
             _userController = new UserController(_service, _mapper);
         }

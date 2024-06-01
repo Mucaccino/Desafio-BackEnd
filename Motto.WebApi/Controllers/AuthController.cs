@@ -4,13 +4,15 @@ using Motto.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using Motto.Domain.Exceptions;
 using Microsoft.VisualBasic;
+using Motto.Domain.Services.Results;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Motto.Controllers
 {
     /// <summary>
     /// Represents a controller for authentication operations.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -31,13 +33,20 @@ namespace Motto.Controllers
         /// <summary>
         /// Authenticates a user with the provided login credentials.
         /// </summary>
-        /// <param name="loginRequest">The login credentials of the user. <see cref="LoginRequest"/></param>
-        /// <returns>The login response containing the authentication token and user information. <see cref="LoginResponse"/></returns>
-        /// <remarks>statusCode: 200 - OK</remarks>
-        /// <remarks>statusCode: 404 - User not found</remarks>
-        /// <remarks>statusCode: 401 - Password is incorrect</remarks>
+        /// <param name="loginRequest">The login credentials of the user.</param>
+        /// <returns>The model containing the authentication token and user information.</returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="404">User not found</response>
+        /// <response code="401">Invalid password</response>
+        /// <response code="500">Internal server error</response>
+        [ProducesResponseType(typeof(AuthenticateUserResult), 200)]
+        [ProducesResponseType(typeof(HttpValidationProblemDetails), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(string), 401)]
+        [ProducesResponseType(500)]
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponse>> AuthenticateUser([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<AuthenticateUserResult>> AuthenticateUser([FromBody] LoginRequest loginRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -80,9 +89,14 @@ namespace Motto.Controllers
         /// </summary>
         /// <param name="refreshToken">The refresh token.</param>
         /// <returns>The action result containing the token response.</returns>  
-        /// <remarks>statusCode: 200 - OK</remarks>
-        /// <remarks>statusCode: 401 - Invalid token</remarks>
-        /// <remarks>statusCode: 401 - Invalid refresh token</remarks>
+        /// <response code="200">OK</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Internal server error</response>
+        [ProducesResponseType(typeof(AuthenticateUserResult), 200)]
+        [ProducesResponseType(typeof(HttpValidationProblemDetails), 400)]
+        [ProducesResponseType(typeof(string), 401)]
+        [ProducesResponseType(500)]
         [HttpPost("token")]
         public async Task<ActionResult<TokenResponse>> RefreshToken(string refreshToken)
         {
@@ -102,8 +116,8 @@ namespace Motto.Controllers
             var authHeader = accessToken?.Replace("Bearer ", "");
             if (string.IsNullOrEmpty(authHeader))
             {
-                _logger.LogError("Authorization header is missing or invalid.");
-                return Unauthorized("Authorization header is missing or invalid.");
+                _logger.LogError("Authorization header is invalid.");
+                return Unauthorized("Authorization header is invalid.");
             }
 
             try
