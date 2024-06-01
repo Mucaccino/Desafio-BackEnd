@@ -6,7 +6,7 @@ Seja muito bem-vindo ao desafio backend. Seu objetivo é criar uma aplicação p
 
 O projeto é integralmente desenvolvido em [.NET 8](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/apis?view=aspnetcore-8.0), utilizando EntityFramework e serviços adicionais como RabbitMQ, PostgreSQL, MinIO e Seq. Possui ambiente para execução de serviços ou completa em Docker e também o Swagger UI para interação com a API.
 
-![Swagger UI rodando no Docker](print_swagger_ui.png?raw=true "Swagger UI rodando no Docker")
+![Swagger UI rodando no Docker](images/print_swagger_ui.png?raw=true "Swagger UI rodando no Docker")
 
 ## Estrutura da Solução
 
@@ -78,7 +78,7 @@ A solução inclui o **makefile** para auxiliar com comandos de compilação e s
 > make up-services
 ```
 
-^Outros comandos podem ser encontrados no [makefile](makefile).^
+Outros comandos podem ser encontrados no [makefile](makefile).
 
 ### Docker
 
