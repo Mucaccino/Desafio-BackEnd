@@ -9,7 +9,7 @@ using Motto.Data.Enums;
 using Motto.WebApi;
 using Motto.WebApi.Dtos;
 
-namespace Motto.Tests;
+namespace Motto.Tests.Integrations;
 
 [TestClass]
 public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<Program>
@@ -17,20 +17,20 @@ public class ApiIntegrationTests : Microsoft.AspNetCore.Mvc.Testing.WebApplicati
     private readonly Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<Program> _factory;
     private UserType _loggedUserType;
     private string? _loggedToken;
-    
-    public ApiIntegrationTests()    
+
+    public ApiIntegrationTests()
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment}.json", optional: true)             
+            .AddJsonFile($"appsettings.{environment}.json", optional: true)
             .AddEnvironmentVariables() // Adicione essa linha para incluir as variáveis de ambiente   
             .Build();
 
         _factory = new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<Program>()
         .WithWebHostBuilder(builder =>
-        { 
+        {
             builder.ConfigureAppConfiguration((hostingContext, config) =>
             {
                 config.AddConfiguration(configuration);

@@ -6,8 +6,9 @@ using Motto.Data.Repositories;
 using Motto.Domain.Services;
 using Motto.Data.Entities;
 using Motto.WebApi.Controllers;
+using Motto.Tests.Helpers;
 
-namespace Motto.Tests
+namespace Motto.Tests.Unitaries
 {
     [TestClass]
     public class RentalPlanControllerTests
@@ -29,7 +30,7 @@ namespace Motto.Tests
         {
             // Arrange
             var rentalPlans = TestDataHelper.GetFakeRentalPlanList();
-            
+
             // Act
             var result = await _controller.GetAll();
 

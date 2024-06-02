@@ -11,8 +11,9 @@ using Motto.WebApi.Dtos;
 using AutoMapper;
 using Motto.WebApi;
 using Motto.WebApi.Controllers;
+using Motto.Tests.Helpers;
 
-namespace Motto.Tests
+namespace Motto.Tests.Unitaries
 {
 
     [TestClass]
@@ -32,26 +33,28 @@ namespace Motto.Tests
 
             // Seed database
             _dbContext.Setup(x => x.RentalPlans)
-                .ReturnsDbSet(TestDataHelper.GetFakeRentalPlanList());                
+                .ReturnsDbSet(TestDataHelper.GetFakeRentalPlanList());
             _dbContext.Setup(x => x.DeliveryDriverUsers)
-                .ReturnsDbSet(TestDataHelper.GetFakeDeliveryDriverList());                
+                .ReturnsDbSet(TestDataHelper.GetFakeDeliveryDriverList());
             _dbContext.Setup(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());                
+                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
             _dbContext.Setup(x => x.Rentals)
-                .ReturnsDbSet(_rentalFakeRentalList);          
+                .ReturnsDbSet(_rentalFakeRentalList);
             _dbContext.Setup(x => x.Motorcycles)
                 .ReturnsDbSet(_motorcycleFakeList);
 
             _dbContext.Setup(x => x.SaveChanges()).Returns(1);
             _dbContext.Setup(x => x.SaveChangesAsync(default)).ReturnsAsync(1);
 
-            _dbContext.Setup(x => x.Add(It.IsAny<Rental>())).Callback<Rental>((rental) => {
-                 _dbContext.Setup(x => x.Rentals)
-                    .ReturnsDbSet(_rentalFakeRentalList = _rentalFakeRentalList.Append(rental).ToList());
+            _dbContext.Setup(x => x.Add(It.IsAny<Rental>())).Callback<Rental>((rental) =>
+            {
+                _dbContext.Setup(x => x.Rentals)
+                   .ReturnsDbSet(_rentalFakeRentalList = _rentalFakeRentalList.Append(rental).ToList());
             });
-            _dbContext.Setup(x => x.Add(It.IsAny<Motorcycle>())).Callback<Motorcycle>((motorcyle) => {
-                 _dbContext.Setup(x => x.Motorcycles)
-                    .ReturnsDbSet(_motorcycleFakeList = _motorcycleFakeList.Append(motorcyle).ToList());
+            _dbContext.Setup(x => x.Add(It.IsAny<Motorcycle>())).Callback<Motorcycle>((motorcyle) =>
+            {
+                _dbContext.Setup(x => x.Motorcycles)
+                   .ReturnsDbSet(_motorcycleFakeList = _motorcycleFakeList.Append(motorcyle).ToList());
             });
 
             // setup auth user
@@ -79,7 +82,7 @@ namespace Motto.Tests
                 }
             };
         }
-        
+
         [TestMethod]
         public async Task Create_ValidModel_ReturnsOk()
         {
@@ -111,7 +114,7 @@ namespace Motto.Tests
                 Model = "Model Z",
                 Plate = "XYZ5678"
             };
-            _dbContext.Object.Add(existingMotorcycle);            
+            _dbContext.Object.Add(existingMotorcycle);
             _dbContext.Object.SaveChanges();
 
             // Arrange
@@ -191,7 +194,7 @@ namespace Motto.Tests
                 Model = updateMotorcycle.Model,
                 Plate = "XYZ5678"
             };
-            
+
             // Act
             var result = await _controller.Update(2, model);
 
@@ -267,7 +270,7 @@ namespace Motto.Tests
                 Plate = "ABC1234"
             };
             _dbContext.Object.Add(motorcycle);
-                        
+
             var rental = new Rental
             {
                 Id = 1,
@@ -288,6 +291,6 @@ namespace Motto.Tests
             var badRequestResult = result.Result as ConflictObjectResult;
             Assert.AreEqual("Não é possível remover a moto porque existem locações associadas a ela.", badRequestResult?.Value);
         }
-        
+
     }
 }

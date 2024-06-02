@@ -1,9 +1,7 @@
-
-
 using Motto.Data.Entities;
 using Motto.Data.Enums;
 
-namespace Motto.Tests;
+namespace Motto.Tests.Helpers;
 
 public class TestDataHelper
 {
@@ -66,8 +64,8 @@ public class TestDataHelper
                 {
                     Id = 3,
                     Days = 30,
-                    DailyCost = 22.00m  
-                },                
+                    DailyCost = 22.00m
+                },
                 new RentalPlan
                 {
                     Id = 4,
@@ -80,7 +78,7 @@ public class TestDataHelper
                     Days = 50,
                     DailyCost = 18.00m
                 }
-            };  
+            };
     }
 
     internal static IEnumerable<DeliveryDriverUser> GetFakeDeliveryDriverList()
@@ -119,37 +117,37 @@ public class TestDataHelper
     internal static List<Rental> GetFakeRentalList()
     {
         return new List<Rental>
-            {
-                // new Rental
-                // {
-                //     Id = 1,
-                //     DeliveryDriverId = 2,
-                //     MotorcycleId = 1,
-                //     RentalPlanId = 2,
-                //     StartDate = DateTime.Today.AddDays(-5),
-                //     ExpectedEndDate = DateTime.Today.AddDays(2)
-                // }
-            };
-    }   
+        {
+            // new Rental
+            // {
+            //     Id = 1,
+            //     DeliveryDriverId = 2,
+            //     MotorcycleId = 1,
+            //     RentalPlanId = 2,
+            //     StartDate = DateTime.Today.AddDays(-5),
+            //     ExpectedEndDate = DateTime.Today.AddDays(2)
+            // }
+        };
+    }
 
     internal static List<Motorcycle> GetFakeMotorcycleList()
     {
         return new List<Motorcycle>
-            {
-                // new Motorcycle
-                // {
-                //     Id = 1,
-                //     Year = 2010,
-                //     Plate = "ABC1234",
-                //     Model = "CB 300",    
-                // },
-                // new Motorcycle
-                // {
-                //     Id = 2,
-                //     Year = 2012,
-                //     Plate = "ABC3234",
-                //     Model = "CB 400",    
-                // }   
-            };
+        {
+            // new Motorcycle
+            // {
+            //     Id = 1,
+            //     Year = 2010,
+            //     Plate = "ABC1234",
+            //     Model = "CB 300",    
+            // },
+            // new Motorcycle
+            // {
+            //     Id = 2,
+            //     Year = 2012,
+            //     Plate = "ABC3234",
+            //     Model = "CB 400",    
+            // }   
+        };
     }
 }

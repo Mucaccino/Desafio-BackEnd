@@ -11,8 +11,9 @@ using AutoMapper;
 using Motto.WebApi;
 using Motto.Data.Entities;
 using Motto.Data.Repositories;
+using Motto.Tests.Helpers;
 
-namespace Motto.Tests
+namespace Motto.Tests.Unitaries
 {
     [TestClass]
     public class RentalControllerTests
@@ -25,24 +26,25 @@ namespace Motto.Tests
         public void Initialize()
         {
             _mockDbContext = new Mock<ApplicationDbContext>();
-            
+
             // Seed database
             _mockDbContext.Setup(x => x.RentalPlans)
-                .ReturnsDbSet(TestDataHelper.GetFakeRentalPlanList());                
+                .ReturnsDbSet(TestDataHelper.GetFakeRentalPlanList());
             _mockDbContext.Setup(x => x.DeliveryDriverUsers)
-                .ReturnsDbSet(TestDataHelper.GetFakeDeliveryDriverList());                
+                .ReturnsDbSet(TestDataHelper.GetFakeDeliveryDriverList());
             _mockDbContext.Setup(x => x.Users)
-                .ReturnsDbSet(TestDataHelper.GetFakeUserList());                
+                .ReturnsDbSet(TestDataHelper.GetFakeUserList());
             _mockDbContext.Setup(x => x.Rentals)
-                .ReturnsDbSet(TestDataHelper.GetFakeRentalList());          
+                .ReturnsDbSet(TestDataHelper.GetFakeRentalList());
             _mockDbContext.Setup(x => x.Motorcycles)
                 .ReturnsDbSet(TestDataHelper.GetFakeMotorcycleList());
 
-            _mockDbContext.Setup(x => x.Add(It.IsAny<Rental>())).Callback<Rental>((rental) => {
-                 _mockDbContext.Setup(x => x.Rentals)
-                    .ReturnsDbSet(_rentalFakeRentalList = _rentalFakeRentalList.Append(rental).ToList());
+            _mockDbContext.Setup(x => x.Add(It.IsAny<Rental>())).Callback<Rental>((rental) =>
+            {
+                _mockDbContext.Setup(x => x.Rentals)
+                   .ReturnsDbSet(_rentalFakeRentalList = _rentalFakeRentalList.Append(rental).ToList());
             });
-            
+
             _mockDbContext.Setup(x => x.SaveChangesAsync(default)).ReturnsAsync(1);
 
             // setup auth user

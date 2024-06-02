@@ -8,8 +8,9 @@ using Motto.Data.Repositories;
 using Motto.Domain.Services.Results;
 using Motto.Domain.Services;
 using Motto.WebApi.Controllers;
+using Motto.Tests.Helpers;
 
-namespace Motto.Tests
+namespace Motto.Tests.Unitaries
 {
     [TestClass]
     public class AuthControllerTests
@@ -31,10 +32,10 @@ namespace Motto.Tests
         [TestMethod]
         public async Task AuthController_ReturnsOkResult_WhenCredentialsAreValid()
         {
-    
+
             // Act
             var result = await _authController.Authenticate(
-                new LoginRequest { Username = "admin", Password = "123mudar" }); 
+                new LoginRequest { Username = "admin", Password = "123mudar" });
 
             //Assert
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));

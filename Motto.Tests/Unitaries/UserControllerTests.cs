@@ -10,8 +10,9 @@ using Motto.WebApi;
 using Motto.Data.Enums;
 using Motto.Data.Entities;
 using Motto.WebApi.Controllers;
+using Motto.Tests.Helpers;
 
-namespace Motto.Tests
+namespace Motto.Tests.Unitaries
 {
     [TestClass]
     public class UserControllerTests
