@@ -5,9 +5,9 @@ O projeto `Motto.Tests` possui testes de integração com WebApi e testes unitá
 - `ApiIntegrationTests`: executa o programa ./api e teste conexão e login em base de dados real para testar funcionamento da API.
 - `____ControllerTests`: executa os testes unitários relacionados aos controllers - usando dados do Mock. 
 
-## Executar pelo make
+## Executar testes
 
-# [Make](#tab/make)
+# [make](#tab/make)
 
 ```sh
 make tests
@@ -22,8 +22,3 @@ dotnet test ./Motto.Tests/Motto.Tests.csproj
 # [Visual Studio](#tab/vs)
 
 > Executar testes pela interface do gerenciador de testes.
-
-
-```
-> make tests
-```
