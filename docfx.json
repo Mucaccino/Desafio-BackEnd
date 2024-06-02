@@ -40,6 +40,8 @@
       "_appTitle": "Desafio Back-End",
       "_enableSearch": true,
       "pdf": false
-    }
+    },
+    "keepFileLink": false,
+    "postProcessors": ["ExtractSearchIndex"]
   }
 }

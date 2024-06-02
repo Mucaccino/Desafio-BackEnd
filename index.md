@@ -1,5 +1,3 @@
 ---
-_layout: landing
+redirect_url: ./README.html
 ---
-
-[!INCLUDE [README](README.md)]

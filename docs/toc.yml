@@ -1,0 +1,15 @@
+- name: Get started
+- href: ../README.md
+- href: solution.md
+- href: project.md
+
+- name: Estrutura
+- href: docker.md
+- href: makefile.md
+- href: entity-framework.md
+- href: tests.md
+
+- name: Adicionais
+- href: workflow.md
+- href: notes.md
+- href: ../TODO.md
