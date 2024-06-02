@@ -21,4 +21,4 @@ dotnet test ./Motto.Tests/Motto.Tests.csproj
 
 # [Visual Studio](#tab/vs)
 
-> Executar testes pela interface do gerenciador de testes.
+Execute os testes pela interface do Grenciador de Testes.
