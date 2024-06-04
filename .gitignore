@@ -38,3 +38,6 @@ obj/
 TestResults/
 /_site/
 /api/
+/apipage
+/restapi/*
+!restapi/toc.yml
