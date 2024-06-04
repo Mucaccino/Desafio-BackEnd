@@ -10,13 +10,29 @@
         }
       ],
       "dest": "api"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "**/*.csproj"
+          ],
+          "src": "./"
+        }
+      ],
+      "namespaceLayout": "nested",
+      "enumSortOrder": "declaringOrder",
+      "outputFormat": "apiPage",
+      "output": "apipage"
     }
   ],
   "build": {
     "content": [
       {
         "files": [
-          "**/*.{md,yml}"
+          "**/*.{md,yml}",
+          "restapi/**",
+          "apipage/**"          
         ],
         "exclude": [
           "_site/**"
@@ -26,7 +42,9 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "makefile",
+          "restapi/clients.ts"
         ]
       }
     ],
@@ -42,6 +60,7 @@
       "pdf": false
     },
     "keepFileLink": false,
-    "postProcessors": ["ExtractSearchIndex"]
+    "exportViewModel": true,
+    "postProcessors": []
   }
 }

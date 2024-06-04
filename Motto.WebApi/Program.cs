@@ -16,10 +16,16 @@ using Motto.Domain.Services.Interfaces;
 
 namespace Motto.WebApi;
 
+/// <summary>
+/// The Program class is the entry point of the application.
+/// </summary>
 public partial class Program {
 
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
+
+        // await Docfx.Docset.Build("../docfx.json");
+        
         var builder = WebApplication.CreateBuilder(args);
 
         // Configure logging
