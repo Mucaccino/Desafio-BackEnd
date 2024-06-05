@@ -21,11 +21,8 @@ namespace Motto.WebApi;
 /// </summary>
 public partial class Program {
 
-    private static async Task Main(string[] args)
-    {
-
-        // await Docfx.Docset.Build("../docfx.json");
-        
+    private static void Main(string[] args)
+    {        
         var builder = WebApplication.CreateBuilder(args);
 
         // Configure logging
