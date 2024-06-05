@@ -35,6 +35,7 @@ jobs:
 
     - run: dotnet tool update -g NSwag.ConsoleCore
     - run: dotnet tool update -g docfx
+    - run: dotnet tool restore
     - run: make docs
 
     - name: Upload artifact
