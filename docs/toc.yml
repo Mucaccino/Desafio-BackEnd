@@ -2,6 +2,7 @@
 - href: ../README.md
 - href: solution.md
 - href: project.md
+- href: ../restapi/swagger.json
 
 - name: Estrutura
 - href: docker.md

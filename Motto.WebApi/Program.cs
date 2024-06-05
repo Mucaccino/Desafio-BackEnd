@@ -16,10 +16,13 @@ using Motto.Domain.Services.Interfaces;
 
 namespace Motto.WebApi;
 
+/// <summary>
+/// The Program class is the entry point of the application.
+/// </summary>
 public partial class Program {
 
     private static void Main(string[] args)
-    {
+    {        
         var builder = WebApplication.CreateBuilder(args);
 
         // Configure logging

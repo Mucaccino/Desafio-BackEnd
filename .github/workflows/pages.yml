@@ -33,8 +33,9 @@ jobs:
       with:
         dotnet-version: 8.x
 
+    - run: dotnet tool update -g NSwag.ConsoleCore
     - run: dotnet tool update -g docfx
-    - run: docfx ./docfx.json
+    - run: make docs
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
