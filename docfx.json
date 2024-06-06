@@ -13,29 +13,13 @@
       "enumSortOrder": "declaringOrder",
       "outputFormat": "mref",
       "dest": "api"
-    },
-    {
-      "src": [
-        {
-          "files": [
-            "**/*.csproj"
-          ],
-          "src": "./"
-        }
-      ],
-      "namespaceLayout": "nested",
-      "enumSortOrder": "declaringOrder",
-      "outputFormat": "apiPage",
-      "dest": "apipage"
     }
   ],
   "build": {
     "content": [
       {
         "files": [
-          "**/*.{md,yml}",
-          "restapi/**",
-          "apipage/**"          
+          "**/*.{md,yml}"
         ],
         "exclude": [
           "_site/**"
@@ -47,7 +31,8 @@
         "files": [
           "images/**",
           "makefile",
-          "restapi/clients.ts"
+          "restapi/clients.ts",
+          "restapi/clients.cs"
         ]
       }
     ],
