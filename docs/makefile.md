@@ -22,7 +22,11 @@ Subir containers de projetos:
 make projects
 ```
 
+## Comandos do makefile
+
 Outros comandos podem ser encontrados no [makefile](../makefile).
+
+[!code-javascript[](../makefile)]
 
 ## Como instalar o make
 

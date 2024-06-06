@@ -1,4 +1,4 @@
-# Estrutura da Solução
+# A Solução
 
 A arquitetura foi projetada para garantir modularidade, clareza na separação de responsabilidades e facilidade de manutenção. Cada projeto desempenha um papel crucial na operação geral do sistema, desde o controle de requisições HTTP até o gerenciamento da persistência de dados e a comunicação assíncrona, bem como toda lógica de domínio do negócio.
 

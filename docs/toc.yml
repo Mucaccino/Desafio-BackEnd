@@ -1,16 +1,16 @@
-- name: Get started
+- name: Começando
 - href: ../README.md
-- href: solution.md
 - href: project.md
+- href: solution.md
 - href: ../restapi/swagger.json
 
 - name: Estrutura
-- href: docker.md
 - href: makefile.md
+- href: docker.md
 - href: entity-framework.md
 - href: tests.md
+- href: workflow.md
 
 - name: Adicionais
-- href: workflow.md
 - href: notes.md
 - href: ../TODO.md

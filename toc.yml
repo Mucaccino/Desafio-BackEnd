@@ -2,7 +2,5 @@
   href: docs/
 - name: Reference
   href: api/
-- name: Api Page
-  href: apipage/
 - name: REST Api
   href: restapi/

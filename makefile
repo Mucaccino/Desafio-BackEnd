@@ -11,8 +11,8 @@ Arguments := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 # Targets
 .PHONY: all build setup services projects docs
 
-# Up services and setup database
-setup: services update
+# Install dependencies, up services and setup database
+setup: dependencies services update
 
 # Update database
 update:

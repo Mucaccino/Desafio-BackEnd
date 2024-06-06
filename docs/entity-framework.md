@@ -1,4 +1,4 @@
-# Entity Framework
+# EF Core
 
 O projeto utiliza Entity Framework para a estrutura de entidades e a conexão com o PostgreSQL, centralizada no projeto `Motto.Data`.
 

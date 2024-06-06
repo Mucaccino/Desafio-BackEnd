@@ -1,4 +1,4 @@
-# Github Workflow
+# Workflow
 
 O projeto está configurado com pipelines para o [Github Actions](https://github.com/Mucaccino/Desafio-BackEnd/actions).
 
