@@ -19,7 +19,8 @@
     "content": [
       {
         "files": [
-          "**/*.{md,yml}"
+          "**/*.{md,yml}",
+          "restapi/swagger.json"   
         ],
         "exclude": [
           "_site/**"
