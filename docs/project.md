@@ -2,18 +2,22 @@
 
 O `Motto.WebApi` é uma **webapi** do dotnet e possui implementação manual do JWT para autenticação e o Swagger UI configurado no ambiente de desenvolvimento.
 
-O aplicativo possui dois tipos de usuários - admin (`Admin`) e entregador (`DeliveryDriver`) - e cada end-point criado possui sua devida autorização.
+Em base o aplicativo possui dois tipos de usuários - admin (`Admin`) e entregador (`DeliveryDriver`) - e cada end-point criado possui sua devida autorização.
 
-## Requisitos não funcionais 
+---
+
+## O Desafio
+
+### Requisitos não funcionais 
 - A aplicação deverá ser construida com .Net utilizando C#.
 - Utilizar apenas os seguintes bancos de dados (Postgress, MongoDB)
     - Não utilizar PL/pgSQL
 - Escolha o sistema de mensageria de sua preferencia( RabbitMq, Sqs/Sns , Kafka, Gooogle Pub/Sub ou qualquer outro)
 
-## Aplicação a ser desenvolvida
+### Aplicação a ser desenvolvida
 Seu objetivo é criar uma aplicação para gerenciar aluguel de motos e entregadores. Quando um entregador estiver registrado e com uma locação ativa poderá também efetuar entregas de pedidos disponíveis na plataforma.
 
-### Casos de uso
+#### Casos de uso
 - Eu como usuário admin quero cadastrar uma nova moto.
   - Os dados obrigatórios da moto são Identificador, Ano, Modelo e Placa
   - A placa é um dado único e não pode se repetir.
@@ -49,7 +53,7 @@ Seu objetivo é criar uma aplicação para gerenciar aluguel de motos e entregad
     - Quando a data informada for superior a data prevista do término, será cobrado um valor adicional de R$50,00 por diária adicional.
     
 
-## Diferenciais 🚀
+### Diferenciais 🚀
 - Testes unitários
 - Testes de integração
 - EntityFramework e/ou Dapper
