@@ -44,7 +44,7 @@ clean:
 # Run docfx
 docs:
 	$(NSWAG) aspnetcore2openapi /project:Motto.WebApi/Motto.WebApi.csproj /nobuild:false /output:restapi/swagger.json
-	$(NSWAG) openapi2tsclient /input:restapi/swagger.json /output:restapi/clients.ts
+	$(NSWAG) openapi2tsclient /input:restapi/swagger.json /template:Axios /clientBaseClass:ClientBase /extensionCode:ClientBase.ts /useTransformOptionsMethod:true /output:restapi/clients.ts 
 	$(NSWAG) openapi2csclient /input:restapi/swagger.json /classname:MottoServiceClient /namespace:Motto /output:restapi/clients.cs
 # make docs serve
 ifeq (serve, $(filter serve,$(MAKECMDGOALS)))
