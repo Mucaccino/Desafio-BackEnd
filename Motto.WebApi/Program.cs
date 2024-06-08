@@ -90,6 +90,17 @@ public partial class Program {
             options.AddPolicy("DeliveryDriver", policy => policy.RequireRole(UserType.DeliveryDriver.ToString()));
         });
 
+        // Configure CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAllOrigins", policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+
         // Configure Swagger
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerDocument(config =>
@@ -119,6 +130,9 @@ public partial class Program {
                 options.Path = "/redoc";
             });
         }
+
+        // Configure CORS policies
+        app.UseCors("AllowAllOrigins");
 
         app.UseSerilogRequestLogging();
         app.UseRouting();
