@@ -13,13 +13,13 @@ make setup
 Subir containers de dependências:
 
 ```sh
-make services
+make docker services
 ```
 
 Subir containers de projetos:
 
 ```sh
-make projects
+make docker projects
 ```
 
 ## Comandos do makefile

@@ -25,12 +25,12 @@ Este projeto é uma aplicação completa desenvolvida em .NET 8 para gerenciar o
 2. Configure e inicie os serviços dependentes:
     ```sh
     make setup
-    make services
+    make docker services
     ```
 
 3. Construa e inicie os projetos:
     ```sh
-    make projects
+    make docker projects
     ```
     > ou execute os projetos manualmente no VS Code ou Visual Studio.
 
@@ -48,7 +48,7 @@ Este projeto é uma aplicação completa desenvolvida em .NET 8 para gerenciar o
 
 O aplicativo Motto.ConsumerApp consome mensagens do RabbitMQ. 
 ```sh
-make consumer
+make run consumer
 ```
 
 ### Executando os testes

@@ -7,6 +7,11 @@ A solução conta com docker-compose para realizar a montagem do ambiente de ser
 ```
 > docker-compose up --build
 ```
+ou
+
+```
+> make docker services
+```
 
 ### Dependências
 
@@ -23,7 +28,21 @@ Possui o `docker-compose.projects.yml` que realiza também a montagem dos projet
 > docker-compose -f docker-compose.yml -f docker-compose.projects.yml up --build
 ```
 
+ou
+
+```
+> make docker projects
+```
+
 ### Projetos
 
 * `webapi`: execução do Motto.WebApi
 * `consumner`: execução do Motto.ConsumerApp
+
+---
+
+#### Comando para subir todos os containers
+
+```
+> make docker
+```
