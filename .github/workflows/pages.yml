@@ -33,7 +33,7 @@ jobs:
       with:
         dotnet-version: 8.x
 
-    - run: dotnet tool update -g NSwag.ConsoleCore
+    - run: dotnet tool update -g NSwag.ConsoleCore --version 14.0.8
     - run: dotnet tool update -g docfx
     - run: dotnet restore
     - run: make build docs
