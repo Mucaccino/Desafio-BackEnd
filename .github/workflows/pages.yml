@@ -36,7 +36,7 @@ jobs:
     - run: dotnet tool update -g NSwag.ConsoleCore
     - run: dotnet tool update -g docfx
     - run: dotnet restore
-    - run: make docs
+    - run: make build docs
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
