@@ -8,14 +8,15 @@ export class ClientBase {
 
     }
 
-    setAuthToken(token: string) {
+    setAuthToken(token: string | null) {
         ClientBase.authToken = token;
     }
 
     protected transformOptions(options: RequestInit): Promise<RequestInit> {
-        debugger;
-        if (ClientBase.authToken) {
-            options.headers["Authorization"] = "bearer " + ClientBase.authToken 
+        if (ClientBase.authToken && options.headers) {
+            const headers = options.headers as Record<string, string>;
+            headers["Authorization"] = "bearer " + ClientBase.authToken
+            options.headers = headers
         } else {
             console.warn("Authorization token have not been set please authorize first.");
         }
@@ -23,7 +24,6 @@ export class ClientBase {
     }
 
     protected transformResult(url: string, response: Response, processor: (response: Response) => any) {
-        debugger;
         // TODO: Return own result or throw exception to change default processing behavior, 
         // or call processor function to run the default processing logic
         console.log("Service call: " + url);
